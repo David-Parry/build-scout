@@ -1,4 +1,4 @@
-# MCP Explorer
+# Build Scout MCP Server
 
 A lightweight tool for MCP-based projects that detects build systems, analyzes dependencies, and helps automate future upgrades and migrations.
 
