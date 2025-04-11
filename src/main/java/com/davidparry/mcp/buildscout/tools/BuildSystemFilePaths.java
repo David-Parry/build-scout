@@ -1,6 +1,7 @@
 package com.davidparry.mcp.buildscout.tools;
 
 import com.davidparry.mcp.buildscout.common.BuildFile;
+import com.davidparry.mcp.buildscout.common.BuildSystem;
 import io.modelcontextprotocol.spec.McpSchema;
 import java.util.HashSet;
 import java.util.List;
@@ -34,10 +35,7 @@ public class BuildSystemFilePaths implements Tool {
 
   @Override
   public String schema() {
-    return "{\n" + "    \"type\": \"object\",\n" + "    \"properties\": {\n" + "        \"paths\": {\n"
-        + "            \"type\": \"array\",\n" + "            \"items\": {\n" + "                \"type\": \"string\"\n"
-        + "            },\n" + "            \"description\": \"Paths to the files\"\n" + "        }\n" + "    },\n"
-        + "    \"required\": [\n" + "        \"paths\"\n" + "    ]\n" + "}";
+    return "{\"type\": \"object\", \"properties\": {  \"paths\": { \"type\": \"array\", \"items\": { \"type\": \"string\" },\"description\": \"Paths to the files\"}}, \"required\": [\"paths\" ] }";
 
   }
 

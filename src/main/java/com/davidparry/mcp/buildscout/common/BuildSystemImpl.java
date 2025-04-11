@@ -1,8 +1,5 @@
-package com.davidparry.mcp.buildscout.tools;
+package com.davidparry.mcp.buildscout.common;
 
-import com.davidparry.mcp.buildscout.common.BuildFile;
-import com.davidparry.mcp.buildscout.common.DiscoveredPath;
-import com.davidparry.mcp.buildscout.common.PathType;
 import io.modelcontextprotocol.spec.McpSchema;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 public class BuildSystemImpl implements BuildSystem {
   private static final Logger logger = LoggerFactory.getLogger(BuildSystemImpl.class);
+
 
 
   @Override
@@ -92,8 +90,10 @@ public class BuildSystemImpl implements BuildSystem {
     if (path.endsWith("pom.xml")) {
       logger.info("HERE Checking build file: {}", path);
       builds.add(new BuildFile(path,"Maven"));
-    } else if (path.endsWith("build.gradle") || path.endsWith("build.gradle.kts")) {
-      builds.add(new BuildFile(path,"Gradle"));
+    } else if (path.endsWith("build.gradle") ) {
+      builds.add(new BuildFile(path,"Gradle/Groovy"));
+    } else if( path.endsWith("build.gradle.kts")) {
+      builds.add(new BuildFile(path,"Gradle/Kotlin"));
     } else if (path.endsWith("package.json")) {
       builds.add(new BuildFile(path,"NPM/Yarn"));
     } else if (path.endsWith("Cargo.toml")) {

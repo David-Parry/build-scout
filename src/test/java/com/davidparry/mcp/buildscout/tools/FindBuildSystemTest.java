@@ -1,5 +1,6 @@
 package com.davidparry.mcp.buildscout.tools;
 
+import com.davidparry.mcp.buildscout.common.BuildSystemImpl;
 import org.junit.Test;
 
 public class FindBuildSystemTest {

@@ -1,6 +1,7 @@
 package com.davidparry.mcp.buildscout.tools;
 
 import com.davidparry.mcp.buildscout.common.BuildFile;
+import com.davidparry.mcp.buildscout.common.BuildSystem;
 import io.modelcontextprotocol.spec.McpSchema;
 import java.util.HashSet;
 import java.util.List;

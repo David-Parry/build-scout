@@ -1,7 +1,5 @@
-package com.davidparry.mcp.buildscout.tools;
+package com.davidparry.mcp.buildscout.common;
 
-import com.davidparry.mcp.buildscout.common.BuildFile;
-import com.davidparry.mcp.buildscout.common.DiscoveredPath;
 import io.modelcontextprotocol.spec.McpSchema;
 import java.nio.file.Path;
 import java.util.List;
