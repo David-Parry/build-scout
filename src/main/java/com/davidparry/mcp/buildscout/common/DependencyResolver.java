@@ -1,26 +1,20 @@
 package com.davidparry.mcp.buildscout.common;
 
-import com.davidparry.mcp.buildscout.tools.ListDependencies;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
-import org.gradle.tooling.model.idea.IdeaProject;
-import org.gradle.tooling.model.idea.IdeaModule;
-import org.gradle.tooling.model.idea.IdeaDependency;
-import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency;
 import org.gradle.tooling.model.GradleModuleVersion;
+import org.gradle.tooling.model.idea.IdeaDependency;
+import org.gradle.tooling.model.idea.IdeaModule;
+import org.gradle.tooling.model.idea.IdeaProject;
+import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 public class DependencyResolver {
     private static final Logger logger = LoggerFactory.getLogger(DependencyResolver.class);
@@ -58,8 +52,7 @@ public class DependencyResolver {
                 for (IdeaModule module : ideaProject.getModules()) {
                     System.out.println("Module: " + module.getName());
                     for (IdeaDependency dependency : module.getDependencies()) {
-                        if (dependency instanceof IdeaSingleEntryLibraryDependency) {
-                            IdeaSingleEntryLibraryDependency libraryDependency = (IdeaSingleEntryLibraryDependency) dependency;
+                        if (dependency instanceof IdeaSingleEntryLibraryDependency libraryDependency) {
                             GradleModuleVersion moduleVersion = libraryDependency.getGradleModuleVersion();
 
                             if (moduleVersion != null) {
@@ -85,6 +78,65 @@ public class DependencyResolver {
         }
 
         return dependencies;
+    }
+
+    public String lookupLatestVersion(String groupId, String artifactId) {
+        try {
+            // Convert groupId to path format
+            String groupPath = groupId.replace('.', '/');
+
+            // Maven central repository URL
+            String metadataUrl = String.format("https://repo1.maven.org/maven2/%s/%s/maven-metadata.xml",
+                    groupPath, artifactId);
+
+            // Create temporary file to store the metadata
+            Path tempFile = Files.createTempFile("maven-metadata", ".xml");
+            File metadataFile = tempFile.toFile();
+
+            // Download the metadata file
+            java.net.URL url = new java.net.URL(metadataUrl);
+            try (java.io.InputStream in = url.openStream();
+                 java.io.FileOutputStream out = new java.io.FileOutputStream(metadataFile)) {
+
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
+                }
+            }
+
+            // Parse the XML to get the latest version
+            javax.xml.parsers.DocumentBuilderFactory factory = javax.xml.parsers.DocumentBuilderFactory.newInstance();
+            javax.xml.parsers.DocumentBuilder builder = factory.newDocumentBuilder();
+            org.w3c.dom.Document doc = builder.parse(metadataFile);
+
+            // Clean up the temporary file
+            Files.deleteIfExists(tempFile);
+
+            // Extract the latest version
+            org.w3c.dom.NodeList versionNodes = doc.getElementsByTagName("latest");
+            if (versionNodes.getLength() > 0) {
+                return versionNodes.item(0).getTextContent();
+            }
+
+            // If no "latest" tag, try to get the "release" tag
+            versionNodes = doc.getElementsByTagName("release");
+            if (versionNodes.getLength() > 0) {
+                return versionNodes.item(0).getTextContent();
+            }
+
+            // If neither "latest" nor "release" tags exist, get the last version from "versions"
+            versionNodes = doc.getElementsByTagName("version");
+            if (versionNodes.getLength() > 0) {
+                return versionNodes.item(versionNodes.getLength() - 1).getTextContent();
+            }
+
+            logger.warn("Could not determine latest version for {}:{}", groupId, artifactId);
+            return null;
+        } catch (Exception e) {
+            logger.error("Error looking up latest version for {}:{}: {}", groupId, artifactId, e.getMessage());
+            return null;
+        }
     }
 
 }

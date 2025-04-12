@@ -28,12 +28,14 @@ public class ExplorerApplication {
             BuildSystemFilePaths bsf = new BuildSystemFilePaths(new BuildSystemImpl());
             GetFileInfo fi = new GetFileInfo();
             ListDependencies ld = new ListDependencies(new DependencyResolver());
+            LatestDependencyVersion ldv = new LatestDependencyVersion(new DependencyResolver());
             // Add all tools to the explorer
             explorer.addTool(cc.name(), cc.description(), cc.schema(), cc::handle)
                     .addTool(jv.name(), jv.description(), jv.schema(), jv::handle)
                     .addTool(fi.name(), fi.description(), fi.schema(), fi::handle)
                     .addTool(bsf.name(), bsf.description(), bsf.schema(), bsf::handle)
                     .addTool(ld.name(), ld.description(), ld.schema(), ld::handle)
+                    .addTool(ldv.name(), ldv.description(), ldv.schema(), ldv::handle)
             ;
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
