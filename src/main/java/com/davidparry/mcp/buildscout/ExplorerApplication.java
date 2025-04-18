@@ -1,10 +1,7 @@
 package com.davidparry.mcp.buildscout;
 
-import com.davidparry.mcp.buildscout.common.DependencyResolver;
-import com.davidparry.mcp.buildscout.common.JarComparatorService;
-import com.davidparry.mcp.buildscout.common.JarDownloader;
+import com.davidparry.mcp.buildscout.common.*;
 import com.davidparry.mcp.buildscout.tools.*;
-import com.davidparry.mcp.buildscout.common.BuildSystemImpl;
 import io.modelcontextprotocol.server.transport.StdioServerTransportProvider;
 import io.modelcontextprotocol.spec.McpServerTransportProvider;
 import org.slf4j.Logger;
@@ -31,6 +28,8 @@ public class ExplorerApplication {
             ListDependencies ld = new ListDependencies(new DependencyResolver());
             LatestDependencyVersion ldv = new LatestDependencyVersion(new DependencyResolver());
             JarDiffReporter jdr = new JarDiffReporter(new JarComparatorService(new JarDownloader()));
+            FindClassUsage fcu = new FindClassUsage(new SourceClassUsageService());
+
             // Add all tools to the explorer
             explorer.addTool(cc.name(), cc.description(), cc.schema(), cc::handle)
                     .addTool(jv.name(), jv.description(), jv.schema(), jv::handle)
@@ -39,6 +38,7 @@ public class ExplorerApplication {
                     .addTool(ld.name(), ld.description(), ld.schema(), ld::handle)
                     .addTool(ldv.name(), ldv.description(), ldv.schema(), ldv::handle)
                     .addTool(jdr.name(), jdr.description(), jdr.schema(), jdr::handle)
+                    .addTool(fcu.name(), fcu.description(), fcu.schema(), fcu::handle)
             ;
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
