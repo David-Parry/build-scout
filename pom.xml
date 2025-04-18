@@ -44,6 +44,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>com.github.siom79.japicmp</groupId>
+                <artifactId>japicmp</artifactId>
+                <version>0.23.1</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -97,6 +103,12 @@
             <artifactId>gradle-tooling-api</artifactId>
             <version>${gradle-tooling-api.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.siom79.japicmp</groupId>
+            <artifactId>japicmp</artifactId>
+            <version>0.23.1</version>
+        </dependency>
+
     </dependencies>
     
     <build>
