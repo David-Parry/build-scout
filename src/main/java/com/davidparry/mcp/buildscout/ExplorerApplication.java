@@ -1,6 +1,7 @@
 package com.davidparry.mcp.buildscout;
 
 import com.davidparry.mcp.buildscout.common.DependencyResolver;
+import com.davidparry.mcp.buildscout.common.JarComparatorService;
 import com.davidparry.mcp.buildscout.common.JarDownloader;
 import com.davidparry.mcp.buildscout.tools.*;
 import com.davidparry.mcp.buildscout.common.BuildSystemImpl;
@@ -29,7 +30,7 @@ public class ExplorerApplication {
             GetFileInfo fi = new GetFileInfo();
             ListDependencies ld = new ListDependencies(new DependencyResolver());
             LatestDependencyVersion ldv = new LatestDependencyVersion(new DependencyResolver());
-            JarDiffReporter jdr = new JarDiffReporter(new JarDownloader());
+            JarDiffReporter jdr = new JarDiffReporter(new JarComparatorService(new JarDownloader()));
             // Add all tools to the explorer
             explorer.addTool(cc.name(), cc.description(), cc.schema(), cc::handle)
                     .addTool(jv.name(), jv.description(), jv.schema(), jv::handle)
