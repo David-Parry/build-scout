@@ -9,6 +9,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class FindClassUsage implements Tool {
@@ -66,7 +67,7 @@ public class FindClassUsage implements Tool {
                 return createErrorResult("No source directories found in the project");
             }
 
-            Map<String, List<Integer>> usageMap = service.searchClassUsage(sourceDirs, fullyQualifiedClassName);
+            Map<String, Set<Integer>> usageMap = service.searchClassUsage(sourceDirs, fullyQualifiedClassName);
 
             if (usageMap.isEmpty()) {
                 results.add(new McpSchema.TextContent("No usages found for class: " + fullyQualifiedClassName));
@@ -74,7 +75,7 @@ public class FindClassUsage implements Tool {
                 StringBuilder resultBuilder = new StringBuilder();
                 resultBuilder.append("Found usages of ").append(fullyQualifiedClassName).append(":\n\n");
 
-                for (Map.Entry<String, List<Integer>> entry : usageMap.entrySet()) {
+                for (Map.Entry<String, Set<Integer>> entry : usageMap.entrySet()) {
                     resultBuilder.append("File: ").append(entry.getKey()).append("\n");
                     resultBuilder.append("Lines: ").append(entry.getValue().stream().map(String::valueOf).collect(Collectors.joining(", "))).append("\n\n");
                 }

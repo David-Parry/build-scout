@@ -8,10 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
@@ -55,8 +52,8 @@ public class SourceClassUsageService {
     }
 
 
-    public Map<String, List<Integer>> searchClassUsage(List<Path> sourceDirs, String fullyQualifiedClassName) {
-        Map<String, List<Integer>> usageMap = new HashMap<>();
+    public Map<String, Set<Integer>> searchClassUsage(List<Path> sourceDirs, String fullyQualifiedClassName) {
+        Map<String, Set<Integer>> usageMap = new HashMap<>();
         String simpleClassName = extractSimpleClassName(fullyQualifiedClassName);
         // Create patterns for different ways the class might be used
         Pattern importPattern = Pattern.compile("import\\s+" + Pattern.quote(fullyQualifiedClassName) + "\\s*;");
@@ -114,8 +111,8 @@ public class SourceClassUsageService {
     }
 
 
-    private void addUsage(Map<String, List<Integer>> usageMap, String filePath, int lineNumber) {
-        usageMap.computeIfAbsent(filePath, k -> new ArrayList<>()).add(lineNumber);
+    private void addUsage(Map<String, Set<Integer>> usageMap, String filePath, int lineNumber) {
+        usageMap.computeIfAbsent(filePath, k -> new HashSet<>()).add(lineNumber);
     }
 
 }

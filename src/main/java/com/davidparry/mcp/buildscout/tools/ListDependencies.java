@@ -1,7 +1,6 @@
 package com.davidparry.mcp.buildscout.tools;
 
-import com.davidparry.mcp.buildscout.common.BuildFile;
-import com.davidparry.mcp.buildscout.common.DependencyResolver;
+import com.davidparry.mcp.buildscout.common.DependencyFetch;
 import io.modelcontextprotocol.spec.McpSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,14 +8,13 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 public class ListDependencies implements Tool {
-    private final DependencyResolver dependencyResolver;
+    private final DependencyFetch dependencyFetch;
     private static final Logger logger = LoggerFactory.getLogger(ListDependencies.class);
 
-    public ListDependencies(DependencyResolver dependencyResolver) {
-        this.dependencyResolver = dependencyResolver;
+    public ListDependencies(DependencyFetch dependencyFetch) {
+        this.dependencyFetch = dependencyFetch;
     }
 
     @Override
@@ -48,7 +46,7 @@ public class ListDependencies implements Tool {
                 String contents = request.get("contents");
                 String buildType = request.get("build");
 
-                List<String> dependencies = dependencyResolver.resolveDependencies(contents, buildType);
+                List<String> dependencies = dependencyFetch.resolveDependencies(contents, buildType);
 
                 if (contents == null || contents.isEmpty()) {
                     results.add(new McpSchema.TextContent("Contents of build file is missing!"));

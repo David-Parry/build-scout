@@ -1,6 +1,6 @@
 package com.davidparry.mcp.buildscout.tools;
 
-import com.davidparry.mcp.buildscout.common.DependencyResolver;
+import com.davidparry.mcp.buildscout.common.DependencyFetch;
 import io.modelcontextprotocol.spec.McpSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,10 +11,10 @@ import java.util.Map;
 
 public class LatestDependencyVersion implements Tool {
     private static final Logger logger = LoggerFactory.getLogger(LatestDependencyVersion.class);
-    private final DependencyResolver dependencyResolver;
+    private final DependencyFetch dependencyFetch;
 
-    public LatestDependencyVersion(DependencyResolver dependencyResolver) {
-        this.dependencyResolver = dependencyResolver;
+    public LatestDependencyVersion(DependencyFetch dependencyFetch) {
+        this.dependencyFetch = dependencyFetch;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class LatestDependencyVersion implements Tool {
             if (request != null) {
                 groupId = request.get("groupId");
                 artifactId = request.get("artifactId");
-                String version = dependencyResolver.lookupLatestVersion(groupId, artifactId);
+                String version = dependencyFetch.lookupLatestVersion(groupId, artifactId);
 
                 if (groupId == null || groupId.isEmpty()) {
                     results.add(new McpSchema.TextContent("GroupId is missing!"));

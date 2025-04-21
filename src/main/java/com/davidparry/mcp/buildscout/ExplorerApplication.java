@@ -25,8 +25,8 @@ public class ExplorerApplication {
             FindBuildSystem cc = new FindBuildSystem(new BuildSystemImpl());
             BuildSystemFilePaths bsf = new BuildSystemFilePaths(new BuildSystemImpl());
             GetFileInfo fi = new GetFileInfo();
-            ListDependencies ld = new ListDependencies(new DependencyResolver());
-            LatestDependencyVersion ldv = new LatestDependencyVersion(new DependencyResolver());
+            ListDependencies ld = new ListDependencies(new DependencyFetch());
+            LatestDependencyVersion ldv = new LatestDependencyVersion(new DependencyFetch());
             JarDiffReporter jdr = new JarDiffReporter(new JarComparatorService(new JarDownloader()));
             FindClassUsage fcu = new FindClassUsage(new SourceClassUsageService());
 
