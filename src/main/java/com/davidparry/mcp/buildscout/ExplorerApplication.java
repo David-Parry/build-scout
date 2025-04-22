@@ -29,6 +29,7 @@ public class ExplorerApplication {
             LatestDependencyVersion ldv = new LatestDependencyVersion(new DependencyFetch());
             JarDiffReporter jdr = new JarDiffReporter(new JarComparatorService(new JarDownloader()));
             FindClassUsage fcu = new FindClassUsage(new SourceClassUsageService());
+            DownloadCurrentLatestSource dcs = new DownloadCurrentLatestSource(new DependencyFetch());
 
             // Add all tools to the explorer
             explorer.addTool(cc.name(), cc.description(), cc.schema(), cc::handle)
@@ -39,6 +40,7 @@ public class ExplorerApplication {
                     .addTool(ldv.name(), ldv.description(), ldv.schema(), ldv::handle)
                     .addTool(jdr.name(), jdr.description(), jdr.schema(), jdr::handle)
                     .addTool(fcu.name(), fcu.description(), fcu.schema(), fcu::handle)
+                    .addTool(dcs.name(), dcs.description(), dcs.schema(), dcs::handle)
             ;
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {

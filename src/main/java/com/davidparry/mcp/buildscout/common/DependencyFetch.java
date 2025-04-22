@@ -138,44 +138,35 @@ public class DependencyFetch {
     }
 
     /**
-     * Downloads the sources jar for each available version of the given Maven artifact into a temp directory.
-     * Returns the path to the temp directory containing the downloaded sources.
+     * Downloads the sources jar for version of the given Maven artifact into a temp directory.
+     * Returns the path to the temp directory containing the downloaded  file.
      *
-     * @param groupId        the Maven groupId
-     * @param artifactId     the Maven artifactId
-     * @param currentVersion the current version (not used for filtering, but included for signature consistency)
+     * @param groupId    the Maven groupId
+     * @param artifactId the Maven artifactId
+     * @param version    the version to download source for
      * @return Path to the temp directory containing all downloaded sources jars, or null if failed.
      */
-    public Path downloadAllSourcesForArtifact(String groupId, String artifactId, String currentVersion) {
+    public Path downloadSourceJar(String groupId, String artifactId, String version, String marker) {
         try {
             // Convert groupId to path format
             String groupPath = groupId.replace('.', '/');
 
-            List<JarData> versions = fetchCurrentLatestMavenArtifactVersions(groupId, artifactId, currentVersion);
+            String sourcesJarUrl = String.format("https://repo1.maven.org/maven2/%s/%s/%s/%s-%s-sources.jar", groupPath, artifactId, version, artifactId, version);
+            Path pathSourcesJarFile = Files.createTempFile(marker + ":" + artifactId + ":" + version + "-", "-sources.jar");
+            File sourcesJarFile = pathSourcesJarFile.toFile();
 
-            // Create a temp directory for sources
-            Path sourcesDir = Files.createTempDirectory("maven-sources-" + artifactId + "-");
-            sourcesDir.toFile().deleteOnExit();
-
-            // Download sources jar for each version
-            for (JarData version : versions) {
-                String sourcesJarUrl = String.format("https://repo1.maven.org/maven2/%s/%s/%s/%s-%s-sources.jar", groupPath, artifactId, version.version(), artifactId, version.version());
-                File sourcesJarFile = new File(sourcesDir.toFile(), artifactId + "-" + version.classifier() + "-sources.jar");
-                try (java.io.InputStream in = new java.net.URL(sourcesJarUrl).openStream(); java.io.FileOutputStream out = new java.io.FileOutputStream(sourcesJarFile)) {
-
-                    byte[] buffer = new byte[4096];
-                    int bytesRead;
-                    while ((bytesRead = in.read(buffer)) != -1) {
-                        out.write(buffer, 0, bytesRead);
-                    }
-                    logger.info("Downloaded sources for {}:{}:{} to {}", groupId, artifactId, version, sourcesJarFile.getAbsolutePath());
-                } catch (Exception e) {
-                    logger.warn("Could not download sources for {}:{}:{} - {}", groupId, artifactId, version, e.getMessage());
-                    // Continue with next version
+            try (java.io.InputStream in = new java.net.URL(sourcesJarUrl).openStream(); java.io.FileOutputStream out = new java.io.FileOutputStream(sourcesJarFile)) {
+                byte[] buffer = new byte[4096];
+                int bytesRead;
+                while ((bytesRead = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, bytesRead);
                 }
+                logger.info("Downloaded sources for {}:{}:{} to {}", groupId, artifactId, version, sourcesJarFile.getAbsolutePath());
+            } catch (Exception e) {
+                logger.error("Could not download sources for {}:{}:{} - {}", groupId, artifactId, version, e.getMessage());
+                return null;
             }
-
-            return sourcesDir;
+            return sourcesJarFile.toPath();
         } catch (Exception e) {
             logger.error("Error downloading sources for {}:{}: {}", groupId, artifactId, e.getMessage());
             return null;
