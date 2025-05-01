@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +35,13 @@ public class DownloadCurrentLatestSource implements Tool {
     }
 
     @Override
-    public String schema() {
-        return "{\"type\":\"object\",\"properties\":{\"groupId\":{\"type\":\"string\",\"description\":\"the maven group id used in maven dependency repository.\"},\"artifactId\":{\"type\":\"string\",\"description\":\"The maven artifact Id used in the maven dependency repository.\"},\"version\":{\"type\":\"string\",\"description\":\"The current version of the dependency to download its source.\"}},\"required\":[\"groupId\",\"artifactId\",\"version\"]}";
+    public McpSchema.JsonSchema schema() {
+        Map<String, Object> properties = new HashMap<>();
+        List<String> required = List.of("groupId", "artifactId", "version");
+        properties.put("groupId", createProperty("string", "the maven group id used in maven dependency repository."));
+        properties.put("artifactId", createProperty("string", "The maven artifact Id used in the maven dependency repository."));
+        properties.put("version", createProperty("string", "The current version of the dependency to download its source."));
+        return new McpSchema.JsonSchema("object", properties, required, null);
     }
 
     private McpSchema.CallToolResult handleDownloadSource(Object args) {

@@ -35,9 +35,16 @@ public class JarDiffReporter implements Tool {
     }
 
     @Override
-    public String schema() {
-        return "{\"type\":\"object\",\"properties\":{\"groupId\":{\"type\": \"string\",\"description\": \"the maven group id used in maven dependency repository.\"},\"artifactId\":{\"type\": \"string\",\"description\":\"The maven artifact Id used in the maven dependency repository.\"},\"currentVersion\":{\"type\": \"string\",\"description\":\"Current version of the artifact.\"},\"latestVersion\":{\"type\": \"string\",\"description\":\"The latest version of the artifact.\"}},\"required\":[\"groupId\",\"artifactId\",\"latestVersion\",\"currentVersion\"]}";
-    }
+    public McpSchema.JsonSchema schema() {
+        Map<String, Object> properties = new HashMap<>();
+        List<String> required = List.of("groupId","artifactId","latestVersion","currentVersion");
+        properties.put("groupId", createProperty("string", "the maven group id used in maven dependency repository."));
+        properties.put("artifactId", createProperty("string", "The maven artifact Id used in the maven dependency repository."));
+        properties.put("latestVersion", createProperty("string", "Current version of the artifact."));
+        properties.put("currentVersion", createProperty("string", "The latest version of the artifact."));
+
+        return new McpSchema.JsonSchema("object", properties, required, null);
+   }
 
     /**
      * Validates and extracts request parameters from the input arguments.

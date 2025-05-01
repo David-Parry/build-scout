@@ -6,15 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class FindClassUsage implements Tool {
     private static final Logger logger = LoggerFactory.getLogger(FindClassUsage.class);
-    private SourceClassUsageService service;
+    private final SourceClassUsageService service;
 
     public FindClassUsage(SourceClassUsageService service) {
         this.service = service;
@@ -36,8 +33,13 @@ public class FindClassUsage implements Tool {
     }
 
     @Override
-    public String schema() {
-        return "{\"type\":\"object\",\"properties\":{\"fullyQualifiedClassName\":{\"type\": \"string\",\"description\": \"the fully qualified class name of the class.\"},\"projectRoot\":{\"type\": \"string\",\"description\":\"The fully qualified path of the root directory of the project.\"}},\"required\":[\"fullyQualifiedClassName\",\"rootDirectoryPath\"]}";
+    public McpSchema.JsonSchema schema() {
+        Map<String, Object> properties = new HashMap<>();
+        List<String> required = List.of("fullyQualifiedClassName", "projectRoot");
+        properties.put("fullyQualifiedClassName", createProperty("string", "the fully qualified class name of the class."));
+        properties.put("projectRoot", createProperty("string", "The fully qualified path of the root directory of the project."));
+
+        return new McpSchema.JsonSchema("object", properties, required, null);
     }
 
     private McpSchema.CallToolResult handleFindClassUsage(Object args) {

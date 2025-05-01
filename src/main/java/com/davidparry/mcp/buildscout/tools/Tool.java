@@ -1,6 +1,9 @@
 package com.davidparry.mcp.buildscout.tools;
 
 import io.modelcontextprotocol.spec.McpSchema;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 /**
@@ -33,15 +36,31 @@ public interface Tool {
   default String description() {
     return "Tool for " + name();
   }
-  
+
   /**
-   * Get the JSON schema for the tool's arguments.
+   * Get the JSON Schema for this tool.
    *
    * @return The JSON schema
    */
-  default String schema() {
-    return "{}";
+  default McpSchema.JsonSchema schema() {
+    return null;
   }
+
+
+  /**
+   * Helper method to create a property map for JSON schema.
+   *
+   * @param type        the type of the property (e.g., "string")
+   * @param description the description of the property
+   * @return a LinkedHashMap representing the property
+   */
+  default Map<String, Object> createProperty(String type, Object description) {
+    Map<String, Object> property = new LinkedHashMap<>();
+    property.put("type", type);
+    property.put("description", description);
+    return property;
+  }
+
   
   /**
    * Get the handler function for this tool.

@@ -30,7 +30,7 @@ public class ExplorerApplication {
             JarDiffReporter jdr = new JarDiffReporter(new JarComparatorService(new JarDownloader()));
             FindClassUsage fcu = new FindClassUsage(new SourceClassUsageService());
             DownloadCurrentLatestSource dcs = new DownloadCurrentLatestSource(new DependencyFetch());
-
+            GetResourceInfo gri = new GetResourceInfo();
             // Add all tools to the explorer
             explorer.addTool(cc.name(), cc.description(), cc.schema(), cc::handle)
                     .addTool(jv.name(), jv.description(), jv.schema(), jv::handle)
@@ -41,6 +41,7 @@ public class ExplorerApplication {
                     .addTool(jdr.name(), jdr.description(), jdr.schema(), jdr::handle)
                     .addTool(fcu.name(), fcu.description(), fcu.schema(), fcu::handle)
                     .addTool(dcs.name(), dcs.description(), dcs.schema(), dcs::handle)
+                    .addTool(gri.name(), gri.description(), gri.schema(), gri::handle)
             ;
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {

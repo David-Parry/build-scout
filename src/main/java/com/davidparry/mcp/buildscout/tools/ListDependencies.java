@@ -6,12 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ListDependencies implements Tool {
-    private final DependencyFetch dependencyFetch;
     private static final Logger logger = LoggerFactory.getLogger(ListDependencies.class);
+    private final DependencyFetch dependencyFetch;
 
     public ListDependencies(DependencyFetch dependencyFetch) {
         this.dependencyFetch = dependencyFetch;
@@ -33,8 +34,13 @@ public class ListDependencies implements Tool {
     }
 
     @Override
-    public String schema() {
-        return "{\"type\":\"object\",\"properties\":{\"contents\":{\"type\": \"string\",\"description\": \"The file contents of a build file that can be read and used to return the dependencies.\"},\"build\":{\"type\": \"string\",\"description\":\"The type of build system (e.g., Maven, Gradle, NPM, etc...).\"}},\"required\":[\"contents\",\"build\"]}";
+    public McpSchema.JsonSchema schema() {
+        Map<String, Object> properties = new HashMap<>();
+        List<String> required = List.of("contents", "build");
+        properties.put("contents", createProperty("string", "The file contents of a build file that can be read and used to return the dependencies."));
+        properties.put("build", createProperty("string", "The type of build system (e.g., Maven, Gradle, NPM, etc...)."));
+
+        return new McpSchema.JsonSchema("object", properties, required, null);
     }
 
     private McpSchema.CallToolResult handleListDependencies(Object args) {

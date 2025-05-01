@@ -5,9 +5,7 @@ import io.modelcontextprotocol.spec.McpSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class LatestDependencyVersion implements Tool {
     private static final Logger logger = LoggerFactory.getLogger(LatestDependencyVersion.class);
@@ -19,6 +17,15 @@ public class LatestDependencyVersion implements Tool {
 
     @Override
     public McpSchema.CallToolResult handle(Object args) {
+        // looking for a session id
+        logger.error("session_id"); // <-- this stores the session
+        if (args instanceof Map) {
+            Map<String, String> request = (Map<String, String>) args;
+            request.keySet().forEach(key -> {
+                logger.error(key + " : " + request.get(key));
+
+            });
+        }
         return handleVersionLookUp(args);
     }
 
@@ -29,13 +36,20 @@ public class LatestDependencyVersion implements Tool {
 
     @Override
     public String description() {
-        return "Given the groupId and artifactId, this tool will return the latest version of this maven dependency.";
+        return "DP Given the groupId and artifactId, this tool will return the latest version of this maven dependency.";
     }
 
     @Override
-    public String schema() {
-        return "{\"type\":\"object\",\"properties\":{\"groupId\":{\"type\": \"string\",\"description\": \"the maven group id used in maven dependency repository.\"},\"artifactId\":{\"type\": \"string\",\"description\":\"The maven artifact Id used in the maven dependency repository.\"}},\"required\":[\"groupId\",\"artifactId\"]}";
+    public McpSchema.JsonSchema schema() {
+        Map<String, Object> properties = new HashMap<>();
+        List<String> required = List.of("groupId", "artifactId");
+
+        properties.put("groupId", createProperty("string", "the maven group id used in maven dependency repository."));
+        properties.put("artifactId", createProperty("string", "The maven artifact Id used in the maven dependency repository."));
+
+        return new McpSchema.JsonSchema("object", properties, required, null);
     }
+
 
     private McpSchema.CallToolResult handleVersionLookUp(Object args) {
         List<McpSchema.Content> results = new ArrayList<>();

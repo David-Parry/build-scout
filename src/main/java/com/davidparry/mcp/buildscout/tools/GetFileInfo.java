@@ -3,110 +3,116 @@ package com.davidparry.mcp.buildscout.tools;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.modelcontextprotocol.spec.McpSchema;
-import java.util.ArrayList;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class GetFileInfo implements Tool {
-  private static final ObjectMapper objectMapper = new ObjectMapper();
-  private static final Logger logger = LoggerFactory.getLogger(GetFileInfo.class);
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final Logger logger = LoggerFactory.getLogger(GetFileInfo.class);
 
-  // Static method that delegates to the instance method
-  public McpSchema.CallToolResult handle(Object args) {
-    return handleGetFileInfo(args);
-  }
-
-  @Override
-  public String schema() {
-    return "{\n" + "  \"type\": \"object\",\n" + "  \"properties\": {\n" + "    \"path\": {\n"
-        + "      \"type\": \"string\",\n" + "      \"description\": \"Path to the file\"\n" + "    }\n" + "  },\n"
-        + "  \"required\": [\"path\"]\n" + "}";
-  }
-
-  @Override
-  public String name() {
-    return "get-file-info";
-  }
-
-  @Override
-  public String description() {
-    return "Get information about a file, just simply give a path and it will return the file information for sure.";
-  }
-
-  private McpSchema.CallToolResult handleGetFileInfo(Object args) {
-    List<McpSchema.Content> results = new ArrayList<>();
-    boolean failed = false;
-    try {
-      ObjectNode result = objectMapper.createObjectNode();
-
-      if (args instanceof ObjectNode argsNode) {
-        String path = argsNode.path("path").asText("");
-
-        if (!path.isEmpty()) {
-          java.io.File file = new java.io.File(path);
-
-          if (file.exists()) {
-            result.put("exists", true);
-            result.put("isDirectory", file.isDirectory());
-            result.put("size", file.length());
-            result.put("lastModified", file.lastModified());
-            result.put("canRead", file.canRead());
-            result.put("canWrite", file.canWrite());
-            result.put("absolutePath", file.getAbsolutePath());
-          } else {
-            result.put("exists", false);
-            result.put("error", "File does not exist");
-          }
-        } else {
-          result.put("error", "Path is empty");
-        }
-      } else if (args instanceof java.util.Map) {
-        // Handle Map arguments (which could come from JSON deserialization)
-        @SuppressWarnings("unchecked") java.util.Map<String, Object> argsMap = (java.util.Map<String, Object>) args;
-
-        if (argsMap.containsKey("path")) {
-          String path = String.valueOf(argsMap.get("path"));
-
-          if (path != null && !path.isEmpty()) {
-            java.io.File file = new java.io.File(path);
-
-            if (file.exists()) {
-              result.put("exists", true);
-              result.put("isDirectory", file.isDirectory());
-              result.put("size", file.length());
-              result.put("lastModified", file.lastModified());
-              result.put("canRead", file.canRead());
-              result.put("canWrite", file.canWrite());
-              result.put("absolutePath", file.getAbsolutePath());
-            } else {
-              result.put("exists", false);
-              result.put("error", "File does not exist");
-            }
-          } else {
-            result.put("error", "Path is empty");
-          }
-        } else {
-          result.put("error", "Missing 'path' parameter");
-        }
-      } else {
-        if (args != null) {
-          result.put("error", "DP 1 Invalid arguments type: " + args.getClass().getName());
-        } else {
-          result.put("error", "DP 2 Invalid arguments: they are null");
-        }
-      }
-
-      McpSchema.Content content = new McpSchema.TextContent(objectMapper.writeValueAsString(result));
-      results.add(content);
-
-    } catch (Exception e) {
-      logger.error("Error handling get-file-info tool call", e);
-      McpSchema.Content content = new McpSchema.TextContent("Failed " + e.getMessage());
-      failed = true;
-      results.add(content);
+    // Static method that delegates to the instance method
+    public McpSchema.CallToolResult handle(Object args) {
+        return handleGetFileInfo(args);
     }
-    return new McpSchema.CallToolResult(results, failed);
-  }
+
+    @Override
+    public McpSchema.JsonSchema schema() {
+        Map<String, Object> properties = new HashMap<>();
+        List<String> required = List.of("path");
+        properties.put("path", createProperty("string", "Path to the file."));
+
+        return new McpSchema.JsonSchema("object", properties, required, null);
+
+    }
+
+    @Override
+    public String name() {
+        return "get-file-info";
+    }
+
+    @Override
+    public String description() {
+        return "Get information about a file, just simply give a path and it will return the file information for sure.";
+    }
+
+    private McpSchema.CallToolResult handleGetFileInfo(Object args) {
+        List<McpSchema.Content> results = new ArrayList<>();
+        boolean failed = false;
+        try {
+            ObjectNode result = objectMapper.createObjectNode();
+
+            if (args instanceof ObjectNode argsNode) {
+                String path = argsNode.path("path").asText("");
+
+                if (!path.isEmpty()) {
+                    java.io.File file = new java.io.File(path);
+
+                    if (file.exists()) {
+                        result.put("exists", true);
+                        result.put("isDirectory", file.isDirectory());
+                        result.put("size", file.length());
+                        result.put("lastModified", file.lastModified());
+                        result.put("canRead", file.canRead());
+                        result.put("canWrite", file.canWrite());
+                        result.put("absolutePath", file.getAbsolutePath());
+                    } else {
+                        result.put("exists", false);
+                        result.put("error", "File does not exist");
+                    }
+                } else {
+                    result.put("error", "Path is empty");
+                }
+            } else if (args instanceof java.util.Map) {
+                // Handle Map arguments (which could come from JSON deserialization)
+                @SuppressWarnings("unchecked") java.util.Map<String, Object> argsMap = (java.util.Map<String, Object>) args;
+
+                if (argsMap.containsKey("path")) {
+                    String path = String.valueOf(argsMap.get("path"));
+
+                    if (path != null && !path.isEmpty()) {
+                        java.io.File file = new java.io.File(path);
+
+                        if (file.exists()) {
+                            result.put("exists", true);
+                            result.put("isDirectory", file.isDirectory());
+                            result.put("size", file.length());
+                            result.put("lastModified", file.lastModified());
+                            result.put("canRead", file.canRead());
+                            result.put("canWrite", file.canWrite());
+                            result.put("absolutePath", file.getAbsolutePath());
+                        } else {
+                            result.put("exists", false);
+                            result.put("error", "File does not exist");
+                        }
+                    } else {
+                        result.put("error", "Path is empty");
+                    }
+                } else {
+                    result.put("error", "Missing 'path' parameter");
+                }
+            } else {
+                if (args != null) {
+                    result.put("error", "DP 1 Invalid arguments type: " + args.getClass().getName());
+                } else {
+                    result.put("error", "DP 2 Invalid arguments: they are null");
+                }
+            }
+
+            McpSchema.Content content = new McpSchema.TextContent(objectMapper.writeValueAsString(result));
+            results.add(content);
+
+        } catch (Exception e) {
+            logger.error("Error handling get-file-info tool call", e);
+            McpSchema.Content content = new McpSchema.TextContent("Failed " + e.getMessage());
+            failed = true;
+            results.add(content);
+        }
+        return new McpSchema.CallToolResult(results, failed);
+    }
 
 }

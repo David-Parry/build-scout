@@ -69,6 +69,40 @@ public class ProjectExplorer implements AutoCloseable {
         return this;
     }
 
+    public ProjectExplorer addMcpTool(String toolName, String description, McpSchema.JsonSchema jsonSchema,
+                                   ToolHandler handler) {
+        Assert.notNull(toolName, "Tool name must not be null");
+        Assert.notNull(description, "Tool description must not be null");
+        Assert.notNull(jsonSchema, "JSON schema must not be null");
+        Assert.notNull(handler, "Tool handler must not be null");
+
+        Tool tool = new McpSchema.Tool(toolName, description, jsonSchema);
+        server.addTool(new McpServerFeatures.SyncToolSpecification(
+                tool,
+                (exchange, args) -> handler.handleToolCall(args)
+        ));
+
+        return this;
+    }
+
+
+    public ProjectExplorer addTool(String toolName, String description,McpSchema.JsonSchema jsonSchema,
+                                   ToolHandler handler) {
+        Assert.notNull(toolName, "Tool name must not be null");
+        Assert.notNull(description, "Tool description must not be null");
+        Assert.notNull(jsonSchema, "JSON schema must not be null");
+        Assert.notNull(handler, "Tool handler must not be null");
+
+        Tool tool = new McpSchema.Tool(toolName, description, jsonSchema);
+        server.addTool(new McpServerFeatures.SyncToolSpecification(
+                tool,
+                (exchange, args) -> handler.handleToolCall(args)
+        ));
+
+        return this;
+    }
+
+
     /**
      * Removes a tool from the server.
      *
