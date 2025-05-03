@@ -32,7 +32,7 @@ public class GetFileInfo implements Tool {
 
     @Override
     public String name() {
-        return "get-file-info";
+        return "get_file_info";
     }
 
     @Override

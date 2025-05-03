@@ -1,18 +1,22 @@
 package com.davidparry.mcp.buildscout.tools;
 
+import com.davidparry.mcp.buildscout.common.BuildSystem;
 import com.davidparry.mcp.buildscout.common.DependencyFetch;
 import io.modelcontextprotocol.spec.McpSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class LatestDependencyVersion implements Tool {
-    private static final Logger logger = LoggerFactory.getLogger(LatestDependencyVersion.class);
-    private final DependencyFetch dependencyFetch;
+public class UpdateDependencyVersion implements Tool {
+    private static final Logger logger = LoggerFactory.getLogger(UpdateDependencyVersion.class);
+    private final BuildSystem buildSystem;
 
-    public LatestDependencyVersion(DependencyFetch dependencyFetch) {
-        this.dependencyFetch = dependencyFetch;
+    public UpdateDependencyVersion(BuildSystem buildSystem) {
+        this.buildSystem = buildSystem;
     }
 
     @Override
@@ -31,21 +35,23 @@ public class LatestDependencyVersion implements Tool {
 
     @Override
     public String name() {
-        return "latest_dependency_version";
+        return "update_dependency_version";
     }
 
     @Override
     public String description() {
-        return "Given the groupId and artifactId, this tool will return the latest version of this maven dependency.";
+        return "Given the groupId, artifactId, version and file path to build system main file, this tool will update this dependency in the build system file and save the file.";
     }
 
     @Override
     public McpSchema.JsonSchema schema() {
         Map<String, Object> properties = new HashMap<>();
-        List<String> required = List.of("groupId", "artifactId");
-
+        List<String> required = List.of("session_id","groupId", "artifactId", "path");
+        properties.put("session_id", createProperty("string", "this is the id that tools can use together to keep a continued conversation in one continued."));
         properties.put("groupId", createProperty("string", "the maven group id used in maven dependency repository."));
         properties.put("artifactId", createProperty("string", "The maven artifact Id used in the maven dependency repository."));
+        properties.put("version", createProperty("string", "The version that you want this tool to update the dependency too."));
+        properties.put("path", createProperty("string", "The absolute path to the build file."));
 
         return new McpSchema.JsonSchema("object", properties, required, null);
     }
@@ -56,30 +62,42 @@ public class LatestDependencyVersion implements Tool {
         boolean error = true;
         String groupId = null;
         String artifactId = null;
+        String path = null;
         String version = null;
         try {
             Map<String, String> request = (Map<String, String>) args;
             if (request != null) {
                 groupId = request.get("groupId");
                 artifactId = request.get("artifactId");
+                version = request.get("version");
+                path = request.get("path");
+
                 if (groupId == null || groupId.isEmpty()) {
                     results.add(new McpSchema.TextContent("GroupId is missing!"));
                 } else if (artifactId == null || artifactId.isEmpty()) {
                     results.add(new McpSchema.TextContent("ArtifactID is missing!"));
+                } else if (path == null || path.isEmpty()) {
+                    results.add(new McpSchema.TextContent("path is missing!"));
+                } else if (version == null || version.isEmpty()) {
+                    results.add(new McpSchema.TextContent("version is missing!"));
                 } else {
-                    version = dependencyFetch.lookupLatestVersion(groupId, artifactId);
-                }
-                if (version != null && !version.isEmpty()) {
                     error = false;
-                    results.add(new McpSchema.TextContent(version));
-                } else {
-                    results.add(new McpSchema.TextContent("Cannot retrieve the latest version of this maven dependency!"));
+                    results.add(new McpSchema.TextContent(buildSystem.updateDependencyVersion(groupId, artifactId, version, path)));
                 }
             }
         } catch (Exception e) {
             logger.error("Failed to process maven repo dependencies version ", e);
-            results.add(new McpSchema.TextContent("Failed to lookup latest version for groupID " + groupId + " artifactID" + artifactId + " error message " + e.getMessage()));
+            results.add(new McpSchema.TextContent(
+                "Failed to lookup latest version for groupID " + groupId +
+                " artifactID " + artifactId +
+                " version " + version +
+                " path " + path +
+                " error message " + e.getMessage()
+            ));
         }
         return new McpSchema.CallToolResult(results, error);
     }
+
+
+
 }

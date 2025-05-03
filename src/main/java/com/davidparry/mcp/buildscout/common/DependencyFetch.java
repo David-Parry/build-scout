@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -18,9 +19,26 @@ import java.util.List;
 
 public class DependencyFetch {
     private static final Logger logger = LoggerFactory.getLogger(DependencyFetch.class);
+    private final BuildSystem buildSystem;
 
-    public List<String> resolveDependencies(String fileContents, String buildType) {
-        return resolveGradleGroovyDependencies(fileContents);
+    public DependencyFetch(BuildSystem buildSystem) {
+        this.buildSystem = buildSystem;
+    }
+
+    public List<String> resolveDependencies(String path) {
+
+        String type = buildSystem.identifyBuildFile(path);
+        if (BuildSystem.GRADLE_GROOVY.equals(type)) {
+            try {
+                String fileContents = Files.readString(Path.of(path));
+                return resolveGradleGroovyDependencies(fileContents);
+            } catch (IOException e) {
+                logger.error("Failed to read file: {}", path, e);
+                return List.of();
+            }
+        } else {
+            return List.of();
+        }
     }
 
     private List<String> resolveGradleGroovyDependencies(String fileContents) {

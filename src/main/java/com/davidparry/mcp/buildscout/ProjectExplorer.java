@@ -3,6 +3,7 @@ package com.davidparry.mcp.buildscout;
 import io.modelcontextprotocol.server.McpServer;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServer;
+import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema;
 import io.modelcontextprotocol.spec.McpSchema.ServerCapabilities;
 import io.modelcontextprotocol.spec.McpSchema.Tool;
@@ -23,6 +24,7 @@ public class ProjectExplorer implements AutoCloseable {
 
     private final McpSyncServer server;
     private final AtomicBoolean isRunning = new AtomicBoolean(false);
+    private McpSyncServerExchange currentExchange;
 
     /**
      * Creates a new ProjectExplorer with the specified transport provider.
@@ -32,59 +34,18 @@ public class ProjectExplorer implements AutoCloseable {
      */
     public ProjectExplorer(McpServerTransportProvider transportProvider, String name, String version) {
         Assert.notNull(transportProvider, "Transport provider must not be null");
+        // Configure the server with proper capabilities
         this.server = McpServer.sync(transportProvider)
                 .serverInfo(name, version)
                 .capabilities(ServerCapabilities.builder()
                         .tools(true)
-                        .resources(false, false)
-                        .prompts(false)
+                        //.resources(false, false)
+                        //.prompts(false)
                         .logging()
                         .build())
                 .build();
         this.isRunning.set(true);
     }
-
-    /**
-     * Adds a tool to the server.
-     *
-     * @param toolName    the name of the tool
-     * @param description the description of the tool
-     * @param jsonSchema  the JSON schema for the tool's parameters
-     * @param handler     the handler for tool invocations
-     * @return this ProjectExplorer instance for method chaining
-     */
-    public ProjectExplorer addTool(String toolName, String description, String jsonSchema,
-                                   ToolHandler handler) {
-        Assert.notNull(toolName, "Tool name must not be null");
-        Assert.notNull(description, "Tool description must not be null");
-        Assert.notNull(jsonSchema, "JSON schema must not be null");
-        Assert.notNull(handler, "Tool handler must not be null");
-
-        Tool tool = new McpSchema.Tool(toolName, description, jsonSchema);
-        server.addTool(new McpServerFeatures.SyncToolSpecification(
-                tool,
-                (exchange, args) -> handler.handleToolCall(args)
-        ));
-
-        return this;
-    }
-
-    public ProjectExplorer addMcpTool(String toolName, String description, McpSchema.JsonSchema jsonSchema,
-                                   ToolHandler handler) {
-        Assert.notNull(toolName, "Tool name must not be null");
-        Assert.notNull(description, "Tool description must not be null");
-        Assert.notNull(jsonSchema, "JSON schema must not be null");
-        Assert.notNull(handler, "Tool handler must not be null");
-
-        Tool tool = new McpSchema.Tool(toolName, description, jsonSchema);
-        server.addTool(new McpServerFeatures.SyncToolSpecification(
-                tool,
-                (exchange, args) -> handler.handleToolCall(args)
-        ));
-
-        return this;
-    }
-
 
     public ProjectExplorer addTool(String toolName, String description,McpSchema.JsonSchema jsonSchema,
                                    ToolHandler handler) {
@@ -96,7 +57,17 @@ public class ProjectExplorer implements AutoCloseable {
         Tool tool = new McpSchema.Tool(toolName, description, jsonSchema);
         server.addTool(new McpServerFeatures.SyncToolSpecification(
                 tool,
-                (exchange, args) -> handler.handleToolCall(args)
+                (exchange, args) -> {
+                    this.currentExchange = exchange;
+                    try {
+                        return handler.handleToolCall(args);
+                    } catch (Exception e) {
+                        // Log the exception and return an error result
+                        log(LoggingLevel.ERROR, "Error handling tool call: " + e.getMessage());
+                        return CallToolResult.builder().addTextContent("Error processing tool call: " + e.getMessage()).build();
+
+                    }
+                }
         ));
 
         return this;
@@ -182,10 +153,19 @@ public class ProjectExplorer implements AutoCloseable {
 
         LoggingMessageNotification notification = LoggingMessageNotification.builder()
                 .level(level)
-                .logger("mcp-explorer-server") // Using the server name as logger
-                .data(message)              // The message is passed as the data parameter
+                .logger("buildscout") // Using the server name as logger
+                .data(message)        // The message is passed as the data parameter
                 .build();
-        server.loggingNotification(notification);
+        
+        if (currentExchange != null) {
+            try {
+                // Use the exchange-specific method instead of the deprecated server-wide method
+                currentExchange.loggingNotification(notification);
+            } catch (Exception e) {
+                // Handle any exceptions that might occur during logging
+                System.err.println("Error sending logging notification: " + e.getMessage());
+            }
+        }
         return this;
     }
 
@@ -213,7 +193,12 @@ public class ProjectExplorer implements AutoCloseable {
     @Override
     public void close() {
         if (isRunning.getAndSet(false)) {
-            server.closeGracefully();
+            try {
+                server.closeGracefully();
+            } catch (Exception e) {
+                System.err.println("Error closing server gracefully: " + e.getMessage());
+                server.close();
+            }
         }
     }
 
