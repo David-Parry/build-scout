@@ -42,6 +42,7 @@ public class ExplorerApplication {
             DownloadCurrentLatestSource dcs = new DownloadCurrentLatestSource(fetch);
             GetResourceInfo gri = new GetResourceInfo();
             UpdateDependencyVersion udv = new UpdateDependencyVersion(new BuildSystemImpl());
+            BuildGradleProject bgp = new BuildGradleProject(new GradleTasksImpl());
             // Add all tools to the explorer
             explorer.addTool(cc.name(), cc.description(), cc.schema(), cc::handle)
                     .addTool(jv.name(), jv.description(), jv.schema(), jv::handle)
@@ -54,6 +55,7 @@ public class ExplorerApplication {
                     .addTool(dcs.name(), dcs.description(), dcs.schema(), dcs::handle)
                     .addTool(gri.name(), gri.description(), gri.schema(), gri::handle)
                     .addTool(udv.name(), udv.description(), udv.schema(), udv::handle)
+                    .addTool(bgp.name(), bgp.description(), bgp.schema(), bgp::handle)
             ;
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {

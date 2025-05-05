@@ -11,7 +11,6 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class BuildSystemImpl implements BuildSystem {
-
     private static final Logger logger = LoggerFactory.getLogger(BuildSystemImpl.class);
 
     @Override
