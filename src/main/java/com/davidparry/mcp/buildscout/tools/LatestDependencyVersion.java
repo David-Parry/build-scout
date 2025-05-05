@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-public class LatestDependencyVersion implements Tool {
+public class LatestDependencyVersion extends BuildTool {
     private static final Logger logger = LoggerFactory.getLogger(LatestDependencyVersion.class);
     private final DependencyFetch dependencyFetch;
 
@@ -41,13 +41,9 @@ public class LatestDependencyVersion implements Tool {
 
     @Override
     public McpSchema.JsonSchema schema() {
-        Map<String, Object> properties = new HashMap<>();
-        List<String> required = List.of("groupId", "artifactId");
-
-        properties.put("groupId", createProperty("string", "the maven group id used in maven dependency repository."));
-        properties.put("artifactId", createProperty("string", "The maven artifact Id used in the maven dependency repository."));
-
-        return new McpSchema.JsonSchema("object", properties, required, null);
+        addProperty("groupId", "string", "The maven group id used in maven dependency repository.", true);
+        addProperty("artifactId", "string", "The maven artifact Id used in the maven dependency repository.", true);
+        return new McpSchema.JsonSchema("object", getProperties(), getRequired(), null);
     }
 
 

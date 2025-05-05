@@ -11,15 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A tool for validating and debugging JSON messages in the MCP Explorer.
  * This can help identify issues with malformed JSON that might be causing parsing errors.
  */
-public class JsonValidator implements Tool {
+public class JsonValidator extends BuildTool {
     private static final Logger logger = LoggerFactory.getLogger(JsonValidator.class);
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -41,17 +39,13 @@ public class JsonValidator implements Tool {
 
     @Override
     public McpSchema.JsonSchema schema() {
-        Map<String, Object> properties = new HashMap<>();
-        List<String> required = List.of("jsonString");
-        properties.put("jsonString", createProperty("string", "The JSON string to validate."));
-
-        return new McpSchema.JsonSchema("object", properties, required, null);
-
+        addProperty("jsonString", "string", "The JSON string to validate.", true);
+        return new McpSchema.JsonSchema("object", getProperties(), getRequired(), null);
     }
 
     private CallToolResult validateJson(Object args) {
         List<Content> results = new ArrayList<>();
-
+        boolean error = false;
         try {
             // Extract the JSON string from args
             JsonNode argsNode = objectMapper.valueToTree(args);
@@ -124,14 +118,16 @@ public class JsonValidator implements Tool {
 
                 // Suggest fixes
                 results.add(new TextContent("\nPossible fixes:\n" + suggestFixes(jsonString, e)));
+                error = true;
             }
 
         } catch (Exception e) {
             logger.error("Error in JsonValidator tool", e);
             results.add(new TextContent("Error processing request: " + e.getMessage()));
+            error = true;
         }
 
-        return new CallToolResult(results, true);
+        return new CallToolResult(results, error);
     }
 
     private void checkCommonIssues(String jsonString, StringBuilder diagnostics) {

@@ -7,11 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class GetFileInfo implements Tool {
+public class GetFileInfo extends BuildTool {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger logger = LoggerFactory.getLogger(GetFileInfo.class);
 
@@ -22,12 +20,8 @@ public class GetFileInfo implements Tool {
 
     @Override
     public McpSchema.JsonSchema schema() {
-        Map<String, Object> properties = new HashMap<>();
-        List<String> required = List.of("path");
-        properties.put("path", createProperty("string", "Path to the file."));
-
-        return new McpSchema.JsonSchema("object", properties, required, null);
-
+        addProperty("path", "string", "Path to the file.", true);
+        return new McpSchema.JsonSchema("object", getProperties(), getRequired(), null);
     }
 
     @Override

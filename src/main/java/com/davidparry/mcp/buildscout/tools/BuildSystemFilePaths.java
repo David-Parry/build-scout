@@ -6,9 +6,12 @@ import io.modelcontextprotocol.spec.McpSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-public class BuildSystemFilePaths implements Tool {
+public class BuildSystemFilePaths extends BuildTool {
     private static final Logger logger = LoggerFactory.getLogger(BuildSystemFilePaths.class);
     private final BuildSystem buildSystem;
 
@@ -33,11 +36,8 @@ public class BuildSystemFilePaths implements Tool {
 
     @Override
     public McpSchema.JsonSchema schema() {
-        Map<String, Object> properties = new HashMap<>();
-        List<String> required = List.of("paths");
-        properties.put("paths", createProperty("array", "Paths to the root directories for the project."));
-
-        return new McpSchema.JsonSchema("object", properties, required, null);
+        addProperty("paths", "array", "Paths to the root directories for the project.", true);
+        return new McpSchema.JsonSchema("object", getProperties(), getRequired(), null);
     }
 
     private McpSchema.CallToolResult handleGetCodeContext(Object args) {

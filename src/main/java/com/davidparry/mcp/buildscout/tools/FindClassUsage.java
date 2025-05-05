@@ -6,10 +6,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-public class FindClassUsage implements Tool {
+public class FindClassUsage extends BuildTool {
     private static final Logger logger = LoggerFactory.getLogger(FindClassUsage.class);
     private final SourceClassUsageService service;
 
@@ -34,12 +37,9 @@ public class FindClassUsage implements Tool {
 
     @Override
     public McpSchema.JsonSchema schema() {
-        Map<String, Object> properties = new HashMap<>();
-        List<String> required = List.of("fullyQualifiedClassName", "projectRoot");
-        properties.put("fullyQualifiedClassName", createProperty("string", "the fully qualified class name of the class."));
-        properties.put("projectRoot", createProperty("string", "The fully qualified path of the root directory of the project."));
-
-        return new McpSchema.JsonSchema("object", properties, required, null);
+        addProperty("fullyQualifiedClassName", "string", "The fully qualified class name of the class.", true);
+        addProperty("projectRoot", "string", "The fully qualified path of the root directory of the project.", true);
+        return new McpSchema.JsonSchema("object", getProperties(), getRequired(), null);
     }
 
     private McpSchema.CallToolResult handleFindClassUsage(Object args) {

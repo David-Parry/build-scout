@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 /**
  * A tool for listing and providing information about resources in the project.
  */
-public class GetResourceInfo implements Tool {
+public class GetResourceInfo extends BuildTool {
     private static final Logger logger = LoggerFactory.getLogger(GetResourceInfo.class);
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -45,12 +45,9 @@ public class GetResourceInfo implements Tool {
 
     @Override
     public McpSchema.JsonSchema schema() {
-        Map<String, Object> properties = new HashMap<>();
-        List<String> required = List.of();
-        properties.put("path", createProperty("string", "Optional path to list resources from."));
-        properties.put("recursive", createProperty("boolean", "Whether to list resources recursively."));
-
-        return new McpSchema.JsonSchema("object", properties, required, null);
+        addProperty("path", "string", "Optional path to list resources from.", true);
+        addProperty("recursive", "boolean", "Whether to list resources recursively.", true);
+        return new McpSchema.JsonSchema("object", getProperties(), getRequired(), null);
     }
 
     private CallToolResult getResourceInfo(Object args) {

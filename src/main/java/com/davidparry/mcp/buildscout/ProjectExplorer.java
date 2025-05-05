@@ -5,13 +5,11 @@ import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServer;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema;
-import io.modelcontextprotocol.spec.McpSchema.ServerCapabilities;
-import io.modelcontextprotocol.spec.McpSchema.Tool;
-import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
-import io.modelcontextprotocol.spec.McpSchema.LoggingMessageNotification;
-import io.modelcontextprotocol.spec.McpSchema.LoggingLevel;
+import io.modelcontextprotocol.spec.McpSchema.*;
 import io.modelcontextprotocol.spec.McpServerTransportProvider;
 import io.modelcontextprotocol.util.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -21,6 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * using the Model Context Protocol.
  */
 public class ProjectExplorer implements AutoCloseable {
+    private static final Logger logger = LoggerFactory.getLogger(ProjectExplorer.class);
 
     private final McpSyncServer server;
     private final AtomicBoolean isRunning = new AtomicBoolean(false);
@@ -35,40 +34,31 @@ public class ProjectExplorer implements AutoCloseable {
     public ProjectExplorer(McpServerTransportProvider transportProvider, String name, String version) {
         Assert.notNull(transportProvider, "Transport provider must not be null");
         // Configure the server with proper capabilities
-        this.server = McpServer.sync(transportProvider)
-                .serverInfo(name, version)
-                .capabilities(ServerCapabilities.builder()
-                        .tools(true)
-                        //.resources(false, false)
-                        //.prompts(false)
-                        .logging()
-                        .build())
-                .build();
+        this.server = McpServer.sync(transportProvider).serverInfo(name, version).capabilities(ServerCapabilities.builder().tools(false)
+                //.resources(false, false)
+                //.prompts(false)
+                .logging().build()).build();
         this.isRunning.set(true);
     }
 
-    public ProjectExplorer addTool(String toolName, String description,McpSchema.JsonSchema jsonSchema,
-                                   ToolHandler handler) {
+    public ProjectExplorer addTool(String toolName, String description, McpSchema.JsonSchema jsonSchema, ToolHandler handler) {
         Assert.notNull(toolName, "Tool name must not be null");
         Assert.notNull(description, "Tool description must not be null");
         Assert.notNull(jsonSchema, "JSON schema must not be null");
         Assert.notNull(handler, "Tool handler must not be null");
 
         Tool tool = new McpSchema.Tool(toolName, description, jsonSchema);
-        server.addTool(new McpServerFeatures.SyncToolSpecification(
-                tool,
-                (exchange, args) -> {
-                    this.currentExchange = exchange;
-                    try {
-                        return handler.handleToolCall(args);
-                    } catch (Exception e) {
-                        // Log the exception and return an error result
-                        log(LoggingLevel.ERROR, "Error handling tool call: " + e.getMessage());
-                        return CallToolResult.builder().addTextContent("Error processing tool call: " + e.getMessage()).build();
+        server.addTool(new McpServerFeatures.SyncToolSpecification(tool, (exchange, args) -> {
+            this.currentExchange = exchange;
+            try {
+                return handler.handleToolCall(args);
+            } catch (Exception e) {
+                // Log the exception and return an error result
+                log(LoggingLevel.ERROR, "Error handling tool call: " + e.getMessage());
+                return CallToolResult.builder().addTextContent("Error processing tool call: " + e.getMessage()).build();
 
-                    }
-                }
-        ));
+            }
+        }));
 
         return this;
     }
@@ -108,8 +98,7 @@ public class ProjectExplorer implements AutoCloseable {
         Assert.notNull(resourceHandler, "Resource handler must not be null");
 
         // Convert the ResourceHandler to a SyncResourceSpecification that the server can accept
-        McpServerFeatures.SyncResourceSpecification resourceSpec =
-                resourceHandler.createResourceSpecification(resourceUri);
+        McpServerFeatures.SyncResourceSpecification resourceSpec = resourceHandler.createResourceSpecification(resourceUri);
 
         // Add the resource specification to the server
         server.addResource(resourceSpec);
@@ -151,19 +140,16 @@ public class ProjectExplorer implements AutoCloseable {
         Assert.notNull(level, "Logging level must not be null");
         Assert.notNull(message, "Message must not be null");
 
-        LoggingMessageNotification notification = LoggingMessageNotification.builder()
-                .level(level)
-                .logger("buildscout") // Using the server name as logger
+        LoggingMessageNotification notification = LoggingMessageNotification.builder().level(level).logger("buildscout") // Using the server name as logger
                 .data(message)        // The message is passed as the data parameter
                 .build();
-        
+
         if (currentExchange != null) {
             try {
                 // Use the exchange-specific method instead of the deprecated server-wide method
                 currentExchange.loggingNotification(notification);
             } catch (Exception e) {
-                // Handle any exceptions that might occur during logging
-                System.err.println("Error sending logging notification: " + e.getMessage());
+                logger.debug("Error logging notification: ", e);
             }
         }
         return this;
@@ -196,7 +182,7 @@ public class ProjectExplorer implements AutoCloseable {
             try {
                 server.closeGracefully();
             } catch (Exception e) {
-                System.err.println("Error closing server gracefully: " + e.getMessage());
+                logger.error("Error closing server gracefully", e);
                 server.close();
             }
         }

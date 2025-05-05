@@ -1,17 +1,15 @@
 package com.davidparry.mcp.buildscout.tools;
 
 import com.davidparry.mcp.buildscout.common.BuildSystem;
-import com.davidparry.mcp.buildscout.common.DependencyFetch;
 import io.modelcontextprotocol.spec.McpSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UpdateDependencyVersion implements Tool {
+public class UpdateDependencyVersion extends BuildTool {
     private static final Logger logger = LoggerFactory.getLogger(UpdateDependencyVersion.class);
     private final BuildSystem buildSystem;
 
@@ -45,15 +43,11 @@ public class UpdateDependencyVersion implements Tool {
 
     @Override
     public McpSchema.JsonSchema schema() {
-        Map<String, Object> properties = new HashMap<>();
-        List<String> required = List.of("session_id","groupId", "artifactId", "path");
-        properties.put("session_id", createProperty("string", "this is the id that tools can use together to keep a continued conversation in one continued."));
-        properties.put("groupId", createProperty("string", "the maven group id used in maven dependency repository."));
-        properties.put("artifactId", createProperty("string", "The maven artifact Id used in the maven dependency repository."));
-        properties.put("version", createProperty("string", "The version that you want this tool to update the dependency too."));
-        properties.put("path", createProperty("string", "The absolute path to the build file."));
-
-        return new McpSchema.JsonSchema("object", properties, required, null);
+        addProperty("groupId", "string", "The maven group id used in maven dependency repository.", true);
+        addProperty("artifactId", "string", "The maven artifact Id used in the maven dependency repository.", true);
+        addProperty("version", "string", "The version that you want this tool to update the dependency too.", true);
+        addProperty("path", "string", "The absolute path to the build file.", true);
+        return new McpSchema.JsonSchema("object", getProperties(), getRequired(), null);
     }
 
 
@@ -87,17 +81,10 @@ public class UpdateDependencyVersion implements Tool {
             }
         } catch (Exception e) {
             logger.error("Failed to process maven repo dependencies version ", e);
-            results.add(new McpSchema.TextContent(
-                "Failed to lookup latest version for groupID " + groupId +
-                " artifactID " + artifactId +
-                " version " + version +
-                " path " + path +
-                " error message " + e.getMessage()
-            ));
+            results.add(new McpSchema.TextContent("Failed to lookup latest version for groupID " + groupId + " artifactID " + artifactId + " version " + version + " path " + path + " error message " + e.getMessage()));
         }
         return new McpSchema.CallToolResult(results, error);
     }
-
 
 
 }

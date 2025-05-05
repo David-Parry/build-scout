@@ -46,7 +46,6 @@ public class ListDependencies extends BuildTool {
             if (request != null) {
                 String path = request.get("path");
                 String sessionId = request.get("session_id");
-                logger.debug("THE SESSION ID is -:{}::--------", sessionId);
                 if (path == null || path.isEmpty()) {
                     results.add(new McpSchema.TextContent("Absolute Path to the build file is missing!"));
                 } else {

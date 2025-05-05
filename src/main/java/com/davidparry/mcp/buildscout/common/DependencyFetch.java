@@ -68,11 +68,9 @@ public class DependencyFetch {
                 IdeaProject ideaProject = connection.getModel(IdeaProject.class);
 
                 for (IdeaModule module : ideaProject.getModules()) {
-                    System.out.println("Module: " + module.getName());
                     for (IdeaDependency dependency : module.getDependencies()) {
                         if (dependency instanceof IdeaSingleEntryLibraryDependency libraryDependency) {
                             GradleModuleVersion moduleVersion = libraryDependency.getGradleModuleVersion();
-
                             if (moduleVersion != null) {
                                 String group = moduleVersion.getGroup();
                                 String name = moduleVersion.getName();

@@ -8,11 +8,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BuildGradleProject implements Tool {
+public class BuildGradleProject extends BuildTool {
     private static final Logger logger = LoggerFactory.getLogger(BuildGradleProject.class);
     private final GradleTasks service;
 
@@ -37,11 +36,8 @@ public class BuildGradleProject implements Tool {
 
     @Override
     public McpSchema.JsonSchema schema() {
-        Map<String, Object> properties = new HashMap<>();
-        List<String> required = List.of("projectRoot");
-        properties.put("projectRoot", createProperty("string", "The fully qualified path of the root directory of the project."));
-
-        return new McpSchema.JsonSchema("object", properties, required, null);
+        addProperty("projectRoot", "string", "The fully qualified path of the root directory of the project.", true);
+        return new McpSchema.JsonSchema("object", getProperties(), getRequired(), null);
     }
 
     private McpSchema.CallToolResult handleFindClassUsage(Object args) {

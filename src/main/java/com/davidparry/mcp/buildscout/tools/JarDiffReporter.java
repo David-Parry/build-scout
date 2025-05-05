@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JarDiffReporter implements Tool {
+public class JarDiffReporter extends BuildTool {
     private static final Logger logger = LoggerFactory.getLogger(JarDiffReporter.class);
     private final JarComparatorService jarComparatorService;
 
@@ -36,15 +36,12 @@ public class JarDiffReporter implements Tool {
 
     @Override
     public McpSchema.JsonSchema schema() {
-        Map<String, Object> properties = new HashMap<>();
-        List<String> required = List.of("groupId","artifactId","latestVersion","currentVersion");
-        properties.put("groupId", createProperty("string", "the maven group id used in maven dependency repository."));
-        properties.put("artifactId", createProperty("string", "The maven artifact Id used in the maven dependency repository."));
-        properties.put("latestVersion", createProperty("string", "Current version of the artifact."));
-        properties.put("currentVersion", createProperty("string", "The latest version of the artifact."));
-
-        return new McpSchema.JsonSchema("object", properties, required, null);
-   }
+        addProperty("groupId", "string", "The maven group id used in maven dependency repository.", true);
+        addProperty("artifactId", "string", "The maven artifact Id used in the maven dependency repository.", true);
+        addProperty("latestVersion", "string", "Current version of the artifact.", true);
+        addProperty("currentVersion", "string", "The latest version of the artifact.", true);
+        return new McpSchema.JsonSchema("object", getProperties(), getRequired(), null);
+    }
 
     /**
      * Validates and extracts request parameters from the input arguments.
@@ -106,7 +103,7 @@ public class JarDiffReporter implements Tool {
             List<DiffData> changedClasses = jarComparatorService.compareJars(validatedParams);
 
             for (DiffData change : changedClasses) {
-                results.add(new McpSchema.TextContent("class:"+change.clazz()+" changeStatus:"+change.changeStatus()));
+                results.add(new McpSchema.TextContent("class:" + change.clazz() + " changeStatus:" + change.changeStatus()));
             }
             error = false;
         } catch (Exception e) {
