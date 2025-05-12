@@ -35,12 +35,12 @@ public class GetResourceInfo extends BuildTool {
 
     @Override
     public String name() {
-        return "get_resource_info";
+        return "get_project_file_resource_info";
     }
 
     @Override
     public String description() {
-        return "Lists available resources and provides information about them";
+        return "Lists available resources/files of a project and provides information about them.";
     }
 
     @Override

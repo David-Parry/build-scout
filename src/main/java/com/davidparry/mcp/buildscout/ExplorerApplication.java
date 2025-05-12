@@ -15,7 +15,7 @@ public class ExplorerApplication {
     private static final Logger logger = LoggerFactory.getLogger(ExplorerApplication.class);
     public McpServerTransportProvider transportProvider = new StdioServerTransportProvider();
     public static final String MCP_SERVER_NAME = "buildscout";
-    public static final String VERSION = "0.1.15";
+    public static final String VERSION = "0.1.17";
 
     public static void main(String[] args) {
         ExplorerApplication application = new ExplorerApplication();
@@ -43,19 +43,21 @@ public class ExplorerApplication {
             GetResourceInfo gri = new GetResourceInfo();
             UpdateDependencyVersion udv = new UpdateDependencyVersion(new BuildSystemImpl());
             BuildGradleProject bgp = new BuildGradleProject(new GradleTasksImpl());
+            ReplaceSourceCodeComplete rscc = new ReplaceSourceCodeComplete();
             // Add all tools to the explorer
             explorer.addTool(cc.name(), cc.description(), cc.schema(), cc::handle)
-                    .addTool(jv.name(), jv.description(), jv.schema(), jv::handle)
-                    .addTool(fi.name(), fi.description(), fi.schema(), fi::handle)
-                    .addTool(bsf.name(), bsf.description(), bsf.schema(), bsf::handle)
-                    .addTool(ld.name(), ld.description(), ld.schema(), ld::handle)
-                    .addTool(ldv.name(), ldv.description(), ldv.schema(), ldv::handle)
-                    .addTool(jdr.name(), jdr.description(), jdr.schema(), jdr::handle)
-                    .addTool(fcu.name(), fcu.description(), fcu.schema(), fcu::handle)
-                    .addTool(dcs.name(), dcs.description(), dcs.schema(), dcs::handle)
-                    .addTool(gri.name(), gri.description(), gri.schema(), gri::handle)
-                    .addTool(udv.name(), udv.description(), udv.schema(), udv::handle)
-                    .addTool(bgp.name(), bgp.description(), bgp.schema(), bgp::handle)
+                 //   .addTool(jv.name(), jv.description(), jv.schema(), jv::handle)
+                 //   .addTool(fi.name(), fi.description(), fi.schema(), fi::handle)
+                 //   .addTool(bsf.name(), bsf.description(), bsf.schema(), bsf::handle)
+                 //   .addTool(ld.name(), ld.description(), ld.schema(), ld::handle)
+                 //   .addTool(ldv.name(), ldv.description(), ldv.schema(), ldv::handle)
+                 //   .addTool(jdr.name(), jdr.description(), jdr.schema(), jdr::handle)
+                 //   .addTool(fcu.name(), fcu.description(), fcu.schema(), fcu::handle)
+                 //   .addTool(dcs.name(), dcs.description(), dcs.schema(), dcs::handle)
+                 //   .addTool(gri.name(), gri.description(), gri.schema(), gri::handle)
+                 //   .addTool(udv.name(), udv.description(), udv.schema(), udv::handle)
+                 //   .addTool(bgp.name(), bgp.description(), bgp.schema(), bgp::handle)
+                 //   .addTool(rscc.name(), rscc.description(), rscc.schema(), rscc::handle)
             ;
 
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {

@@ -36,7 +36,7 @@ public class BuildSystemFilePaths extends BuildTool {
 
     @Override
     public McpSchema.JsonSchema schema() {
-        addProperty("paths", "array", "Paths to the root directories for the project.", true);
+        addProperty("paths", "string", "Paths to the root directories for the project.", true);
         return new McpSchema.JsonSchema("object", getProperties(), getRequired(), null);
     }
 

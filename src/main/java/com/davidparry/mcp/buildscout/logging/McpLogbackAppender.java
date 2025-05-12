@@ -34,7 +34,7 @@ public class McpLogbackAppender extends AppenderBase<ILoggingEvent> {
         LoggingLevel level = mapLevel(event.getLevel().levelStr);
         String message = event.getFormattedMessage();
 
-        projectExplorer.log(level, message);
+       // projectExplorer.log(level, message);
     }
 
     /**

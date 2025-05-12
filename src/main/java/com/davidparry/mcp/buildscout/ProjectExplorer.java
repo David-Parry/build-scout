@@ -11,6 +11,7 @@ import io.modelcontextprotocol.util.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -34,12 +35,19 @@ public class ProjectExplorer implements AutoCloseable {
     public ProjectExplorer(McpServerTransportProvider transportProvider, String name, String version) {
         Assert.notNull(transportProvider, "Transport provider must not be null");
         // Configure the server with proper capabilities
-        this.server = McpServer.sync(transportProvider).serverInfo(name, version).capabilities(ServerCapabilities.builder().tools(false)
-                //.resources(false, false)
-                //.prompts(false)
-                .logging().build()).build();
+        this.server = McpServer.sync(transportProvider)
+                .serverInfo(name, version)
+                .capabilities(ServerCapabilities.builder()
+                        .tools(false)
+                        .resources(false, false)
+                        .prompts(false)
+                        .logging()
+                        .experimental(new HashMap<>())
+                        .build())
+                .build();
         this.isRunning.set(true);
     }
+
 
     public ProjectExplorer addTool(String toolName, String description, McpSchema.JsonSchema jsonSchema, ToolHandler handler) {
         Assert.notNull(toolName, "Tool name must not be null");
