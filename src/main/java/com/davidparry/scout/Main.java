@@ -18,7 +18,7 @@ public class Main {
     private static IOHandler io;
     private static RequestController controller;
     public static String MCP_SERVER_NAME = "scout-server";
-    public static String MCP_SERVER_VERSION = "0.0.4";
+    public static String MCP_SERVER_VERSION = "1.0-SNAPSHOT";
 
 
 

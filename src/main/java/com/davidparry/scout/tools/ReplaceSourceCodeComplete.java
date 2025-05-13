@@ -58,15 +58,15 @@ public class ReplaceSourceCodeComplete extends BuildTool implements Tool<ToolOut
 
             try {
                 // Backup the original file
-                Path backupPath = Paths.get(fullyQualifiedSourceFilePath + ".backup");
-                Files.copy(filePath, backupPath, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                //Path backupPath = Paths.get(fullyQualifiedSourceFilePath + ".backup");
+                //Files.copy(filePath, backupPath, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
                 // Write the new content to the file
                 Files.writeString(filePath, sourceCode, StandardOpenOption.TRUNCATE_EXISTING);
 
                 // Build the result
 
-                results.add(new Content("Successfully replaced the contents of file: " + fullyQualifiedSourceFilePath + "\n" + "Backup created at: " + backupPath));
+                results.add(new Content("Successfully replaced the contents of file: " + fullyQualifiedSourceFilePath ));
 
             } catch (IOException e) {
                 logger.log("Error replacing file contents", e);
