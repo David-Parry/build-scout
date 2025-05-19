@@ -18,7 +18,7 @@ public class GetFileInfo extends BuildTool implements Tool<ToolOutputResponse> {
     @Override
     public InputSchema schema() {
         logger.log("GetFileInfo schema Schema being created and returned");
-        addProperty("path", new InputProperty("string", "Path to the file."), true);
+        addProperty(new InputProperty("path", "string", "Path to the file.", true));
         return new InputSchema("object", getProperties(), getRequired());
     }
 

@@ -27,10 +27,10 @@ public class UpdateDependencyVersion extends BuildTool implements Tool<ToolOutpu
     @Override
     public InputSchema schema() {
         logger.log("UpdateDependencyVersion schema Schema being created and returned");
-        addProperty("groupId", new InputProperty("string", "The maven group id used in maven dependency repository."), true);
-        addProperty("artifactId", new InputProperty("string", "The maven artifact Id used in the maven dependency repository."), true);
-        addProperty("version", new InputProperty("string", "The version that you want this tool to update the dependency too."), true);
-        addProperty("path", new InputProperty("string", "The absolute path to the build file."), true);
+        addProperty(new InputProperty("groupId", "string", "The maven group id used in maven dependency repository.", true));
+        addProperty(new InputProperty("artifactId", "string", "The maven artifact Id used in the maven dependency repository.", true));
+        addProperty(new InputProperty("version", "string", "The version that you want this tool to update the dependency too.", true));
+        addProperty(new InputProperty("path", "string", "The absolute path to the build file.", true));
         return new InputSchema("object", getProperties(), getRequired());
     }
 

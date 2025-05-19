@@ -13,7 +13,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-@Schema(name = "build_gradle_project", description = "Given the fully qualified path of the root directory of the gradle project, this tool will invoke the build and return the result with both success and errors if isError is true.")
+@Schema(name = "build_gradle_project", description = "Given the fully qualified path of the root directory of the gradle project, if you want to also run a complete build with all checks pass the check = true this tool will invoke the build and return the result with both success and errors if isError is true.")
 public class BuildGradleProject extends BuildTool implements Tool<ToolOutputResponse> {
     private static final Logger logger = ApplicationLogger.getInstance();
     private final GradleTasks service;
@@ -31,7 +31,7 @@ public class BuildGradleProject extends BuildTool implements Tool<ToolOutputResp
         List<Content> results = new ArrayList<>();
         boolean error;
         try {
-            String projectRoot = ArgumentUtils.getArgument(args,"projectRoot");
+            String projectRoot = ArgumentUtils.getArgument(args, "projectRoot");
             if (projectRoot == null || projectRoot.isEmpty()) {
                 return createErrorResult("Missing project root path");
             }
@@ -39,7 +39,13 @@ public class BuildGradleProject extends BuildTool implements Tool<ToolOutputResp
             if (!projectDir.exists() || !projectDir.isDirectory()) {
                 return createErrorResult("Project root directory does not exist or is not a directory");
             }
-            BuildOutput output = service.buildGradleProject(projectDir);
+            Boolean check = Boolean.FALSE;
+            Boolean checkParameter = ArgumentUtils.getArgument(args, "check");
+            if (checkParameter != null) {
+                check = checkParameter;
+            }
+
+            BuildOutput output = service.buildGradleProject(projectDir, check);
             results.add(new Content(service.formatOutput(output)));
             error = output.failed();
         } catch (Exception e) {
@@ -53,7 +59,8 @@ public class BuildGradleProject extends BuildTool implements Tool<ToolOutputResp
     @Override
     public InputSchema schema() {
         logger.log("BuildGradleProject schema Schema being created and returned");
-        addProperty("projectRoot", new InputProperty("string", "The fully qualified path of the root directory of the project."), true);
+        addProperty(new InputProperty("projectRoot", "string", "The fully qualified path of the root directory of the project.",true));
+        addProperty(new InputProperty("check","boolean", "If this flag is passed and is true then the check part of the gradle build will be also done.",false));
         return new InputSchema("object", getProperties(), getRequired());
     }
 

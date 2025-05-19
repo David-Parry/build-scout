@@ -30,10 +30,10 @@ public class JarDiffReporter extends BuildTool implements Tool<ToolOutputRespons
     @Override
     public InputSchema schema() {
         logger.log("JarDiffReporter schema being created and returned");
-        addProperty("groupId", new InputProperty("string", "The maven group id used in maven dependency repository."), true);
-        addProperty("artifactId", new InputProperty("string", "The maven artifact Id used in the maven dependency repository."), true);
-        addProperty("latestVersion", new InputProperty("string", "Current version of the artifact."), true);
-        addProperty("currentVersion", new InputProperty("string", "The latest version of the artifact."), true);
+        addProperty(new InputProperty("groupId", "string", "The maven group id used in maven dependency repository.", true));
+        addProperty(new InputProperty("artifactId", "string", "The maven artifact Id used in the maven dependency repository.", true));
+        addProperty(new InputProperty("latestVersion", "string", "Current version of the artifact.", true));
+        addProperty(new InputProperty("currentVersion", "string", "The latest version of the artifact.", true));
         return new InputSchema("object", getProperties(), getRequired());
     }
 

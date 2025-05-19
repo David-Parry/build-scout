@@ -11,7 +11,7 @@ import com.davidparry.scout.spec.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Schema(name = "latest_dependency_version",description = "Given the groupId and artifactId, this tool will return the latest version of this maven dependency.")
+@Schema(name = "latest_dependency_version", description = "Given the groupId and artifactId, this tool will return the latest version of this maven dependency.")
 public class LatestDependencyVersion extends BuildTool implements Tool<ToolOutputResponse> {
     private static final Logger logger = ApplicationLogger.getInstance();
     private final DependencyFetch dependencyFetch;
@@ -27,8 +27,8 @@ public class LatestDependencyVersion extends BuildTool implements Tool<ToolOutpu
     @Override
     public InputSchema schema() {
         logger.log("LatestDependencyVersion schema Schema being created and returned");
-        addProperty("groupId", new InputProperty("string", "The maven group id used in maven dependency repository."), true);
-        addProperty("artifactId", new InputProperty("string", "The maven artifact Id used in the maven dependency repository."), true);
+        addProperty(new InputProperty("groupId", "string", "The maven group id used in maven dependency repository.", true));
+        addProperty(new InputProperty("artifactId", "string", "The maven artifact Id used in the maven dependency repository.", true));
         return new InputSchema("object", getProperties(), getRequired());
     }
 

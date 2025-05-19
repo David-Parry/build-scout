@@ -21,8 +21,8 @@ public class ReplaceSourceCodeComplete extends BuildTool implements Tool<ToolOut
     @Override
     public InputSchema schema() {
         logger.log("ReplaceSourceCodeComplete schema Schema being created and returned");
-        addProperty("fullyQualifiedSourceFilePath", new InputProperty("string", "The fully qualified path of the source file you want its contents replaced."), true);
-        addProperty("sourceCode", new InputProperty("string", "The fully qualified path of the sourceCode file that you want to replace it contents with."), true);
+        addProperty(new InputProperty("fullyQualifiedSourceFilePath", "string", "The fully qualified path of the source file you want its contents replaced.", true));
+        addProperty(new InputProperty("sourceCode", "string", "The fully qualified path of the sourceCode file that you want to replace it contents with.", true));
         return new InputSchema("object", getProperties(), getRequired());
     }
 
@@ -66,7 +66,7 @@ public class ReplaceSourceCodeComplete extends BuildTool implements Tool<ToolOut
 
                 // Build the result
 
-                results.add(new Content("Successfully replaced the contents of file: " + fullyQualifiedSourceFilePath ));
+                results.add(new Content("Successfully replaced the contents of file: " + fullyQualifiedSourceFilePath));
 
             } catch (IOException e) {
                 logger.log("Error replacing file contents", e);

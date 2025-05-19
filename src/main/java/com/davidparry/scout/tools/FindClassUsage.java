@@ -30,10 +30,9 @@ public class FindClassUsage extends BuildTool implements Tool<ToolOutputResponse
     @Override
     public InputSchema schema() {
         logger.log("FindClassUsage schema Schema being created and returned");
-        addProperty("fullyQualifiedClassName", new InputProperty("string", "The fully qualified class name of the class."), true);
-        addProperty("projectRoot", new InputProperty("string", "The fully qualified path of the root directory of the project."), true);
+        addProperty(new InputProperty("fullyQualifiedClassName", "string", "The fully qualified class name of the class.", true));
+        addProperty(new InputProperty("projectRoot", "string", "The fully qualified path of the root directory of the project.", true));
         return new InputSchema("object", getProperties(), getRequired());
-
     }
 
     @Override

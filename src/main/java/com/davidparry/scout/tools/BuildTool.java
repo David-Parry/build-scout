@@ -6,7 +6,7 @@ import com.davidparry.scout.spec.ToolOutputResponse;
 
 import java.util.*;
 
-public abstract class BuildTool  {
+public abstract class BuildTool {
     private final List<String> required = new ArrayList<>();
     private final Map<String, InputProperty> properties = new HashMap<>();
 
@@ -15,9 +15,7 @@ public abstract class BuildTool  {
      * and adds the session_id property
      */
     public BuildTool() {
-        required.add("session_id");
-        InputProperty sessionId = new InputProperty("string", "The unique identifier for the current session, used by the tools to keep a session between multiple calls from the client within when chat conversation.");
-        properties.put("session_id", sessionId);
+        addProperty(new InputProperty("session_id", "string", "The unique identifier for the current session, used by the tools to keep a session between multiple calls from the client within when chat conversation.", true));
     }
 
     /**
@@ -33,20 +31,18 @@ public abstract class BuildTool  {
      * Adds a parameter name to the required list.
      *
      * @param paramName The name of the parameter to add to the required list
-     * @return true if the parameter was added, false if it was already in the list
      */
-    public boolean addRequired(String paramName) {
+    public void addRequired(String paramName) {
         if (paramName != null && !required.contains(paramName)) {
-            return required.add(paramName);
+            required.add(paramName);
         }
-        return false;
     }
 
 
-    public BuildTool addProperty(String key, InputProperty property, boolean isRequired) {
-        properties.put(key, property);
-        if (isRequired) {
-            addRequired(key);
+    public BuildTool addProperty(InputProperty property) {
+        properties.put(property.key(), property);
+        if (property.isRequired()) {
+            addRequired(property.key());
         }
         return this;
     }
@@ -65,7 +61,6 @@ public abstract class BuildTool  {
         results.add(new Content("Error: " + errorMessage));
         return new ToolOutputResponse(results, true);
     }
-
 
 
 }

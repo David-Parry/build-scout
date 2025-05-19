@@ -27,7 +27,7 @@ public class ListDependencies extends BuildTool implements Tool<ToolOutputRespon
     @Override
     public InputSchema schema() {
         logger.log("ListDependencies schema Schema being created and returned");
-        addProperty("path", new InputProperty("string", "The absolute path to the build file."), true);
+        addProperty(new InputProperty("path", "string", "The absolute path to the build file.", true));
         return new InputSchema("object", getProperties(), getRequired());
     }
 

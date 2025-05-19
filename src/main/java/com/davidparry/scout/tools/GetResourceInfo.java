@@ -22,8 +22,8 @@ public class GetResourceInfo extends BuildTool implements Tool<ToolOutputRespons
     @Override
     public InputSchema schema() {
         logger.log("GetResourceInfo schema Schema being created and returned");
-        addProperty("path", new InputProperty("string", "Optional absolute path to list resources from if not then . will be used."), false);
-        addProperty("recursive", new InputProperty("boolean", "Whether to list resources recursively."), true);
+        addProperty(new InputProperty("path", "string", "Optional absolute path to list resources from if not then . will be used.", false));
+        addProperty(new InputProperty("recursive", "boolean", "Whether to list resources recursively.", true));
         return new InputSchema("object", getProperties(), getRequired());
     }
 

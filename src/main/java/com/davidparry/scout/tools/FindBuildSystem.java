@@ -46,7 +46,7 @@ public class FindBuildSystem extends BuildTool implements Tool<ToolOutputRespons
     @Override
     public InputSchema schema() {
         logger.log("FindBuildSystem schema Schema being created and returned");
-        addProperty("path", new InputProperty("string", "Path to the root directories for the project."), true);
+        addProperty(new InputProperty("path", "string", "Path to the root directories for the project.", true));
         return new InputSchema("object", getProperties(), getRequired());
     }
 

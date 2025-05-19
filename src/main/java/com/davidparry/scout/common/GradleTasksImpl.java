@@ -1,31 +1,36 @@
 package com.davidparry.scout.common;
 
 import org.gradle.tooling.BuildException;
+import org.gradle.tooling.BuildLauncher;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GradleTasksImpl implements GradleTasks {
 
 
-    public BuildOutput buildGradleProject(File projectDir) {
+    public BuildOutput buildGradleProject(File projectDir, boolean check) {
         GradleConnector connector = GradleConnector.newConnector().forProjectDirectory(projectDir);
         boolean error = true;
         String output = "";
         String errorOutput = "";
         try (ProjectConnection connection = connector.connect()) {
-
-            // 3. Prepare to capture output
             ByteArrayOutputStream stdOut = new ByteArrayOutputStream();
             ByteArrayOutputStream stdErr = new ByteArrayOutputStream();
 
-            // 4. Configure and launch the build
-            var build = connection.newBuild().forTasks("clean", "build")              // or any other task(s)
-                    .setStandardOutput(stdOut)      // wire stdout
-                    .setStandardError(stdErr);      // wire stderr
+            List<String> taskList = new ArrayList<>();
+            taskList.add("clean");
+            taskList.add("build");
+            if (check) {
+                taskList.add("check");
+            }
+
+            BuildLauncher build = connection.newBuild().forTasks(taskList.toArray(new String[0])).setStandardOutput(stdOut).setStandardError(stdErr);
 
             try {
                 build.run();                   // actually run it

@@ -27,9 +27,9 @@ public class DownloadCurrentLatestSource extends BuildTool implements Tool<ToolO
     @Override
     public InputSchema schema() {
         logger.log("DownloadCurrentLatestSource schema Schema being created and returned");
-        addProperty("groupId", new InputProperty("string", "The maven group id used in maven dependency repository."), true);
-        addProperty("artifactId", new InputProperty("string", "The maven artifact Id used in the maven dependency repository."), true);
-        addProperty("version", new InputProperty("string", "The current version of the dependency to download its source."), true);
+        addProperty(new InputProperty("groupId", "string", "The maven group id used in maven dependency repository.", true));
+        addProperty(new InputProperty("artifactId", "string", "The maven artifact Id used in the maven dependency repository.", true));
+        addProperty(new InputProperty("version", "string", "The current version of the dependency to download its source.", true));
         return new InputSchema("object", getProperties(), getRequired());
 
     }
