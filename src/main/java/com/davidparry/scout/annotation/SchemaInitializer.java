@@ -1,10 +1,9 @@
 package com.davidparry.scout.annotation;
 
-import com.davidparry.scout.handlers.InitializeHandler;
-import com.davidparry.scout.handlers.NotificationHandler;
-import com.davidparry.scout.handlers.ToolDispatcherHandler;
-import com.davidparry.scout.handlers.ToolsListHandler;
+import com.davidparry.scout.State;
+import com.davidparry.scout.handlers.*;
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.IOHandler;
 import com.davidparry.scout.io.Logger;
 
 import java.io.IOException;
@@ -32,15 +31,17 @@ public class SchemaInitializer {
             // Process any remaining classes that might have been loaded but not processed
             processLoadedClasses();
         }));
-        registerCoreClasses();
+        //registerCoreClasses();
 
         // Process already loaded classes
         processLoadedClasses();
     }
 
-    public static void registerCoreClasses() {
+    public static void registerCoreClasses(IOHandler ioHandler, State state) {
         SchemaRegistry.getInstance().registerHandler("initialize", new InitializeHandler());
         SchemaRegistry.getInstance().registerHandler("notifications", new NotificationHandler());
+        SchemaRegistry.getInstance().registerHandler("notifications/roots/list_changed", new NotificationRootsHandler(ioHandler,state));
+        SchemaRegistry.getInstance().registerHandler("notifications/initialized", new NotificationInitializedHandler(ioHandler,state));
         SchemaRegistry.getInstance().registerHandler("tools/list", new ToolsListHandler(SchemaRegistry.getInstance()));
         SchemaRegistry.getInstance().registerHandler("tools/call", new ToolDispatcherHandler());
 

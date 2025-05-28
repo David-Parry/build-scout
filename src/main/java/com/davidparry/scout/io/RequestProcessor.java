@@ -46,10 +46,10 @@ public class RequestProcessor implements Runnable {
             // Parse the incoming JSON-RPC request
 
             logger.log("Thread processing request: " + request.toJson());
-
             String method = request.method();
             jsonRpc = request.jsonrpc();
             id = request.id();
+
 
             // Handle the request based on the method
             Object result = handleMethod(method, request);
@@ -87,7 +87,13 @@ public class RequestProcessor implements Runnable {
             if (method.contains("/")) {
                 String base = method.substring(0, method.indexOf('/'));
                 if ("notifications".equals(base)) {
-                    baseMethod = method.substring(0, method.indexOf('/'));
+                    if ("notifications/roots/list_changed".equalsIgnoreCase(method)) {
+                        baseMethod = "notifications/roots/list_changed";
+                    } else if ("notifications/initialized".equalsIgnoreCase(method)) {
+                        baseMethod = "notifications/initialized";
+                    } else {
+                        baseMethod = method.substring(0, method.indexOf('/'));
+                    }
                     logger.log("Using base method: " + baseMethod + " from full method: " + method);
                 }
             }

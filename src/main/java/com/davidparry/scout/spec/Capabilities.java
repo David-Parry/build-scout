@@ -1,8 +1,13 @@
 package com.davidparry.scout.spec;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
- * Record representing the capabilities object in the request parameters.
- * This is empty in the provided example but can be extended as needed.
+ *
+ * @param roots
  */
-public record Capabilities() {
+public record Capabilities(@SerializedName("roots") ListChanged roots) {
+    public Capabilities() {
+        this(null);
+    }
 }

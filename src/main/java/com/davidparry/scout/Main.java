@@ -2,6 +2,7 @@ package com.davidparry.scout;
 
 import com.davidparry.scout.annotation.SchemaInitializer;
 import com.davidparry.scout.annotation.SchemaRegistry;
+import com.davidparry.scout.common.ClientConsumer;
 import com.davidparry.scout.io.ApplicationLogger;
 import com.davidparry.scout.io.IOHandler;
 import com.davidparry.scout.io.IOHandlerImpl;
@@ -15,24 +16,24 @@ public class Main {
     private static final AtomicBoolean isShuttingDown = new AtomicBoolean(false);
     private static final CountDownLatch shutdownLatch = new CountDownLatch(1);
     private static final Logger logger = ApplicationLogger.getInstance();
-    private static IOHandler io;
-    private static RequestController controller;
     public static String MCP_SERVER_NAME = "scout-server";
     public static String MCP_SERVER_VERSION = "1.0-SNAPSHOT";
-
-
+    private static IOHandler io;
+    private static RequestController controller;
 
     public static void main(String[] args) {
-        // Initialize the Schema annotation system
-        SchemaInitializer.initialize();
-
-        SchemaRegistry registry = SchemaRegistry.getInstance();
-
+        logger.log("Starting Scout");
         // Create an IOHandler instance for console I/O
         io = new IOHandlerImpl();
 
+        // Initialize the Schema annotation system
+        SchemaInitializer.initialize();
+        SchemaInitializer.registerCoreClasses(io, ApplicationState.instance());
+        SchemaRegistry registry = SchemaRegistry.getInstance();
+
+
         // Create the request controller
-        controller = new RequestController(io, registry);
+        controller = new RequestController(io, registry, new ClientConsumer(ApplicationState.instance()));
 
         try {
             // Add a listener for individual lines
@@ -51,7 +52,6 @@ public class Main {
 
             // Start the async input reader
             io.startInputReader();
-            // Keep the application running until terminated
 
             keepRunning();
             logger.log("Scout shutting down");
@@ -64,7 +64,7 @@ public class Main {
     }
 
     private static void stop() {
-        if(io != null) {
+        if (io != null) {
             io.stopRunning();
         }
     }

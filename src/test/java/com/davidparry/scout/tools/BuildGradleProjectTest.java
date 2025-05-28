@@ -77,7 +77,7 @@ class BuildGradleProjectTest {
             "buildGradle", // name
             arguments
         );
-        JsonRpcRequest request = new JsonRpcRequest("2.0", "buildGradle", "test", 1, params);
+        JsonRpcRequest request = new JsonRpcRequest("2.0", "buildGradle", "test", 1, params, null, null);
 
         BuildOutput buildOutput = new BuildOutput("Build successful", null, false);
         when(gradleTasks.buildGradleProject(any(File.class), anyBoolean())).thenReturn(buildOutput);
@@ -113,7 +113,7 @@ class BuildGradleProjectTest {
                 "buildGradle", // name
                 arguments
         );
-        JsonRpcRequest request = new JsonRpcRequest("2.0", "buildGradle", "test", 1, params);
+        JsonRpcRequest request = new JsonRpcRequest("2.0", "buildGradle", "test", 1, params,null,null);
 
         // Act
         ToolOutputResponse response = buildGradleProject.action(request);
@@ -144,7 +144,7 @@ class BuildGradleProjectTest {
                 "buildGradle", // name
                 arguments
         );
-        JsonRpcRequest request = new JsonRpcRequest("2.0", "buildGradle", "test", 1, params);
+        JsonRpcRequest request = new JsonRpcRequest("2.0", "buildGradle", "test", 1, params, null,null);
 
         // Act
         ToolOutputResponse response = buildGradleProject.action(request);
@@ -175,7 +175,7 @@ class BuildGradleProjectTest {
                 "buildGradle", // name
                 arguments
         );
-        JsonRpcRequest request = new JsonRpcRequest("2.0", "buildGradle", "test", 1, params);
+        JsonRpcRequest request = new JsonRpcRequest("2.0", "buildGradle", "test", 1, params, null,null);
 
         BuildOutput buildOutput = new BuildOutput("Build failed", "Error message", true);
         when(gradleTasks.buildGradleProject(any(File.class), anyBoolean())).thenReturn(buildOutput);

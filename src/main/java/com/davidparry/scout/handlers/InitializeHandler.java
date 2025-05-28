@@ -1,5 +1,6 @@
 package com.davidparry.scout.handlers;
 
+import com.davidparry.scout.ApplicationState;
 import com.davidparry.scout.Main;
 import com.davidparry.scout.spec.*;
 
@@ -9,6 +10,10 @@ public class InitializeHandler implements Handler<InitializeResult> {
     @Override
     public InitializeResult handle(JsonRpcRequest request) {
         String protocolVersion = request.params().protocolVersion();
+
+        ApplicationState.instance().clientInformation(request.params());
+
+        ApplicationState.instance().jsonrpc(request.jsonrpc());
 
         ToolCapabilities tools = new ToolCapabilities();
 

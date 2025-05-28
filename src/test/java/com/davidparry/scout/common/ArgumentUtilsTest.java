@@ -1,14 +1,16 @@
 package com.davidparry.scout.common;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
-import com.davidparry.scout.spec.JsonRpcRequest;
-import com.davidparry.scout.spec.RequestParams;
 import com.davidparry.scout.spec.Capabilities;
 import com.davidparry.scout.spec.ClientInfo;
+import com.davidparry.scout.spec.JsonRpcRequest;
+import com.davidparry.scout.spec.RequestParams;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ArgumentUtilsTest {
 
@@ -20,22 +22,12 @@ public class ArgumentUtilsTest {
         arguments.put("stringKey", "testValue");
 
         // Prepare RequestParams
-        RequestParams params = new RequestParams(
-                "2.0",
-                new Capabilities(), // Assuming default constructor exists
-                new ClientInfo("",""),   // Assuming default constructor exists
-                "testName",
-                arguments
-        );
+        RequestParams params = new RequestParams("2.0", new Capabilities(), // Assuming default constructor exists
+                new ClientInfo("", ""),   // Assuming default constructor exists
+                "testName", arguments);
 
         // Prepare JsonRpcRequest
-        JsonRpcRequest request = new JsonRpcRequest(
-                "2.0",
-                "testMethod",
-                "testName",
-                1,
-                params
-        );
+        JsonRpcRequest request = new JsonRpcRequest("2.0", "testMethod", "testName", 1, params, null, null);
 
         // Test integer extraction
         Integer intValue = ArgumentUtils.getArgument(request, "intKey");
