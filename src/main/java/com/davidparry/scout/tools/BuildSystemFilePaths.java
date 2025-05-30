@@ -34,27 +34,22 @@ public class BuildSystemFilePaths extends BuildTool implements Tool<ToolOutputRe
     @Override
     public InputSchema schema() {
         logger.log("BuildSystemFilePaths schema Schema being created and returned");
-        addProperty(new InputProperty("projectRoot", "string", "The fully qualified path of the root directory of the project.", false));
+        addProperty(new InputProperty(PROJECT_ROOT, "string", "The fully qualified path of the root directory of the project.", false));
         return new InputSchema("object", getProperties(), getRequired());
     }
 
     @Override
     public ToolOutputResponse action(JsonRpcRequest args) {
 
-        Set<BuildFile> builds = new HashSet<>(); // Using Set to avoid duplicates
+        Set<BuildFile> builds; // Using Set to avoid duplicates
         try {
-            String projectRoot = (String) args.params().arguments().get("projectRoot");
-            if (projectRoot == null || projectRoot.isEmpty()) {
-                return createErrorResult("Missing project root path");
-            }
-            File projectDir = new File(projectRoot);
-            if (!projectDir.exists() || !projectDir.isDirectory()) {
-                return createErrorResult("Project root directory does not exist or is not a directory");
-            }
+            Set<File> files = getProjectRoots(args);
+            logger.log("Root directories " + files.size() + " projects in " + files);
             Set<String> absolutePaths = new HashSet<>();
-            buildSystem.processRootFolder(projectRoot, absolutePaths);
-            List<String> absolutePathsList = new ArrayList<>(absolutePaths);
-            builds = buildSystem.identifyBuildFiles(absolutePathsList);
+            for (File file : files) {
+                buildSystem.processRootFolder(file.getAbsolutePath(), absolutePaths);
+            }
+            builds = buildSystem.identifyBuildFiles(absolutePaths);
         } catch (Exception e) {
             logger.log("Failed to process paths", e);
             return createErrorResult("Failed to find root build paths for the project." + e.getMessage());

@@ -1,10 +1,9 @@
 package com.davidparry.scout.common;
 
-import com.davidparry.scout.spec.JsonRpcTextResponse;
 import com.davidparry.scout.spec.ToolOutputResponse;
 
+import java.io.File;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Set;
 
 public interface BuildSystem {
@@ -28,11 +27,13 @@ public interface BuildSystem {
 
     int processRootFolder(String rootPath, Set<String> absolutePaths);
 
-    Set<BuildFile> identifyBuildFiles(List<String> potentialPaths);
+    Set<BuildFile> identifyBuildFiles(Set<String> potentialPaths);
 
     ToolOutputResponse createPathResults(Set<BuildFile> builds);
 
     String updateDependencyVersion(String groupId, String artifactId, String version, String path);
 
     String identifyBuildFile(String path);
+
+    Set<BuildFile> onlyBuildFilesFilter(Set<File> files);
 }

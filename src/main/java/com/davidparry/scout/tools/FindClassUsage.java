@@ -7,6 +7,7 @@ import com.davidparry.scout.io.ApplicationLogger;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.*;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +31,8 @@ public class FindClassUsage extends BuildTool implements Tool<ToolOutputResponse
     @Override
     public InputSchema schema() {
         logger.log("FindClassUsage schema Schema being created and returned");
+        addProperty(new InputProperty(PROJECT_ROOT, "string", "The fully qualified path of the root directory of the project.", false));
         addProperty(new InputProperty("fullyQualifiedClassName", "string", "The fully qualified class name of the class.", true));
-        addProperty(new InputProperty("projectRoot", "string", "The fully qualified path of the root directory of the project.", true));
         return new InputSchema("object", getProperties(), getRequired());
     }
 
@@ -44,23 +45,22 @@ public class FindClassUsage extends BuildTool implements Tool<ToolOutputResponse
             }
 
             String fullyQualifiedClassName = ArgumentUtils.getArgument(request, "fullyQualifiedClassName");
-            String projectRoot = ArgumentUtils.getArgument(request, "projectRoot");
-
             if (fullyQualifiedClassName == null || fullyQualifiedClassName.isEmpty()) {
                 return createErrorResult("Missing fully qualified class name");
             }
 
-            if (projectRoot == null || projectRoot.isEmpty()) {
-                return createErrorResult("Missing project root path");
+            List<Path> totalSourceDirs = new ArrayList<>();
+            Set<File> files = getProjectRoots(request);
+            for (File file : files) {
+                logger.log("Root directories " + files.size() + " projects in " + files);
+                totalSourceDirs.addAll(service.findSourceDirectories(file.getAbsolutePath()));
             }
-
             // Find source directories
-            List<Path> sourceDirs = service.findSourceDirectories(projectRoot);
-            if (sourceDirs.isEmpty()) {
+            if (totalSourceDirs.isEmpty()) {
                 return createErrorResult("No source directories found in the project");
             }
 
-            Map<String, Set<Integer>> usageMap = service.searchClassUsage(sourceDirs, fullyQualifiedClassName);
+            Map<String, Set<Integer>> usageMap = service.searchClassUsage(totalSourceDirs, fullyQualifiedClassName);
 
             if (usageMap.isEmpty()) {
                 return createErrorResult("No usages found for class: " + fullyQualifiedClassName);

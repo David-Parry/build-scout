@@ -6,13 +6,24 @@ import com.davidparry.scout.spec.ToolOutputResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BuildSystemImpl implements BuildSystem {
+
+
+    public Set<BuildFile> onlyBuildFilesFilter(Set<File> files) {
+        Set<String> absolutePaths = files.stream()
+                .map(File::getAbsolutePath)
+                .collect(Collectors.toSet());
+        return identifyBuildFiles(absolutePaths);
+    }
+
 
     @Override
     public DiscoveredPath discover(String pathStr) {
@@ -191,7 +202,7 @@ public class BuildSystemImpl implements BuildSystem {
     }
 
 
-    public Set<BuildFile> identifyBuildFiles(List<String> potentialPaths) {
+    public Set<BuildFile> identifyBuildFiles(Set<String> potentialPaths) {
         Set<BuildFile> builds = new HashSet<>();
 
         for (String pathStr : potentialPaths) {

@@ -11,8 +11,8 @@ import com.davidparry.scout.spec.InputSchema;
 import com.davidparry.scout.spec.JsonRpcRequest;
 import com.davidparry.scout.spec.ToolOutputResponse;
 
+import java.io.File;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Schema(name = "find_build_system", description = "This tool can find the build system given the root directory of the project.")
@@ -33,8 +33,9 @@ public class FindBuildSystem extends BuildTool implements Tool<ToolOutputRespons
     public ToolOutputResponse action(JsonRpcRequest args) {
         Set<BuildFile> builds = new HashSet<>();
         try {
-            String path = (String) args.params().arguments().get("path");
-            builds = buildSystem.identifyBuildFiles(List.of(path));
+            Set<File> files = getProjectRoots(args);
+            logger.log("Root directories " + files.size() + " projects in " + files);
+            builds = buildSystem.onlyBuildFilesFilter(files);
         } catch (Exception e) {
             logger.log("Error finding the build path", e);
             return createErrorResult("Error finding the build path; " + e.getMessage());
@@ -46,7 +47,7 @@ public class FindBuildSystem extends BuildTool implements Tool<ToolOutputRespons
     @Override
     public InputSchema schema() {
         logger.log("FindBuildSystem schema Schema being created and returned");
-        addProperty(new InputProperty("path", "string", "Path to the root directories for the project.", true));
+        addProperty(new InputProperty(PROJECT_ROOT, "string", "Path to the root directories for the project.", false));
         return new InputSchema("object", getProperties(), getRequired());
     }
 

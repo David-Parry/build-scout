@@ -23,7 +23,6 @@ public class DependencyFetch {
     }
 
     public List<String> resolveDependencies(String path) {
-
         String type = buildSystem.identifyBuildFile(path);
         if (BuildSystem.GRADLE_GROOVY.equals(type)) {
             try {

@@ -16,7 +16,7 @@ import static com.davidparry.scout.ApplicationState.instance;
 public abstract class BuildTool {
     private final List<String> required = new ArrayList<>();
     private final Map<String, InputProperty> properties = new HashMap<>();
-
+    protected final String PROJECT_ROOT = "projectRoot";
     /**
      * Constructor initializes the required list with default values
      * and adds the session_id property
@@ -69,8 +69,15 @@ public abstract class BuildTool {
         return new ToolOutputResponse(results, true);
     }
 
+    /**
+     * Retrieves the project roots based on the provided arguments.
+     * If no project root is specified, it retrieves all roots from the application state.
+     *
+     * @param args The JSON RPC request containing the project root argument
+     * @return A set of project root directories as File objects
+     */
     public Set<File> getProjectRoots(JsonRpcRequest args) {
-        String projectRoot = ArgumentUtils.getArgument(args, "projectRoot");
+        String projectRoot = ArgumentUtils.getArgument(args, PROJECT_ROOT);
         Set<File> projectRoots = new HashSet<>();
         if (projectRoot == null || projectRoot.isEmpty()) {
             Map<String, URI> paths = ApplicationState.instance().roots();

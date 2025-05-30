@@ -51,7 +51,7 @@ public class UnitTestGradleProject extends BuildTool implements Tool<ToolOutputR
     @Override
     public InputSchema schema() {
         logger.log("BuildGradleProject schema Schema being created and returned");
-        addProperty(new InputProperty("projectRoot", "string", "The fully qualified path of the root directory of the project.", false));
+        addProperty(new InputProperty(PROJECT_ROOT, "string", "The fully qualified path of the root directory of the project.", false));
         return new InputSchema("object", getProperties(), getRequired());
     }
 

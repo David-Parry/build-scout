@@ -8,7 +8,7 @@ plugins {
 }
 
 group = 'com.davidparry.scout'
-version = '1.0.27'
+version = '1.0.31'
 
 repositories {
     mavenCentral()
@@ -126,7 +126,6 @@ tasks.register('updateConfigJson') {
             return
         }
         def latestJar = jarFiles.max { a, b -> a.lastModified() <=> b.lastModified() }
-        //def configFile = file("/Users/davidparry/Library/Application Support/Claude/claude_desktop_config.json")
         def claudConfigFile = file("${System.getProperty('user.home')}/Library/Application Support/Claude/claude_desktop_config.json")
         def copilotConfigFile = file("${System.getProperty('user.home')}/.config/github-copilot/intellij/mcp.json")
         updateScoutServerJarInConfig(claudConfigFile,latestJar)
