@@ -8,6 +8,7 @@ import com.davidparry.scout.io.IOHandler;
 import com.davidparry.scout.io.IOHandlerImpl;
 import com.davidparry.scout.io.Logger;
 
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -17,12 +18,12 @@ public class Main {
     private static final CountDownLatch shutdownLatch = new CountDownLatch(1);
     private static final Logger logger = ApplicationLogger.getInstance();
     public static String MCP_SERVER_NAME = "scout-server";
-    public static String MCP_SERVER_VERSION = "1.0-SNAPSHOT";
+    public static String MCP_SERVER_VERSION = loadVersion();
     private static IOHandler io;
     private static RequestController controller;
 
     public static void main(String[] args) {
-        logger.log("Starting Scout");
+        logger.log("Starting Scout version " + MCP_SERVER_VERSION);
         // Create an IOHandler instance for console I/O
         io = new IOHandlerImpl();
 
@@ -123,6 +124,20 @@ public class Main {
         } catch (Exception e) {
             logger.log("Error processing input", e);
         }
+    }
+
+    private static String loadVersion() {
+        try {
+            java.io.InputStream is = Main.class.getClassLoader().getResourceAsStream("version.txt");
+            if (is != null) {
+                try (java.util.Scanner scanner = new java.util.Scanner(is, StandardCharsets.UTF_8)) {
+                    return scanner.hasNextLine() ? scanner.nextLine().trim() : "unknown";
+                }
+            }
+        } catch (Exception e) {
+            logger.log("Could not load version from version.txt", e);
+        }
+        return "unknown";
     }
 
 }

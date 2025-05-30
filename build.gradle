@@ -1,3 +1,6 @@
+import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
+
 plugins {
     id 'java'
     id 'application'
@@ -5,7 +8,7 @@ plugins {
 }
 
 group = 'com.davidparry.scout'
-version = '1.0.2'
+version = '1.0.23'
 
 repositories {
     mavenCentral()
@@ -67,3 +70,78 @@ shadowJar {
 build {
     dependsOn shadowJar
 }
+
+// Task to generate version.txt with the project version
+tasks.register('generateVersionFile') {
+    def versionFile = file("$buildDir/generated/resources/version.txt")
+    outputs.file versionFile
+    doLast {
+        versionFile.parentFile.mkdirs()
+        versionFile.text = project.version
+    }
+}
+
+// Make processResources depend on generateVersionFile and copy version.txt to resources
+processResources.dependsOn generateVersionFile
+processResources {
+    from("$buildDir/generated/resources") {
+        include 'version.txt'
+        into '.'
+    }
+}
+
+// Task to auto-increment the patch version in build.gradle
+import java.util.regex.Pattern
+
+tasks.register('incrementVersion') {
+    doLast {
+        def buildFile = file('build.gradle')
+        def text = buildFile.text
+        def currentVersion = project.version.toString()
+        def versionPattern = /([0-9]+)\.([0-9]+)\.([0-9]+)/
+        def matcher = currentVersion =~ versionPattern
+        if (matcher.matches()) {
+            def major = matcher.group(1) as int
+            def minor = matcher.group(2) as int
+            def patch = matcher.group(3) as int
+            def newVersion = "${major}.${minor}.${patch + 1}"
+            // Replace only the line with the current version value
+            def newText = text.replaceFirst(/(?m)^\s*version\s*=\s*['\"]${currentVersion}['\"]/, "version = '${newVersion}'")
+            buildFile.text = newText
+            println "Version incremented to ${newVersion}"
+        } else {
+            println "DEBUG: Could not parse version from project.version: ${currentVersion}"
+            throw new GradleException('Could not parse version from project.version')
+        }
+    }
+}
+
+// Task to update the JSON config file with the latest scout jar
+tasks.register('updateConfigJson') {
+    doLast {
+        def libsDir = file("build/libs")
+        def jarFiles = libsDir.listFiles().findAll { it.name ==~ /scout-\d+\.\d+\.\d+\.jar/ }
+        if (!jarFiles) {
+            println "No scout-*.jar found in build/libs."
+            return
+        }
+        def latestJar = jarFiles.max { a, b -> a.lastModified() <=> b.lastModified() }
+        def configFile = file("/Users/davidparry/Library/Application Support/Claude/claude_desktop_config.json")
+        def json = new JsonSlurper().parse(configFile)
+        if (json?.mcpServers?.'scout-server'?.args) {
+            json.mcpServers.'scout-server'.args = json.mcpServers.'scout-server'.args.collect { arg ->
+                if (arg instanceof String && arg.contains("scout-") && arg.endsWith(".jar")) {
+                    return latestJar.absolutePath
+                }
+                return arg
+            }
+            configFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(json))
+            println "Updated config to use: ${latestJar.absolutePath}"
+        } else {
+            println "Could not find scout-server args in config."
+        }
+    }
+}
+
+// Optionally, run incrementVersion after build
+build.finalizedBy incrementVersion

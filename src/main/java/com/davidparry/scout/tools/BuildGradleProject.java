@@ -13,7 +13,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-@Schema(name = "build_gradle_project", description = "Given the fully qualified path of the root directory of the gradle project, if you want to also run a complete build with all checks pass the check = true this tool will invoke the build and return the result with both success and errors if isError is true.")
+@Schema(name = "build_gradle_project", description = "if you want to also run a complete build with all checks pass the check = true this tool will invoke the build and return the result with both success and errors if isError is true.")
 public class BuildGradleProject extends BuildTool implements Tool<ToolOutputResponse> {
     private static final Logger logger = ApplicationLogger.getInstance();
     private final GradleTasks service;
@@ -59,7 +59,7 @@ public class BuildGradleProject extends BuildTool implements Tool<ToolOutputResp
     @Override
     public InputSchema schema() {
         logger.log("BuildGradleProject schema Schema being created and returned");
-        addProperty(new InputProperty("projectRoot", "string", "The fully qualified path of the root directory of the project.",true));
+        addProperty(new InputProperty("projectRoot", "string", "The fully qualified path of the root directory of the project.",false));
         addProperty(new InputProperty("check","boolean", "If this flag is passed and is true then the check part of the gradle build will be also done.",false));
         return new InputSchema("object", getProperties(), getRequired());
     }

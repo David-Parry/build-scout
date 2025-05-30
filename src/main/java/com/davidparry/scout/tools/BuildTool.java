@@ -1,10 +1,17 @@
 package com.davidparry.scout.tools;
 
+import com.davidparry.scout.ApplicationState;
+import com.davidparry.scout.common.ArgumentUtils;
 import com.davidparry.scout.spec.Content;
 import com.davidparry.scout.spec.InputProperty;
+import com.davidparry.scout.spec.JsonRpcRequest;
 import com.davidparry.scout.spec.ToolOutputResponse;
 
+import java.io.File;
+import java.net.URI;
 import java.util.*;
+
+import static com.davidparry.scout.ApplicationState.instance;
 
 public abstract class BuildTool {
     private final List<String> required = new ArrayList<>();
@@ -62,5 +69,21 @@ public abstract class BuildTool {
         return new ToolOutputResponse(results, true);
     }
 
+    public Set<File> getProjectRoots(JsonRpcRequest args) {
+        String projectRoot = ArgumentUtils.getArgument(args, "projectRoot");
+        Set<File> projectRoots = new HashSet<>();
+        if (projectRoot == null || projectRoot.isEmpty()) {
+            Map<String, URI> paths = ApplicationState.instance().roots();
+            for (URI uri : paths.values()) {
+                File file = new File(uri);
+                projectRoots.add(file);
+            }
+        } else {
+             File projectDir = new File(projectRoot);
+            projectRoots.add(projectDir);
+        }
+           return projectRoots;
+
+    }
 
 }

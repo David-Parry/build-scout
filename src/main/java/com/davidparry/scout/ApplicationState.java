@@ -54,6 +54,10 @@ public class ApplicationState implements State {
         this.clientInformation = clientInformation;
     }
 
+    public Map<String, URI> roots() {
+        return Map.copyOf(roots);
+    }
+
     /**
      * Set a root value.
      *

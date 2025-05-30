@@ -3,6 +3,7 @@ package com.davidparry.scout;
 import com.davidparry.scout.spec.RequestParams;
 
 import java.net.URI;
+import java.util.Map;
 
 public interface State {
 
@@ -17,4 +18,6 @@ public interface State {
     void clientInformation(RequestParams clientInformation);
 
     void clearRoots();
+
+    Map<String, URI> roots();
 }
