@@ -34,7 +34,7 @@ public class BuildSystemFilePaths extends BuildTool implements Tool<ToolOutputRe
     @Override
     public InputSchema schema() {
         logger.log("BuildSystemFilePaths schema Schema being created and returned");
-        addProperty(new InputProperty("projectRoot", "string", "The fully qualified path of the root directory of the project.", true));
+        addProperty(new InputProperty("projectRoot", "string", "The fully qualified path of the root directory of the project.", false));
         return new InputSchema("object", getProperties(), getRequired());
     }
 
