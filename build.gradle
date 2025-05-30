@@ -8,7 +8,7 @@ plugins {
 }
 
 group = 'com.davidparry.scout'
-version = '1.0.23'
+version = '1.0.25'
 
 repositories {
     mavenCentral()
@@ -126,22 +126,38 @@ tasks.register('updateConfigJson') {
             return
         }
         def latestJar = jarFiles.max { a, b -> a.lastModified() <=> b.lastModified() }
-        def configFile = file("/Users/davidparry/Library/Application Support/Claude/claude_desktop_config.json")
-        def json = new JsonSlurper().parse(configFile)
-        if (json?.mcpServers?.'scout-server'?.args) {
-            json.mcpServers.'scout-server'.args = json.mcpServers.'scout-server'.args.collect { arg ->
+        //def configFile = file("/Users/davidparry/Library/Application Support/Claude/claude_desktop_config.json")
+        def claudConfigFile = file("${System.getProperty('user.home')}/Library/Application Support/Claude/claude_desktop_config.json")
+        def copilotConfigFile = file("${System.getProperty('user.home')}/.config/github-copilot/intellij/mcp.json")
+        updateScoutServerJarInConfig(claudConfigFile,latestJar)
+        updateScoutServerJarInConfig(copilotConfigFile,latestJar)
+    }
+}
+
+void updateScoutServerJarInConfig(File configFile, File latestJar) {
+    def json = new JsonSlurper().parse(configFile)
+    def updated = false
+
+    ['mcpServers', 'servers'].each { key ->
+        if (json?."$key"?.'scout-server'?.args) {
+            json."$key".'scout-server'.args = json."$key".'scout-server'.args.collect { arg ->
                 if (arg instanceof String && arg.contains("scout-") && arg.endsWith(".jar")) {
                     return latestJar.absolutePath
                 }
                 return arg
             }
-            configFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(json))
-            println "Updated config to use: ${latestJar.absolutePath}"
-        } else {
-            println "Could not find scout-server args in config."
+            updated = true
         }
     }
+
+    if (updated) {
+        configFile.text = JsonOutput.prettyPrint(JsonOutput.toJson(json))
+        println "Updated config to use: ${latestJar.absolutePath}"
+    } else {
+        println "Could not find scout-server args in config."
+    }
 }
+
 
 // Optionally, run incrementVersion after build
 build.finalizedBy incrementVersion
