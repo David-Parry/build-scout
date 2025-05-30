@@ -8,7 +8,7 @@ plugins {
 }
 
 group = 'com.davidparry.scout'
-version = '1.0.31'
+version = '1.0.35'
 
 repositories {
     mavenCentral()
