@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Schema(name = "gradle_tester", description = "Executes Gradle build tasks for any gradle project. Runs the standard build process and optionally performs comprehensive testing when quality assurance is required.")
+@Schema(name = "gradle_tester", description = "Executes Gradle build and check tasks for any gradle project.")
 public class UnitTestGradleProject extends BuildTool implements Tool<ToolOutputResponse> {
     private static final Logger logger = ApplicationLogger.getInstance();
     private final GradleTasks service;
