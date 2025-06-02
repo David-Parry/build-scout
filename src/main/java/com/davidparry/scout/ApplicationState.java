@@ -1,5 +1,6 @@
 package com.davidparry.scout;
 
+import com.davidparry.scout.prompts.Prompt;
 import com.davidparry.scout.spec.RequestParams;
 
 import java.net.URI;
@@ -13,6 +14,8 @@ public class ApplicationState implements State {
 
     // Singleton instance
     private static ApplicationState INSTANCE;
+
+    private final Map<String, Prompt> prompts = new HashMap<>();
 
     // State roots
     private final Map<String, URI> roots = new HashMap<>();
@@ -82,4 +85,15 @@ public class ApplicationState implements State {
         roots.clear();
     }
 
+    public Map<String, Prompt> prompts() {
+        return Map.copyOf(prompts);
+    }
+
+    public Prompt getPrompt(String key) {
+        return prompts.get(key);
+    }
+
+    public void setPrompt(String key, Prompt prompt) {
+        prompts.put(key, prompt);
+    }
 }

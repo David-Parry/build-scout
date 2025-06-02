@@ -1,5 +1,6 @@
 package com.davidparry.scout;
 
+import com.davidparry.scout.prompts.Prompt;
 import com.davidparry.scout.spec.RequestParams;
 
 import java.net.URI;
@@ -20,4 +21,10 @@ public interface State {
     void clearRoots();
 
     Map<String, URI> roots();
+
+    Map<String, Prompt> prompts();
+
+    void setPrompt(String key, Prompt prompt);
+
+    Prompt getPrompt(String key);
 }
