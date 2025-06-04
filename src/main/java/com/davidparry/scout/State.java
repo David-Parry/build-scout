@@ -27,4 +27,6 @@ public interface State {
     void setPrompt(String key, Prompt prompt);
 
     Prompt getPrompt(String key);
+
+    boolean hasRootCapability();
 }

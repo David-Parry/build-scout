@@ -1,5 +1,7 @@
 package com.davidparry.scout;
 
+import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.prompts.Prompt;
 import com.davidparry.scout.spec.RequestParams;
 
@@ -11,6 +13,9 @@ import java.util.Map;
  * Singleton class to manage application state.
  */
 public class ApplicationState implements State {
+
+    private static final Logger logger = ApplicationLogger.getInstance();
+
 
     // Singleton instance
     private static ApplicationState INSTANCE;
@@ -26,6 +31,19 @@ public class ApplicationState implements State {
 
     // Private constructor to prevent instantiation
     private ApplicationState() {
+
+    }
+
+    public boolean hasRootCapability() {
+        if (clientInformation == null ||
+                clientInformation.capabilities() == null ||
+                clientInformation.capabilities().roots() == null) {
+            logger.log("NO capabilities provided");
+            return false;
+        } else {
+            logger.log("HAS capabilities provided");
+            return true;
+        }
 
     }
 

@@ -1,5 +1,6 @@
 package com.davidparry.scout.tools;
 
+import com.davidparry.scout.ApplicationState;
 import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.ArgumentUtils;
 import com.davidparry.scout.common.BuildOutput;
@@ -58,7 +59,7 @@ public class BuildGradleProject extends BuildTool implements Tool<ToolOutputResp
     @Override
     public InputSchema schema() {
         logger.log("BuildGradleProject schema Schema being created and returned");
-        addProperty(new InputProperty(PROJECT_ROOT, "string", "The fully qualified path of the root directory of the project.", false));
+        addProperty(new InputProperty(PROJECT_ROOT, "string", "The fully qualified path of the root directory of the project.", rootProjectMandatory()));
         addProperty(new InputProperty("check","boolean", "If this flag is passed and is true then the check part of the gradle build will be also done.",false));
         return new InputSchema("object", getProperties(), getRequired());
     }
