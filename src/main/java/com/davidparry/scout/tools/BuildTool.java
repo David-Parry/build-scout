@@ -2,6 +2,8 @@ package com.davidparry.scout.tools;
 
 import com.davidparry.scout.ApplicationState;
 import com.davidparry.scout.common.ArgumentUtils;
+import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.Content;
 import com.davidparry.scout.spec.InputProperty;
 import com.davidparry.scout.spec.JsonRpcRequest;
@@ -11,12 +13,12 @@ import java.io.File;
 import java.net.URI;
 import java.util.*;
 
-import static com.davidparry.scout.ApplicationState.instance;
-
 public abstract class BuildTool {
+    private static final Logger logger = ApplicationLogger.getInstance();
+    protected final String PROJECT_ROOT = "projectRoot";
     private final List<String> required = new ArrayList<>();
     private final Map<String, InputProperty> properties = new HashMap<>();
-    protected final String PROJECT_ROOT = "projectRoot";
+
     /**
      * Constructor initializes the required list with default values
      * and adds the session_id property
@@ -86,11 +88,15 @@ public abstract class BuildTool {
                 projectRoots.add(file);
             }
         } else {
-             File projectDir = new File(projectRoot);
+            File projectDir = new File(projectRoot);
             projectRoots.add(projectDir);
         }
-           return projectRoots;
+        return projectRoots;
+    }
 
+    public boolean rootProjectMandatory() {
+        logger.log("Root project mandatory " + !ApplicationState.instance().hasRootCapability());
+        return !ApplicationState.instance().hasRootCapability();
     }
 
 }

@@ -7,14 +7,15 @@ package com.davidparry.scout.spec;
 public class ServerCapabilities {
 
     private ToolCapabilities tools;
-
+    private PromptsCapabilities prompts;
     // Default constructor
     public ServerCapabilities() {
     }
 
     // Constructor with all fields
-    public ServerCapabilities(ToolCapabilities tools) {
+    public ServerCapabilities(ToolCapabilities tools, PromptsCapabilities prompts) {
         this.tools = tools;
+        this.prompts = prompts;
     }
 
 

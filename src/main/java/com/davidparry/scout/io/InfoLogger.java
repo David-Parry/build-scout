@@ -1,35 +1,23 @@
 package com.davidparry.scout.io;
 
-public class DevNullLogger implements Logger {
-
-
-    @Override
-    public void log(String message) {
-
-    }
-
-    @Override
-    public void log(String message, Throwable exception) {
-
+public class InfoLogger extends ApplicationLogger {
+    public InfoLogger(String logDirectory) {
+        super(logDirectory);
     }
 
     @Override
     public void info(String message) {
-
+        write(message);
     }
 
     @Override
     public void error(String message) {
-
-    }
-
-    @Override
-    public void close() {
-
+        write(message);
     }
 
     @Override
     public void error(String message, Throwable exception) {
-
+        write(message, exception);
     }
+
 }

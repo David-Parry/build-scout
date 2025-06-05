@@ -1,5 +1,8 @@
 package com.davidparry.scout;
 
+import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.Logger;
+import com.davidparry.scout.prompts.Prompt;
 import com.davidparry.scout.spec.RequestParams;
 
 import java.net.URI;
@@ -11,8 +14,13 @@ import java.util.Map;
  */
 public class ApplicationState implements State {
 
+    private static final Logger logger = ApplicationLogger.getInstance();
+
+
     // Singleton instance
     private static ApplicationState INSTANCE;
+
+    private final Map<String, Prompt> prompts = new HashMap<>();
 
     // State roots
     private final Map<String, URI> roots = new HashMap<>();
@@ -23,6 +31,19 @@ public class ApplicationState implements State {
 
     // Private constructor to prevent instantiation
     private ApplicationState() {
+
+    }
+
+    public boolean hasRootCapability() {
+        if (clientInformation == null ||
+                clientInformation.capabilities() == null ||
+                clientInformation.capabilities().roots() == null) {
+            logger.log("NO capabilities provided");
+            return false;
+        } else {
+            logger.log("HAS capabilities provided");
+            return true;
+        }
 
     }
 
@@ -82,4 +103,15 @@ public class ApplicationState implements State {
         roots.clear();
     }
 
+    public Map<String, Prompt> prompts() {
+        return Map.copyOf(prompts);
+    }
+
+    public Prompt getPrompt(String key) {
+        return prompts.get(key);
+    }
+
+    public void setPrompt(String key, Prompt prompt) {
+        prompts.put(key, prompt);
+    }
 }

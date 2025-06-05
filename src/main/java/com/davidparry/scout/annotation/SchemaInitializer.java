@@ -44,7 +44,9 @@ public class SchemaInitializer {
         SchemaRegistry.getInstance().registerHandler("notifications/initialized", new NotificationInitializedHandler(ioHandler,state));
         SchemaRegistry.getInstance().registerHandler("tools/list", new ToolsListHandler(SchemaRegistry.getInstance()));
         SchemaRegistry.getInstance().registerHandler("tools/call", new ToolDispatcherHandler());
-
+        SchemaRegistry.getInstance().registerHandler("prompts/list", new PromptsListHandler());
+        SchemaRegistry.getInstance().registerHandler("prompts/get", new PromptDispatchHandler());
+        SchemaRegistry.getInstance().registerHandler("completion/complete", new CompletionComplete());
     }
 
     /**

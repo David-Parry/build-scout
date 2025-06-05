@@ -17,7 +17,9 @@ public class InitializeHandler implements Handler<InitializeResult> {
 
         ToolCapabilities tools = new ToolCapabilities();
 
-        ServerCapabilities capabilities = new ServerCapabilities(tools);
+        PromptsCapabilities prompts = new PromptsCapabilities();
+
+        ServerCapabilities capabilities = new ServerCapabilities(tools, prompts);
 
         Implementation serverInfo = new Implementation(Main.MCP_SERVER_NAME, Main.MCP_SERVER_VERSION);
 

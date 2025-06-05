@@ -2,12 +2,17 @@ package com.davidparry.scout.io;
 
 public interface Logger {
     String BUILD_SCOUT_LOGGING = "BUILD_SCOUT_LOGGING";
+    String LOG_DIRECTORY = "/log";
 
     void log(String message);
 
     void log(String message, Throwable exception);
 
+    void info(String message);
+
+    void error(String message);
+
     void close();
 
-    void setLogDirectory(String directory);
+    void error(String message, Throwable exception);
 }

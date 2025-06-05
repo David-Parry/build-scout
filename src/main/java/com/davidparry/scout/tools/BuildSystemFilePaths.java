@@ -1,5 +1,6 @@
 package com.davidparry.scout.tools;
 
+import com.davidparry.scout.ApplicationState;
 import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.BuildFile;
 import com.davidparry.scout.common.BuildSystem;
@@ -34,7 +35,7 @@ public class BuildSystemFilePaths extends BuildTool implements Tool<ToolOutputRe
     @Override
     public InputSchema schema() {
         logger.log("BuildSystemFilePaths schema Schema being created and returned");
-        addProperty(new InputProperty(PROJECT_ROOT, "string", "The fully qualified path of the root directory of the project.", false));
+        addProperty(new InputProperty(PROJECT_ROOT, "string", "The fully qualified path of the root directory of the project.", rootProjectMandatory()));
         return new InputSchema("object", getProperties(), getRequired());
     }
 
