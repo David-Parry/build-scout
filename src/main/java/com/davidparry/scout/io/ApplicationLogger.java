@@ -12,28 +12,30 @@ import java.util.concurrent.locks.ReentrantLock;
  * Singleton logger class for the application.
  * Provides centralized logging functionality with thread-safe operations.
  */
-public class ApplicationLogger implements Logger {
+public abstract class ApplicationLogger implements Logger {
     private static Logger INSTANCE;
+    private static String loggingLevel;
+
+    static {
+        try {
+            loggingLevel = System.getenv(BUILD_SCOUT_LOGGING);
+        } catch (Exception e) {
+        }
+    }
+
     private final ReentrantLock lock = new ReentrantLock();
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
     private final SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     private String logDirectory;
     private String currentLogFile;
     private PrintWriter logWriter;
-    private static boolean loggingEnabled = false;
 
-    static {
-        try {
-            String envValue = System.getenv(BUILD_SCOUT_LOGGING);
-            loggingEnabled = "true".equalsIgnoreCase(envValue);
-        } catch (Exception e) {}
-    }
     /**
      * Private constructor to enforce singleton pattern
-     * 
+     *
      * @param logDirectory The directory path where logs should be stored
      */
-    private ApplicationLogger(String logDirectory) {
+    protected ApplicationLogger(String logDirectory) {
         this.logDirectory = logDirectory;
         initialize();
     }
@@ -44,16 +46,9 @@ public class ApplicationLogger implements Logger {
      * @return The ApplicationLogger instance
      */
     public static synchronized Logger getInstance() {
-        if (INSTANCE == null) {
-            if(loggingEnabled) {
-                INSTANCE = new ApplicationLogger(System.getProperty("user.home") + "/logs");
-            } else {
-                INSTANCE = new DevNullLogger();
-            }
-        }
-        return INSTANCE;
+       return getInstance(System.getProperty("user.home")+ LOG_DIRECTORY);
     }
-    
+
     /**
      * Get the singleton instance of the logger with specified log directory
      *
@@ -62,14 +57,15 @@ public class ApplicationLogger implements Logger {
      */
     public static synchronized Logger getInstance(String logDirectory) {
         if (INSTANCE == null) {
-            if(loggingEnabled) {
-                INSTANCE = new ApplicationLogger(logDirectory);
+            if ("DEBUG".equalsIgnoreCase(loggingLevel)) {
+                INSTANCE = new DebugLogger(logDirectory );
+            } else if ("INFO".equalsIgnoreCase(loggingLevel)) {
+                INSTANCE = new InfoLogger(logDirectory);
+            } else if ("ERROR".equalsIgnoreCase(loggingLevel)) {
+                INSTANCE = new ErrorLogger(logDirectory);
             } else {
                 INSTANCE = new DevNullLogger();
             }
-        } else {
-            // If instance already exists, update the log directory
-            INSTANCE.setLogDirectory(logDirectory);
         }
         return INSTANCE;
     }
@@ -79,7 +75,7 @@ public class ApplicationLogger implements Logger {
      *
      * @param logDirectory The directory path where logs should be stored
      */
-    public  void setLogDirectory(String logDirectory) {
+    private void setLogDirectory(String logDirectory) {
         lock.lock();
         try {
             this.logDirectory = logDirectory;
@@ -114,13 +110,7 @@ public class ApplicationLogger implements Logger {
         logWriter = new PrintWriter(new FileWriter(currentLogFile, true));
     }
 
-    /**
-     * Log a message to the current log file
-     *
-     * @param message The message to log
-     */
-    @Override
-    public void log(String message) {
+    protected void write(String message) {
         lock.lock();
         try {
             if (logWriter == null) {
@@ -137,14 +127,7 @@ public class ApplicationLogger implements Logger {
         }
     }
 
-    /**
-     * Log an exception with a message
-     *
-     * @param message   The message to log
-     * @param exception The exception to log
-     */
-    @Override
-    public void log(String message, Throwable exception) {
+    protected void write(String message, Throwable exception) {
         lock.lock();
         try {
             if (logWriter == null) {
@@ -176,5 +159,30 @@ public class ApplicationLogger implements Logger {
         } finally {
             lock.unlock();
         }
+    }
+
+    @Override
+    public void log(String message) {
+
+    }
+
+    @Override
+    public void log(String message, Throwable exception) {
+
+    }
+
+    @Override
+    public void info(String message) {
+
+    }
+
+    @Override
+    public void error(String message) {
+
+    }
+
+    @Override
+    public void error(String message, Throwable exception) {
+
     }
 }

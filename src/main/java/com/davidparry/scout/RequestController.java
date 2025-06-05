@@ -47,9 +47,7 @@ public class RequestController {
         if (line.isEmpty()) {
             return;
         }
-
-        logger.log("RAW Received request: " + line);
-
+        logger.info("Received Message :'" + line + "'");
         try {
             JsonRpcRequest request = JsonRpcRequest.fromJson(line);
             if (request.error() != null) {
