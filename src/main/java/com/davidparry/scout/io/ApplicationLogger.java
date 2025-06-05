@@ -71,21 +71,6 @@ public abstract class ApplicationLogger implements Logger {
     }
 
     /**
-     * Set a custom log directory
-     *
-     * @param logDirectory The directory path where logs should be stored
-     */
-    private void setLogDirectory(String logDirectory) {
-        lock.lock();
-        try {
-            this.logDirectory = logDirectory;
-            initialize();
-        } finally {
-            lock.unlock();
-        }
-    }
-
-    /**
      * Initialize the log directory
      */
     private void initialize() {
