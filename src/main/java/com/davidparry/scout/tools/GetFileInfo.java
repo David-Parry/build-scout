@@ -14,6 +14,10 @@ import java.util.List;
 public class GetFileInfo extends BuildTool implements Tool<ToolOutputResponse> {
     private static final Logger logger = ApplicationLogger.getInstance();
 
+    // Add explicit no-argument constructor
+    public GetFileInfo() {
+        // Default constructor for schema processor
+    }
 
     @Override
     public InputSchema schema() {

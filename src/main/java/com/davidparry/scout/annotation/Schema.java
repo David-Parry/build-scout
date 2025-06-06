@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  * along with their name, description, and JSON schema representation.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
+@Target({ElementType.FIELD, ElementType.TYPE})
 public @interface Schema {
     /**
      * The name of the schema. If not specified, the class simple name will be used.

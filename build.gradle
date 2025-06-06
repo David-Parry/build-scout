@@ -5,10 +5,12 @@ plugins {
     id 'java'
     id 'application'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'org.graalvm.buildtools.native' version '0.10.1'
 }
 
 group = 'com.davidparry.scout'
-version = '1.0.62'
+version = '1.0.61'
+jar.enabled = false
 
 repositories {
     mavenCentral()
@@ -157,6 +159,47 @@ void updateScoutServerJarInConfig(File configFile, File latestJar) {
     }
 }
 
+graalvmNative {
+    binaries {
+        main {
+            imageName = 'scout'
+            mainClass = 'com.davidparry.scout.Main'
+            buildArgs.add('--no-fallback')  // Optional: reduces size, disables JVM fallback
+            buildArgs.add('--initialize-at-build-time=com.google.gson,com.davidparry.scout')
+            buildArgs.add("-H:ReflectionConfigurationFiles=${projectDir}/src/main/resources/META-INF/native-image/reflect-config.json")
+            buildArgs.add('--report-unsupported-elements-at-runtime')
+            useFatJar = true  // Uses shadowJar
+        }
+    }
+}
 
+nativeCompile.dependsOn shadowJar
 // Optionally, run incrementVersion after build
-build.finalizedBy incrementVersion
+//build.finalizedBy incrementVersion
+
+tasks.named('distZip').configure { enabled = false }
+tasks.named('distTar').configure { enabled = false }
+// Make the shadowJar task run when the build task runs
+build {
+    dependsOn shadowJar
+}
+
+tasks.named('distZip') {
+    dependsOn shadowJar
+}
+
+tasks.named('distTar') {
+    dependsOn shadowJar
+}
+
+tasks.named('startScripts') {
+    dependsOn shadowJar
+}
+
+tasks.named('nativeCompileClasspathJar') {
+    dependsOn tasks.named('shadowJar')
+}
+
+tasks.named('generateResourcesConfigFile') {
+    dependsOn tasks.named('shadowJar')
+}

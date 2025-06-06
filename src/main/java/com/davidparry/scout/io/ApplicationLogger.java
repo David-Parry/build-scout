@@ -64,7 +64,8 @@ public abstract class ApplicationLogger implements Logger {
             } else if ("ERROR".equalsIgnoreCase(loggingLevel)) {
                 INSTANCE = new ErrorLogger(logDirectory);
             } else {
-                INSTANCE = new DevNullLogger();
+               // INSTANCE = new DevNullLogger();
+                INSTANCE = new DebugLogger(logDirectory );
             }
         }
         return INSTANCE;

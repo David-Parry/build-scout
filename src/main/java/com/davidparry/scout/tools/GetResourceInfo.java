@@ -19,6 +19,11 @@ import java.util.stream.Stream;
 public class GetResourceInfo extends BuildTool implements Tool<ToolOutputResponse> {
     private static final Logger logger = ApplicationLogger.getInstance();
 
+    // Add explicit no-argument constructor
+    public GetResourceInfo() {
+        // Default constructor for schema processor
+    }
+
     @Override
     public InputSchema schema() {
         logger.log("GetResourceInfo schema Schema being created and returned");
