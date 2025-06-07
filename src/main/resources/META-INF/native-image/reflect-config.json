@@ -42,13 +42,6 @@
     "queryAllPublicMethods": true
   },
   {
-    "name": "com.davidparry.scout.spec.PromptCapabilities",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
     "name": "com.davidparry.scout.spec.InitializeResult",
     "allDeclaredFields": true,
     "allDeclaredMethods": true,
@@ -175,118 +168,6 @@
     "queryAllPublicMethods": true
   },
   {
-    "name": "com.davidparry.scout.spec.JSONResponse",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
-    "name": "com.davidparry.scout.spec.JsonRpcRequest",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
-    "name": "com.davidparry.scout.spec.RequestParams",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
-    "name": "com.davidparry.scout.spec.RpcError",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
-    "name": "com.davidparry.scout.spec.Capabilities",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
-    "name": "com.davidparry.scout.spec.ClientInfo",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
-    "name": "com.davidparry.scout.spec.Tool",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
-    "name": "com.davidparry.scout.spec.InputSchema",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
-    "name": "com.davidparry.scout.spec.ToolsListResponse",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
-    "name": "com.davidparry.scout.spec.ToolOutputResponse",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
-    "name": "com.davidparry.scout.spec.Content",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
-    "name": "com.davidparry.scout.spec.PromptListItem",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
-    "name": "com.davidparry.scout.spec.PromptMessage",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
-    "name": "com.davidparry.scout.spec.PromptResponse",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
-    "name": "com.davidparry.scout.spec.PromptsListResponse",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
-    "name": "com.davidparry.scout.spec.PromptArguments",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
     "name": "com.davidparry.scout.spec.ListChanged",
     "allDeclaredFields": true,
     "allDeclaredMethods": true,
@@ -295,13 +176,6 @@
   },
   {
     "name": "com.davidparry.scout.annotation.Schema",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
-    "name": "com.davidparry.scout.spec.ListChanged",
     "allDeclaredFields": true,
     "allDeclaredMethods": true,
     "allDeclaredConstructors": true,
@@ -551,4 +425,3 @@
     "queryAllPublicMethods": true
   }
 ]
-
