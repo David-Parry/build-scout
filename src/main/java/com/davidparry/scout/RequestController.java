@@ -50,6 +50,7 @@ public class RequestController {
         logger.info("Received Message :'" + line + "'");
         try {
             JsonRpcRequest request = JsonRpcRequest.fromJson(line);
+            logger.log("Request has been created and is ready to consume " + request);
             if (request.error() != null) {
                 logger.log("Error processing request: " + request.error());
             } else if (request.result() != null) {
@@ -61,7 +62,7 @@ public class RequestController {
             }
         } catch (Exception e) {
             // This should only happen if there's an error creating the thread
-            logger.log("Error creating request processor thread", e);
+            logger.error("Error creating request processor thread", e);
             JSONResponse<?> jsonResponse = new JSONResponse<>("2.0", 0, new RpcError(-32603, "Error creating request processor: " + e.getMessage()));
             io.writeLine(gson.toJson(jsonResponse));
         }

@@ -1,0 +1,427 @@
+[
+  {
+    "name": "com.davidparry.scout.spec.ToolCapabilities",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.ServerCapabilities",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.ResourceCapabilities",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.PromptsCapabilities",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.LoggingCapabilities",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.PromptCapabilities",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.InitializeResult",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.Implementation",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.JSONResponse",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.JsonRpcRequest",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.RequestParams",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.RpcError",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.Capabilities",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.ClientInfo",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.Tool",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.InputSchema",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.ToolsListResponse",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.ToolOutputResponse",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.Content",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.PromptListItem",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.PromptMessage",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.PromptResponse",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.PromptsListResponse",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.PromptArguments",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.ListChanged",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.annotation.Schema",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.InputProperty",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.Tool",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.Role",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.ClientInfo",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.LoggingCapabilities",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true,
+    "allDeclaredFields": true
+  },
+  {
+    "name": "com.davidparry.scout.agent.Agent",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "java.lang.annotation.Annotation",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.common.ArgumentUtils",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.common.SourceClassUsageService",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.io.ApplicationLogger",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.io.Logger",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.spec.InputProperty",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.common.BuildOutput",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.common.GradleTasks",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.common.GradleTasksImpl",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.common.BuildFile",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.common.BuildSystem",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.common.BuildSystemImpl",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "java.lang.instrument.Instrumentation",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.common.DependencyFetch",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.tools.FindClassUsage",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.tools.UnitTestGradleProject",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.tools.FindBuildSystem",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.tools.ListDependencies",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.tools.BuildGradleProject",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.tools.BuildSystemFilePaths",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.tools.DownloadCurrentLatestSource",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.tools.GetFileInfo",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.tools.GetResourceInfo",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.tools.JarDiffReporter",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.tools.LatestDependencyVersion",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.tools.ReplaceSourceCodeComplete",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.tools.UpdateDependencyVersion",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.tools.BuildTool",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  }
+]

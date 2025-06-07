@@ -26,7 +26,7 @@ public abstract class ApplicationLogger implements Logger {
     private final ReentrantLock lock = new ReentrantLock();
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
     private final SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-    private String logDirectory;
+    private final String logDirectory;
     private String currentLogFile;
     private PrintWriter logWriter;
 
@@ -46,7 +46,7 @@ public abstract class ApplicationLogger implements Logger {
      * @return The ApplicationLogger instance
      */
     public static synchronized Logger getInstance() {
-       return getInstance(System.getProperty("user.home")+ LOG_DIRECTORY);
+        return getInstance(System.getProperty("user.home") + LOG_DIRECTORY);
     }
 
     /**
@@ -58,7 +58,7 @@ public abstract class ApplicationLogger implements Logger {
     public static synchronized Logger getInstance(String logDirectory) {
         if (INSTANCE == null) {
             if ("DEBUG".equalsIgnoreCase(loggingLevel)) {
-                INSTANCE = new DebugLogger(logDirectory );
+                INSTANCE = new DebugLogger(logDirectory);
             } else if ("INFO".equalsIgnoreCase(loggingLevel)) {
                 INSTANCE = new InfoLogger(logDirectory);
             } else if ("ERROR".equalsIgnoreCase(loggingLevel)) {

@@ -33,9 +33,9 @@ public class PromptDispatchHandler implements Handler<PromptResponse> {
             }
         }
         Object argsObj = request.params().arguments();
-        Map<String, String> arguments = (argsObj instanceof Map<?, ?> map) ? map.entrySet().stream().filter(e -> e.getKey() instanceof String && e.getValue() instanceof String).collect(java.util.stream.Collectors.toMap(e -> (String) e.getKey(), e -> (String) e.getValue())) : Collections.emptyMap();
+        Map<String, String> arguments = (argsObj instanceof Map<?, ?> map) ? map.entrySet().stream().filter(e -> e.getKey() instanceof String && e.getValue() != null).collect(java.util.stream.Collectors.toMap(e -> (String) e.getKey(), e -> e.getValue() instanceof String ? (String) e.getValue() : String.valueOf(e.getValue()))) : Collections.emptyMap();
+
         String name = request.params().name();
-        //String name = request.params().arguments().get("name");
         logger.log("PromptDispatchHandler name is : " + name);
         Prompt prompt = state.getPrompt(name);
         if (prompt == null) {

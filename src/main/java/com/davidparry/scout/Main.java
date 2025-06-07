@@ -35,7 +35,7 @@ public class Main {
 
         // Create the request controller
         controller = new RequestController(io, registry, new ClientConsumer(ApplicationState.instance()));
-
+        logger.log("Controller initialized ");
         try {
             // Add a listener for individual lines
             io.addLineListener(Main::process);
@@ -50,10 +50,9 @@ public class Main {
                     shutdownLatch.countDown();
                 }
             }));
-
+            logger.info("Scout version " + MCP_SERVER_VERSION+ " started.");
             // Start the async input reader
             io.startInputReader();
-
             keepRunning();
             logger.log("Scout shutting down");
         } catch (Exception e) {

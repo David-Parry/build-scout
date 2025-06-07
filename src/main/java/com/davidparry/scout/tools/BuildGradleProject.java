@@ -55,7 +55,6 @@ public class BuildGradleProject extends BuildTool implements Tool<ToolOutputResp
         return new ToolOutputResponse(results, error);
     }
 
-
     @Override
     public InputSchema schema() {
         logger.log("BuildGradleProject schema Schema being created and returned");
@@ -63,6 +62,4 @@ public class BuildGradleProject extends BuildTool implements Tool<ToolOutputResp
         addProperty(new InputProperty("check","boolean", "If this flag is passed and is true then the check part of the gradle build will be also done.",false));
         return new InputSchema("object", getProperties(), getRequired());
     }
-
-
 }
