@@ -203,3 +203,16 @@ tasks.named('nativeCompileClasspathJar') {
 tasks.named('generateResourcesConfigFile') {
     dependsOn tasks.named('shadowJar')
 }
+
+graalvmNative {
+    agent {
+        enabled = true
+        defaultMode = "standard" // or "conditional" for conditional metadata
+
+        // Optional: Configure metadata copy task
+        metadataCopy {
+            inputTaskNames.add("run") // or "test"
+            outputDirectories.add("src/main/resources/META-INF/native-image")
+        }
+    }
+}
