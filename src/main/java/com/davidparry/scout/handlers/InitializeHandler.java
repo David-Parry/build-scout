@@ -21,7 +21,7 @@ public class InitializeHandler implements Handler<InitializeResult> {
 
         ServerCapabilities capabilities = new ServerCapabilities(tools, prompts);
 
-        Implementation serverInfo = new Implementation(Main.MCP_SERVER_NAME, Main.MCP_SERVER_VERSION);
+        Implementation serverInfo = new Implementation(Main.MCP_SERVER_NAME,  ApplicationState.instance().getVersion());
 
         InitializeResult result = new InitializeResult(protocolVersion, capabilities, serverInfo);
 

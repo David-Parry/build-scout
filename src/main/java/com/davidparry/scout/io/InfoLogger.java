@@ -1,23 +1,24 @@
 package com.davidparry.scout.io;
 
-public class InfoLogger extends ApplicationLogger {
-    public InfoLogger(String logDirectory) {
-        super(logDirectory);
+public class InfoLogger extends BaseLogger {
+
+    public InfoLogger(String logDirectory, String level) {
+        super(logDirectory, level);
     }
 
     @Override
     public void info(String message) {
-        write(message);
+        write(INFO_PREFIX + message);
     }
 
     @Override
     public void error(String message) {
-        write(message);
+        write(ERROR_PREFIX + message);
     }
 
     @Override
     public void error(String message, Throwable exception) {
-        write(message, exception);
+        write(ERROR_PREFIX + message, exception);
     }
 
 }

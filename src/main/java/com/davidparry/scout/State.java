@@ -29,4 +29,9 @@ public interface State {
     Prompt getPrompt(String key);
 
     boolean hasRootCapability();
+
+    void setVersion(String version);
+
+    String getVersion();
+
 }

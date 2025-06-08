@@ -32,4 +32,14 @@ public class DevNullLogger implements Logger {
     public void error(String message, Throwable exception) {
 
     }
+
+    @Override
+    public String level() {
+        return "DEV/NULL";
+    }
+
+    @Override
+    public String path() {
+        return "DEV/NULL/PATH";
+    }
 }

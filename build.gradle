@@ -9,7 +9,7 @@ plugins {
 }
 
 group = 'com.davidparry.scout'
-version = '1.0.61'
+version = '1.0.68'
 jar.enabled = false
 
 repositories {
@@ -167,6 +167,7 @@ graalvmNative {
             buildArgs.add('--no-fallback')  // Optional: reduces size, disables JVM fallback
             buildArgs.add('--initialize-at-build-time=com.google.gson,com.davidparry.scout')
             buildArgs.add("-H:ReflectionConfigurationFiles=${projectDir}/src/main/resources/META-INF/native-image/reflect-config.json")
+            buildArgs.add("-H:ResourceConfigurationFiles=${projectDir}/src/main/resources/META-INF/native-image/resource-config.json")
             buildArgs.add('--report-unsupported-elements-at-runtime')
             useFatJar = true  // Uses shadowJar
         }
@@ -174,8 +175,6 @@ graalvmNative {
 }
 
 nativeCompile.dependsOn shadowJar
-// Optionally, run incrementVersion after build
-//build.finalizedBy incrementVersion
 
 tasks.named('distZip').configure { enabled = false }
 tasks.named('distTar').configure { enabled = false }
@@ -216,3 +215,22 @@ graalvmNative {
         }
     }
 }
+
+// Add this at the end of your build.gradle
+
+tasks.register('prebuild') {
+    group = 'build'
+    description = 'Increments version and then runs build with updated version.'
+
+    doLast {
+        // Run incrementVersion
+        exec {
+            commandLine 'gradle', 'incrementVersion'
+        }
+        // Now run the build with the new version
+        exec {
+            commandLine 'gradle', 'build'
+        }
+    }
+}
+

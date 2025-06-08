@@ -3,12 +3,15 @@ package com.davidparry.scout;
 import com.davidparry.scout.annotation.SchemaInitializer;
 import com.davidparry.scout.annotation.SchemaRegistry;
 import com.davidparry.scout.common.ClientConsumer;
+import com.davidparry.scout.common.LogFactory;
 import com.davidparry.scout.io.ApplicationLogger;
 import com.davidparry.scout.io.IOHandler;
 import com.davidparry.scout.io.IOHandlerImpl;
 import com.davidparry.scout.io.Logger;
 
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -16,14 +19,28 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Main {
     private static final AtomicBoolean isShuttingDown = new AtomicBoolean(false);
     private static final CountDownLatch shutdownLatch = new CountDownLatch(1);
-    private static final Logger logger = ApplicationLogger.getInstance();
     public static String MCP_SERVER_NAME = "scout-server";
-    public static String MCP_SERVER_VERSION = loadVersion();
     private static IOHandler io;
     private static RequestController controller;
+    public final String mcpVersionNumber;
+    private final Logger logger;
+
+    public Main() {
+        LogFactory logFactory = new LogFactory();
+        logger = logFactory.getLogger();
+        ApplicationLogger.setLogger(logger);
+        mcpVersionNumber = loadVersion();
+        ApplicationState.instance().setVersion(mcpVersionNumber);
+    }
 
     public static void main(String[] args) {
-        logger.log("Starting Scout version " + MCP_SERVER_VERSION);
+        Main main = new Main();
+        main.start();
+    }
+
+    public void start() {
+        logger.info("Starting Scout version " + mcpVersionNumber + " Logger Level " + logger.level());
+
         // Create an IOHandler instance for console I/O
         io = new IOHandlerImpl();
 
@@ -38,7 +55,7 @@ public class Main {
         logger.log("Controller initialized ");
         try {
             // Add a listener for individual lines
-            io.addLineListener(Main::process);
+            io.addLineListener(this::process);
 
             // Create a shutdown hook to close resources properly
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -50,7 +67,7 @@ public class Main {
                     shutdownLatch.countDown();
                 }
             }));
-            logger.info("Scout version " + MCP_SERVER_VERSION+ " started.");
+            logger.info("Scout version " + mcpVersionNumber + " started.");
             // Start the async input reader
             io.startInputReader();
             keepRunning();
@@ -63,16 +80,17 @@ public class Main {
         }
     }
 
-    private static void stop() {
+    private void stop() {
         if (io != null) {
             io.stopRunning();
         }
+        logger.close();
     }
 
     /**
      * Keeps the application running until terminated by the user or until IO processing stops
      */
-    private static void keepRunning() {
+    private void keepRunning() {
         try {
             // Create a polling mechanism to check if IO is still running
             while (!isShuttingDown.get()) {
@@ -112,7 +130,7 @@ public class Main {
      *
      * @param line The input line to process
      */
-    private static void process(String line) {
+    private void process(String line) {
         if (line.isEmpty()) {
             return;
         }
@@ -125,16 +143,18 @@ public class Main {
         }
     }
 
-    private static String loadVersion() {
+    private String loadVersion() {
+        logger.log("Loading Scout version !!!! ");
         try {
-            java.io.InputStream is = Main.class.getClassLoader().getResourceAsStream("version.txt");
+            InputStream is = Main.class.getClassLoader().getResourceAsStream("version.txt");
             if (is != null) {
-                try (java.util.Scanner scanner = new java.util.Scanner(is, StandardCharsets.UTF_8)) {
-                    return scanner.hasNextLine() ? scanner.nextLine().trim() : "unknown";
+                try (Scanner scanner = new Scanner(is, StandardCharsets.UTF_8)) {
+                    logger.log("Loading version from file scanner ");
+                    return scanner.hasNextLine() ? scanner.nextLine().trim() : "file_missing_version";
                 }
             }
         } catch (Exception e) {
-            logger.log("Could not load version from version.txt", e);
+            logger.error("Could not load version from version.txt", e);
         }
         return "unknown";
     }

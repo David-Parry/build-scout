@@ -16,6 +16,7 @@ public class ApplicationState implements State {
 
     private static final Logger logger = ApplicationLogger.getInstance();
 
+    private String version = "1.0.0";
 
     // Singleton instance
     private static ApplicationState INSTANCE;
@@ -45,6 +46,16 @@ public class ApplicationState implements State {
             return true;
         }
 
+    }
+
+    @Override
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    @Override
+    public String getVersion() {
+        return version;
     }
 
     /**

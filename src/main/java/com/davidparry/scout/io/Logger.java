@@ -3,6 +3,9 @@ package com.davidparry.scout.io;
 public interface Logger {
     String BUILD_SCOUT_LOGGING = "BUILD_SCOUT_LOGGING";
     String LOG_DIRECTORY = "/log";
+    String ERROR_PREFIX = "[ERROR] ";
+    String INFO_PREFIX = "[INFO] ";
+    String DEBUG_PREFIX = "[DEBUG] ";
 
     void log(String message);
 
@@ -15,4 +18,8 @@ public interface Logger {
     void close();
 
     void error(String message, Throwable exception);
+
+    String level();
+
+    String path();
 }

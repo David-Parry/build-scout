@@ -423,5 +423,40 @@
     "allDeclaredMethods": true,
     "allDeclaredConstructors": true,
     "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.io.ApplicationLogger",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.io.DebugLogger",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.io.ErrorLogger",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.io.InfoLogger",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.io.Logger",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true,
+    "queryAllPublicMethods": true
   }
 ]
