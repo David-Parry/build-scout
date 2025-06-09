@@ -1,5 +1,6 @@
 package com.davidparry.scout.handlers;
 
+import com.davidparry.scout.annotation.SchemaMetadata;
 import com.davidparry.scout.annotation.SchemaRegistry;
 import com.davidparry.scout.spec.InputSchema;
 import com.davidparry.scout.spec.JsonRpcRequest;
@@ -20,10 +21,10 @@ public class ToolsListHandler implements Handler<ToolsListResponse> {
     @Override
     public ToolsListResponse handle(JsonRpcRequest request) {
         List<Tool> tools = new ArrayList<>();
-        Map<String, SchemaRegistry.SchemaMetadata> registries = schemaRegistry.getAllSchemas();
+        Map<String, SchemaMetadata> registries = schemaRegistry.getAllSchemas();
 
         for (String key : registries.keySet()) {
-            SchemaRegistry.SchemaMetadata metadata = registries.get(key);
+            SchemaMetadata metadata = registries.get(key);
             InputSchema inputSchema = metadata.getTool().schema();
             Tool tool = new Tool(key, metadata.getDescription(), inputSchema);
             tools.add(tool);

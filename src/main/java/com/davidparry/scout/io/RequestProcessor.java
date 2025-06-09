@@ -43,8 +43,6 @@ public class RequestProcessor implements Runnable {
         int id = 0;
 
         try {
-            // Parse the incoming JSON-RPC request
-
             logger.log("Thread processing request: " + request.toJson());
             String method = request.method();
             jsonRpc = request.jsonrpc();
@@ -60,12 +58,12 @@ public class RequestProcessor implements Runnable {
                 io.writeLine(outString);
 
                 // Log the response
-                logger.log("Thread sending response: " + outString);
+                logger.log("Thread sending response is null? " + (outString == null));
             } else {
                 logger.log("Thread notification no response for: " + request);
             }
         } catch (Exception e) {
-            logger.log("Error in request processor", e);
+            logger.error("Error in request processor", e);
             JSONResponse<?> jsonResponse = new JSONResponse<>(jsonRpc, id, new RpcError(-32603, "Error processing request: " + e.getMessage()));
             io.writeLine(gson.toJson(jsonResponse));
         }
@@ -82,33 +80,20 @@ public class RequestProcessor implements Runnable {
      */
     private Object handleMethod(String method, JsonRpcRequest request) {
         try {
-            // Extract the base method name if it contains a forward slash
-            String baseMethod = method;
-            if (method.contains("/")) {
-                String base = method.substring(0, method.indexOf('/'));
-                if ("notifications".equals(base)) {
-                    if ("notifications/roots/list_changed".equalsIgnoreCase(method)) {
-                        baseMethod = "notifications/roots/list_changed";
-                    } else if ("notifications/initialized".equalsIgnoreCase(method)) {
-                        baseMethod = "notifications/initialized";
-                    } else {
-                        baseMethod = method.substring(0, method.indexOf('/'));
-                    }
-                    logger.log("Using base method: " + baseMethod + " from full method: " + method);
-                }
-            }
-            Handler handler = registry.getHandlerForMethod(baseMethod);
-            logger.log("Handler: " + handler);
+            // Use the full method name for handler lookup, including notifications
+            Handler handler = registry.getHandlerForMethod(method);
             if (handler != null) {
-                // Get the handler for the base method
-                return handler.handle(request);
+                logger.log("RequestProcessor handler " + handler + " found for method: " + method);
+                Object object = handler.handle(request);
+                logger.log("RequestProcessor handler response " + object);
+                return object;
             } else {
-                logger.log("No Handler for the following method and call : " + method + " request: " + request);
+                logger.error("No Handler for the following method and call : " + method + " request: " + request);
                 // method not found
                 return new RpcError(-32601, "This capability is not supported. ");
             }
         } catch (Exception e) {
-            logger.log("Error invoking handler for method: " + method, e);
+            logger.error("Error invoking handler for method: " + method, e);
             // method not found
             return new RpcError(-32603, "Error processing request: " + e.getMessage());
         }

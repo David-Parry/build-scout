@@ -1,13 +1,9 @@
 package com.davidparry.scout.annotation;
 
-import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.handlers.Handler;
 import com.davidparry.scout.tools.Tool;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -126,30 +122,5 @@ public class SchemaRegistry {
     public Map<String, Object> getAllHandlers() {
         return Collections.unmodifiableMap(methodHandlers);
     }
-    
-    /**
-     * Class to hold metadata about a registered schema.
-     */
-    public static class SchemaMetadata {
-        private final Class<?> clazz;
-        private final String description;
-        private final Tool handler;
-        
-        public SchemaMetadata(Class<?> clazz, String description, Tool handler) {
-            this.clazz = clazz;
-            this.description = description;
-            this.handler = handler;
-        }
-        public Class<?> getClazz() {
-            return clazz;
-        }
-        
-        public String getDescription() {
-            return description;
-        }
-        
-        public Tool getTool() {
-            return handler;
-        }
-    }
+
 }

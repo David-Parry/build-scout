@@ -35,7 +35,7 @@ public class GetFileInfo extends BuildTool implements Tool<ToolOutputResponse> {
             FileInfoRecord fileInfoRecord = FileInfoRecord.fromFile(file);
             results.add(new Content(fileInfoRecord.toJson()));
         } catch (Exception e) {
-            logger.log("Error handling get-file-info tool call", e);
+            logger.error("Error handling get-file-info tool call", e);
             return createErrorResult("Error handling get-file-info tool call " + e.getMessage());
         }
         return new ToolOutputResponse(results, false);

@@ -35,6 +35,7 @@ public class ListDependencies extends BuildTool implements Tool<ToolOutputRespon
 
     @Override
     public ToolOutputResponse action(JsonRpcRequest request) {
+        logger.log("ListDependencies action method received");
         List<Content> results = new ArrayList<>();
         boolean error = true;
         try {
@@ -55,7 +56,6 @@ public class ListDependencies extends BuildTool implements Tool<ToolOutputRespon
                         }
                     }
                 } else {
-
                     List<String> dependencies = dependencyFetch.resolveDependencies(path);
                     error = false;
                     dependencies.forEach(d -> results.add(new Content(d)));
@@ -63,7 +63,7 @@ public class ListDependencies extends BuildTool implements Tool<ToolOutputRespon
                 }
             }
         } catch (Exception e) {
-            logger.log("Failed to process paths", e);
+            logger.error("Failed to process paths", e);
         }
         return new ToolOutputResponse(results, error);
     }

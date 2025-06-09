@@ -1,9 +1,10 @@
 package com.davidparry.scout.common;
 
+import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.Content;
 import com.davidparry.scout.spec.JsonRpcTextResponse;
 import com.davidparry.scout.spec.ToolOutputResponse;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
@@ -15,6 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class BuildSystemImpl implements BuildSystem {
+    private static final Logger logger = ApplicationLogger.getInstance();
 
 
     public Set<BuildFile> onlyBuildFilesFilter(Set<File> files) {
@@ -40,6 +42,7 @@ public class BuildSystemImpl implements BuildSystem {
                 }
             }
         } catch (Exception e) {
+            logger.error("Error while trying to discover Scout path " + pathStr, e);
         }
         return new DiscoveredPath(type, discoverPath);
     }
@@ -54,6 +57,7 @@ public class BuildSystemImpl implements BuildSystem {
         try {
             Files.walk(directory).filter(path -> !isHiddenDirectory(path)).filter(Files::isRegularFile).forEach(file -> checkBuildFile(file.toString(), builds));
         } catch (Exception e) {
+            logger.error("Error while trying to walk Scout directory " + directory, e);
         }
     }
 
@@ -95,6 +99,7 @@ public class BuildSystemImpl implements BuildSystem {
     }
 
     public String identifyBuildFile(String path) {
+        logger.log("BuildSystemImpl Building Scout path " + path);
         if (path.endsWith("pom.xml")) {
             return MAVEN;
         } else if (path.endsWith("build.gradle")) {
@@ -184,6 +189,7 @@ public class BuildSystemImpl implements BuildSystem {
                     }
                 });
             } catch (Exception e) {
+                logger.error("Error while trying to process Scout root folder " + directoryPath, e);
             }
         } else if (discoveredPath.type() == PathType.FILE && discoveredPath.path().isPresent()) {
             // If it's a single file, check if it's a build file
@@ -196,6 +202,7 @@ public class BuildSystemImpl implements BuildSystem {
                 absolutePaths.add(filePath);
             }
         } else {
+            logger.log("No Scout root folder found for " + discoveredPath.path());
         }
 
         return absolutePaths.size() - initialSize;

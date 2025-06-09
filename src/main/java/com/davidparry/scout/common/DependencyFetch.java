@@ -1,5 +1,7 @@
 package com.davidparry.scout.common;
 
+import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.Logger;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
 import org.gradle.tooling.model.GradleModuleVersion;
@@ -17,12 +19,14 @@ import java.util.List;
 
 public class DependencyFetch {
     private final BuildSystem buildSystem;
+    private static final Logger logger = ApplicationLogger.getInstance();
 
     public DependencyFetch(BuildSystem buildSystem) {
         this.buildSystem = buildSystem;
     }
 
     public List<String> resolveDependencies(String path) {
+        logger.log("Resolving dependencies for " + path);
         String type = buildSystem.identifyBuildFile(path);
         if (BuildSystem.GRADLE_GROOVY.equals(type)) {
             try {
@@ -84,6 +88,7 @@ public class DependencyFetch {
             }
 
         } catch (Exception e) {
+            logger.error("Error resolving Gradle dependencies", e);
         }
 
         return dependencies;
@@ -140,6 +145,7 @@ public class DependencyFetch {
 
             return null;
         } catch (Exception e) {
+            logger.error("Error resolving latest version", e);
             return null;
         }
     }
@@ -173,6 +179,7 @@ public class DependencyFetch {
             }
             return sourcesJarFile.toPath();
         } catch (Exception e) {
+            logger.error("Error resolving latest version", e);
             return null;
         }
     }
@@ -225,6 +232,7 @@ public class DependencyFetch {
                 }
             }
         } catch (Exception e) {
+            logger.error("Error resolving latest version", e);
         } finally {
             if (tempMetadataFile != null) {
                 try {

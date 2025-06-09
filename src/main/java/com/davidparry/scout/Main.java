@@ -24,6 +24,7 @@ public class Main {
     private static RequestController controller;
     public final String mcpVersionNumber;
     private final Logger logger;
+    private final SchemaInitializer schemaInitializer;
 
     public Main() {
         LogFactory logFactory = new LogFactory();
@@ -31,6 +32,7 @@ public class Main {
         ApplicationLogger.setLogger(logger);
         mcpVersionNumber = loadVersion();
         ApplicationState.instance().setVersion(mcpVersionNumber);
+        schemaInitializer = new SchemaInitializer();
     }
 
     public static void main(String[] args) {
@@ -45,8 +47,8 @@ public class Main {
         io = new IOHandlerImpl();
 
         // Initialize the Schema annotation system
-        SchemaInitializer.initialize();
-        SchemaInitializer.registerCoreClasses(io, ApplicationState.instance());
+        schemaInitializer.initialize();
+        schemaInitializer.registerCoreClasses(io, ApplicationState.instance());
         SchemaRegistry registry = SchemaRegistry.getInstance();
 
 

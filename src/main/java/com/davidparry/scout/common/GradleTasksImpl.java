@@ -1,5 +1,7 @@
 package com.davidparry.scout.common;
 
+import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.Logger;
 import org.gradle.tooling.BuildException;
 import org.gradle.tooling.BuildLauncher;
 import org.gradle.tooling.GradleConnector;
@@ -12,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GradleTasksImpl implements GradleTasks {
+
+    private static final Logger logger = ApplicationLogger.getInstance();
 
 
     public BuildOutput buildGradleProject(File projectDir, boolean check) {
@@ -42,6 +46,7 @@ public class GradleTasksImpl implements GradleTasks {
             }
 
         } catch (Exception io) {
+            logger.error(io.getMessage(), io);
             errorOutput = io.getMessage();
         }
         return new BuildOutput(output, errorOutput, error);

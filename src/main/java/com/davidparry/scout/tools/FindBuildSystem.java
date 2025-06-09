@@ -32,9 +32,10 @@ public class FindBuildSystem extends BuildTool implements Tool<ToolOutputRespons
     @Override
     public ToolOutputResponse action(JsonRpcRequest args) {
         Set<BuildFile> builds = new HashSet<>();
+        logger.log("Finding build system using " + args);
         try {
             Set<File> files = getProjectRoots(args);
-            logger.log("Root directories " + files.size() + " projects in " + files);
+            logger.log("FindBuildSystem Root directories " + files.size() + " projects in " + files);
             builds = buildSystem.onlyBuildFilesFilter(files);
         } catch (Exception e) {
             logger.log("Error finding the build path", e);

@@ -8,8 +8,6 @@ import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.tools.*;
 
 import java.io.IOException;
-import java.lang.instrument.Instrumentation;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -20,15 +18,16 @@ import java.util.concurrent.ConcurrentHashMap;
  * automatically process annotated classes.
  */
 public class SchemaInitializer {
-    private static final Set<Class<?>> PROCESSED_CLASSES = ConcurrentHashMap.newKeySet();
-    private static final Logger logger = ApplicationLogger.getInstance();
-    private static final boolean IS_NATIVE_IMAGE = isNativeImage();
+    private  final Set<Class<?>> PROCESSED_CLASSES = ConcurrentHashMap.newKeySet();
+    private  final Logger logger = ApplicationLogger.getInstance();
+    private  final boolean IS_NATIVE_IMAGE = isNativeImage();
 
     /**
      * Determines if the code is running in a GraalVM native image
+     *
      * @return true if running as a native image, false otherwise
      */
-    private static boolean isNativeImage() {
+    private boolean isNativeImage() {
         return System.getProperty("org.graalvm.nativeimage.imagecode") != null;
     }
 
@@ -36,7 +35,7 @@ public class SchemaInitializer {
      * Initialize the Schema annotation processing system.
      * This should be called early in the application startup.
      */
-    public static void initialize() {
+    public  void initialize() {
         logger.log("Initializing Schema Processing...");
         // Register a shutdown hook to ensure all classes are processed
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -49,11 +48,11 @@ public class SchemaInitializer {
         processLoadedClasses();
     }
 
-    public static void registerCoreClasses(IOHandler ioHandler, State state) {
+    public  void registerCoreClasses(IOHandler ioHandler, State state) {
         SchemaRegistry.getInstance().registerHandler("initialize", new InitializeHandler());
         SchemaRegistry.getInstance().registerHandler("notifications", new NotificationHandler());
-        SchemaRegistry.getInstance().registerHandler("notifications/roots/list_changed", new NotificationRootsHandler(ioHandler,state));
-        SchemaRegistry.getInstance().registerHandler("notifications/initialized", new NotificationInitializedHandler(ioHandler,state));
+        SchemaRegistry.getInstance().registerHandler("notifications/roots/list_changed", new NotificationRootsHandler(ioHandler, state));
+        SchemaRegistry.getInstance().registerHandler("notifications/initialized", new NotificationInitializedHandler(ioHandler, state));
         SchemaRegistry.getInstance().registerHandler("tools/list", new ToolsListHandler(SchemaRegistry.getInstance()));
         SchemaRegistry.getInstance().registerHandler("tools/call", new ToolDispatcherHandler());
         SchemaRegistry.getInstance().registerHandler("prompts/list", new PromptsListHandler());
@@ -64,9 +63,8 @@ public class SchemaInitializer {
     /**
      * Process all currently loaded classes to find and register those with @Schema annotations.
      */
-    private static void processLoadedClasses() {
+    private  void processLoadedClasses() {
         try {
-
             // Get all loaded classes using reflection
             Class<?>[] loadedClasses = getLoadedClasses();
             logger.log("Loaded " + loadedClasses.length + " classes");
@@ -76,7 +74,7 @@ public class SchemaInitializer {
                 }
             }
         } catch (Exception e) {
-            logger.error("Error processing loaded classes: ",  e);
+            logger.error("Error processing loaded classes: ", e);
         }
     }
 
@@ -85,7 +83,7 @@ public class SchemaInitializer {
      *
      * @param clazz The class to check and process
      */
-    public static void processClassIfAnnotated(Class<?> clazz) {
+    public  void processClassIfAnnotated(Class<?> clazz) {
         if (clazz != null && !PROCESSED_CLASSES.contains(clazz) && clazz.isAnnotationPresent(Schema.class)) {
             PROCESSED_CLASSES.add(clazz);
             SchemaProcessor.processAnnotation(clazz);
@@ -97,7 +95,7 @@ public class SchemaInitializer {
      *
      * @return Array of loaded classes or an empty array if they couldn't be retrieved
      */
-    private static Class<?>[] getLoadedClasses() {
+    private  Class<?>[] getLoadedClasses() {
         try {
             return findAllLoadedClasses();
         } catch (Exception e) {
@@ -112,17 +110,14 @@ public class SchemaInitializer {
      *
      * @return Array of classes or an empty array if scanning failed
      */
-    private static Class<?>[] findAllLoadedClasses() {
+    private  Class<?>[] findAllLoadedClasses() {
         try {
-            // If running as a native image, use the explicit registry instead of dynamic scanning
-            if (IS_NATIVE_IMAGE) {
-                logger.log("Running as native image, using explicit class registry");
-                List<Class<?>> classes = getAnnotatedClasses();
-                return classes.toArray(new Class<?>[0]);
+            logger.log("Finding all loaded classes...");
+            List<Class<?>> classes = getAnnotatedClasses();
+            if (classes.isEmpty()) {
+                logger.log("No classes found with @Schema annotation, calling JVM class scanner");
+                classes = ClassScanner.scanAllClasses();
             }
-
-            // Otherwise use dynamic class scanning (JVM mode)
-            List<Class<?>> classes = ClassScanner.scanAllClasses();
             return classes.toArray(new Class<?>[0]);
         } catch (ClassNotFoundException | IOException e) {
             // Log the error
@@ -131,13 +126,14 @@ public class SchemaInitializer {
             return new Class<?>[0];
         }
     }
+
     /**
      * Get a list of all classes annotated with @Schema.
      * This method is used in native image mode instead of dynamic class scanning.
      *
      * @return List of all classes with the @Schema annotation
      */
-    public static List<Class<?>> getAnnotatedClasses() {
+    public  List<Class<?>> getAnnotatedClasses() {
         List<Class<?>> annotatedClasses = new ArrayList<>();
 
         // Add all classes with @Schema annotation here

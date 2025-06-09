@@ -1,5 +1,6 @@
 package com.davidparry.scout.handlers;
 
+import com.davidparry.scout.annotation.SchemaMetadata;
 import com.davidparry.scout.annotation.SchemaRegistry;
 import com.davidparry.scout.io.ApplicationLogger;
 import com.davidparry.scout.io.Logger;
@@ -12,8 +13,10 @@ public class ToolDispatcherHandler implements Handler<ToolOutputResponse> {
 
     @Override
     public ToolOutputResponse handle(JsonRpcRequest request) {
-        logger.log("Handling request: " + request);
-        SchemaRegistry.SchemaMetadata metadata = SchemaRegistry.getInstance().getSchema(request.params().name());
+        logger.info("ToolDispatcherHandler Received request");
+        logger.log("ToolDispatcherHandler Handling request: " + request);
+        SchemaMetadata metadata = SchemaRegistry.getInstance().getSchema(request.params().name());
+
         Tool tool = metadata.getTool();
         return (ToolOutputResponse) tool.action(request);
     }
