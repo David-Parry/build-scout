@@ -9,7 +9,7 @@ plugins {
 }
 
 group = 'com.davidparry.scout'
-version = '1.0.87'
+version = '1.0.94'
 jar.enabled = false
 
 repositories {
@@ -232,5 +232,20 @@ tasks.register('prebuild') {
             commandLine 'gradle', 'build'
         }
     }
+}
+
+// Alternative approach using doFirst if you need the version increment to happen before build
+tasks.register('alternative') {
+    group = 'build'
+    description = 'Increments version and then runs build with updated version.'
+
+    doFirst {
+        // Execute incrementVersion task directly
+        tasks.incrementVersion.actions.each { action ->
+            action.execute(tasks.incrementVersion)
+        }
+    }
+
+    finalizedBy build
 }
 

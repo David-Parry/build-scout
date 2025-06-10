@@ -54,18 +54,22 @@ public class BaseLogger implements Logger {
     }
 
     protected void write(String message) {
+        String timestamp = timestampFormat.format(new Date());
+        rawWrite("[" + timestamp + "] " + message);
+    }
+
+    protected void rawWrite(String message) {
         try {
             if (logWriter == null) {
                 createNewLogFile();
             }
-
-            String timestamp = timestampFormat.format(new Date());
-            logWriter.println("[" + timestamp + "] " + message);
+            logWriter.println(message);
             logWriter.flush();
         } catch (IOException e) {
             // just dont output
         }
     }
+
 
     protected void write(String message, Throwable exception) {
         try {
@@ -95,6 +99,11 @@ public class BaseLogger implements Logger {
         } catch (Exception e) {
             // Ignore any exceptions during close
         }
+    }
+
+    @Override
+    public void api(String message) {
+
     }
 
     @Override

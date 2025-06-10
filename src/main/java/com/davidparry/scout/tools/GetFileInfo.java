@@ -10,7 +10,7 @@ import com.davidparry.scout.spec.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Schema(name = "get_file_info", description = "Get information about a file, just simply give a path and it will return the file information for sure.")
+@Schema(name = "get_file_info", description = "Get information about a file, just simply give an absolute path and it will return the file information for sure.")
 public class GetFileInfo extends BuildTool implements Tool<ToolOutputResponse> {
     private static final Logger logger = ApplicationLogger.getInstance();
 
@@ -22,7 +22,7 @@ public class GetFileInfo extends BuildTool implements Tool<ToolOutputResponse> {
     @Override
     public InputSchema schema() {
         logger.log("GetFileInfo schema Schema being created and returned");
-        addProperty(new InputProperty("path", "string", "Path to the file.", true));
+        addProperty(new InputProperty("path", "string", "The Absolute Path to the file.", true));
         return new InputSchema("object", getProperties(), getRequired());
     }
 

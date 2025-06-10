@@ -4,6 +4,11 @@ public class DevNullLogger implements Logger {
 
 
     @Override
+    public void api(String message) {
+
+    }
+
+    @Override
     public void log(String message) {
 
     }

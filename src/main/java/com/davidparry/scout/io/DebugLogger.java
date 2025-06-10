@@ -32,4 +32,9 @@ public class DebugLogger extends BaseLogger {
         write(INFO_PREFIX + message);
     }
 
+    @Override
+    public void api(String message) {
+        write(API_PREFIX + message);
+    }
+
 }

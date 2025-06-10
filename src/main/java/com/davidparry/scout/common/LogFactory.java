@@ -41,8 +41,9 @@ public class LogFactory {
             return new InfoLogger(directory, loggingLevel);
         } else if ("ERROR".equalsIgnoreCase(loggingLevel)) {
             return new ErrorLogger(directory, loggingLevel);
+        } else if ("API".equalsIgnoreCase(loggingLevel)) {
+            return new ApiLogger(directory, loggingLevel);
         } else {
-            // INSTANCE = new DebugLogger(directory, loggingLevel);
             return new DevNullLogger();
         }
     }

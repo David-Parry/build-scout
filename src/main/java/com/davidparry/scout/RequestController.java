@@ -47,7 +47,6 @@ public class RequestController {
         if (line.isEmpty()) {
             return;
         }
-        logger.info("Received Message :'" + line + "'");
         try {
             JsonRpcRequest request = JsonRpcRequest.fromJson(line);
             logger.log("Request has been created and is ready to consume " + request);
