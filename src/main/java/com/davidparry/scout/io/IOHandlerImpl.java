@@ -67,7 +67,7 @@ public class IOHandlerImpl implements IOHandler {
      * @param text The text to write
      */
     public void writeLine(String text) {
-        logger.api("transmitted:"+text);
+        logger.api(text);
         writer.println(text);
         writer.flush();
     }
@@ -93,7 +93,7 @@ public class IOHandlerImpl implements IOHandler {
                         break;
                     }
                     String line = scanner.nextLine();
-                    logger.api("received:"+line);
+                    logger.api(line);
                     publishLine(line);
                 }
                 logger.log("Input stream closed.");

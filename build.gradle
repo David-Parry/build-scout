@@ -9,7 +9,7 @@ plugins {
 }
 
 group = 'com.davidparry.scout'
-version = '1.0.94'
+version = '1.0.105'
 jar.enabled = false
 
 repositories {
@@ -130,8 +130,10 @@ tasks.register('updateConfigJson') {
         def latestJar = jarFiles.max { a, b -> a.lastModified() <=> b.lastModified() }
         def claudConfigFile = file("${System.getProperty('user.home')}/Library/Application Support/Claude/claude_desktop_config.json")
         def copilotConfigFile = file("${System.getProperty('user.home')}/.config/github-copilot/intellij/mcp.json")
+        def inspectorConfigFile = file("${System.getProperty('user.home')}/code/github/inspector/config.json")
         updateScoutServerJarInConfig(claudConfigFile,latestJar)
         updateScoutServerJarInConfig(copilotConfigFile,latestJar)
+        updateScoutServerJarInConfig(inspectorConfigFile,latestJar)
     }
 }
 
@@ -216,26 +218,8 @@ graalvmNative {
     }
 }
 
-// Add this at the end of your build.gradle
 
 tasks.register('prebuild') {
-    group = 'build'
-    description = 'Increments version and then runs build with updated version.'
-
-    doLast {
-        // Run incrementVersion
-        exec {
-            commandLine 'gradle', 'incrementVersion'
-        }
-        // Now run the build with the new version
-        exec {
-            commandLine 'gradle', 'build'
-        }
-    }
-}
-
-// Alternative approach using doFirst if you need the version increment to happen before build
-tasks.register('alternative') {
     group = 'build'
     description = 'Increments version and then runs build with updated version.'
 

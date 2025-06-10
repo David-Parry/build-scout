@@ -18,16 +18,6 @@ public class DebugLogger extends BaseLogger {
     }
 
     @Override
-    public void error(String message) {
-        write(ERROR_PREFIX + message);
-    }
-
-    @Override
-    public void error(String message, Throwable exception) {
-        write(ERROR_PREFIX + message, exception);
-    }
-
-    @Override
     public void info(String message) {
         write(INFO_PREFIX + message);
     }

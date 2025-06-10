@@ -12,16 +12,6 @@ public class InfoLogger extends BaseLogger {
     }
 
     @Override
-    public void error(String message) {
-        write(ERROR_PREFIX + message);
-    }
-
-    @Override
-    public void error(String message, Throwable exception) {
-        write(ERROR_PREFIX + message, exception);
-    }
-
-    @Override
     public void api(String message) {
         write(API_PREFIX + message);
     }

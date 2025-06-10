@@ -41,9 +41,20 @@ public class BaseLogger implements Logger {
         if (logWriter != null) {
             logWriter.close();
         }
-
         String timestamp = dateFormat.format(new Date());
-        String currentLogFile = logDirectory + "/scoutServer" + timestamp + ".log";
+        String currentLogFile = logDirectory + "/scoutServer.log";
+
+        // Check if the current log file exists and rename it with timestamp
+        File existingLogFile = new File(currentLogFile);
+        if (existingLogFile.exists()) {
+            String archivedLogFile = logDirectory + "/scoutServer_" + timestamp + ".log";
+            File archivedFile = new File(archivedLogFile);
+            if (!existingLogFile.renameTo(archivedFile)) {
+                // If rename fails, try to delete the existing file to avoid conflicts
+                existingLogFile.delete();
+            }
+        }
+
         try {
             logWriter = new PrintWriter(new FileWriter(currentLogFile, true));
         } catch (IOException e) {
@@ -123,13 +134,14 @@ public class BaseLogger implements Logger {
 
     @Override
     public void error(String message) {
-
+        write(ERROR_PREFIX + message);
     }
 
     @Override
     public void error(String message, Throwable exception) {
-
+        write(ERROR_PREFIX + message, exception);
     }
+
 
     @Override
     public String level() {
