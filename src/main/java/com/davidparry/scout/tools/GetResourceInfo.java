@@ -3,7 +3,10 @@ package com.davidparry.scout.tools;
 import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.ArgumentUtils;
 import com.davidparry.scout.common.FileInfoRecord;
+import com.davidparry.scout.handlers.Handler;
+import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.*;
 
@@ -16,8 +19,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Schema(name = "get_project_file_resource_info", description = "Lists available resources/files of a project and provides information about them.")
-public class GetResourceInfo extends BuildTool implements Tool<ToolOutputResponse> {
-    private static final Logger logger = ApplicationLogger.getInstance();
+public class GetResourceInfo extends BuildTool implements Tool, Handler {
+    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
 
     // Add explicit no-argument constructor
     public GetResourceInfo() {
@@ -67,5 +70,9 @@ public class GetResourceInfo extends BuildTool implements Tool<ToolOutputRespons
         } else {
             return List.of(path);
         }
+    }
+    @Override
+    public HandlerResponse handle(JsonRpcRequest request) {
+        return new HandlerResponse(action(request));
     }
 }

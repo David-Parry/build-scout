@@ -1,17 +1,17 @@
 package com.davidparry.scout;
 
-import com.davidparry.scout.annotation.SchemaInitializer;
-import com.davidparry.scout.annotation.SchemaRegistry;
+import com.davidparry.scout.common.BuildSystemImpl;
 import com.davidparry.scout.common.ClientConsumer;
+import com.davidparry.scout.common.DependencyFetch;
 import com.davidparry.scout.common.LogFactory;
-import com.davidparry.scout.io.ApplicationLogger;
-import com.davidparry.scout.io.IOHandler;
-import com.davidparry.scout.io.IOHandlerImpl;
-import com.davidparry.scout.io.Logger;
+import com.davidparry.scout.handlers.*;
+import com.davidparry.scout.io.*;
+import com.davidparry.scout.spec.Tool;
+import com.davidparry.scout.tools.ListDependencies;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -21,18 +21,18 @@ public class Main {
     private static final CountDownLatch shutdownLatch = new CountDownLatch(1);
     public static String MCP_SERVER_NAME = "scout-server";
     private static IOHandler io;
-    private static RequestController controller;
     public final String mcpVersionNumber;
     private final Logger logger;
-    private final SchemaInitializer schemaInitializer;
+    private Router router;
+    private volatile LogFile logFile;
+    private volatile Map<String, Handler> handlers = new HashMap<>();
+    private volatile List<com.davidparry.scout.spec.Tool> tools = new ArrayList<>();
 
     public Main() {
-        LogFactory logFactory = new LogFactory();
-        logger = logFactory.getLogger();
-        ApplicationLogger.setLogger(logger);
+        logFile = LogFileWriter.getInstance(new LogFactory());
+        logger = ApplicationLogger.getLogger(logFile);
         mcpVersionNumber = loadVersion();
         ApplicationState.instance().setVersion(mcpVersionNumber);
-        schemaInitializer = new SchemaInitializer();
     }
 
     public static void main(String[] args) {
@@ -40,21 +40,41 @@ public class Main {
         main.start();
     }
 
+    private void initializeHandlers() {
+        // tools first need to answer list
+        ListDependencies listDependencies = new ListDependencies();
+        tools.add(listDependencies.getTool());
+        handlers.put(listDependencies.getTool().name(), listDependencies);
+
+
+        // other handlers
+        handlers.put("initialize", new InitializeHandler());
+        handlers.put("notifications", new NotificationHandler());
+        handlers.put("notifications/roots/list_changed", new NotificationRootsHandler(io, ApplicationState.instance()));
+        handlers.put("notifications/initialized", new NotificationInitializedHandler(io, ApplicationState.instance()));
+        handlers.put("tools/list", new ToolsListHandler(tools));
+        handlers.put("prompts/list", new PromptsListHandler());
+        handlers.put("prompts/get", new PromptDispatchHandler(ApplicationState.instance()));
+        handlers.put("completion/complete", new CompletionComplete());
+        handlers.put("roots", new ClientConsumer(ApplicationState.instance()));
+    }
+
+
     public void start() {
         logger.info("Starting Scout version " + mcpVersionNumber + " Logger Level " + logger.level());
 
         // Create an IOHandler instance for console I/O
         io = new IOHandlerImpl();
 
-        // Initialize the Schema annotation system
-        schemaInitializer.initialize();
-        schemaInitializer.registerCoreClasses(io, ApplicationState.instance());
-        SchemaRegistry registry = SchemaRegistry.getInstance();
+        initializeHandlers();
 
 
-        // Create the request controller
-        controller = new RequestController(io, registry, new ClientConsumer(ApplicationState.instance()));
+
         logger.log("Controller initialized ");
+
+        router = new Router(io, ApplicationState.instance(), handlers);
+
+
         try {
             // Add a listener for individual lines
             io.addLineListener(this::process);
@@ -65,7 +85,7 @@ public class Main {
                     // Stop the async input reader and close resources
                     //io.stopAsyncInputReader();
                     stop();
-                    logger.close();
+                    logFile.close();
                     shutdownLatch.countDown();
                 }
             }));
@@ -77,7 +97,7 @@ public class Main {
         } catch (Exception e) {
             logger.log("Error in main method", e);
             stop();
-            logger.close();
+            logFile.close();
             System.exit(1);
         }
     }
@@ -86,7 +106,7 @@ public class Main {
         if (io != null) {
             io.stopRunning();
         }
-        logger.close();
+        logFile.close();
     }
 
     /**
@@ -100,7 +120,7 @@ public class Main {
                 if (io != null && !io.isRunning()) {
                     logger.log("IO processing has stopped. Initiating shutdown.");
                     if (isShuttingDown.compareAndSet(false, true)) {
-                        logger.close();
+                        logFile.close();
                         shutdownLatch.countDown();
                     }
                 }
@@ -136,10 +156,8 @@ public class Main {
         if (line.isEmpty()) {
             return;
         }
-
         try {
-            // Delegate processing to the controller
-            controller.processRequest(line);
+            router.route(line);
         } catch (Exception e) {
             logger.log("Error processing input", e);
         }

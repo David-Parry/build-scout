@@ -1,18 +1,17 @@
 package com.davidparry.scout.handlers;
 
+import com.davidparry.scout.common.LogFactory;
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.JsonRpcRequest;
 
-public class CompletionComplete implements Handler<String> {
-    private Logger logger;
-    public CompletionComplete() {
-        this.logger = ApplicationLogger.getInstance();
-    }
+public class CompletionComplete implements Handler {
+    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance(new LogFactory()));
 
     @Override
-    public String handle(JsonRpcRequest request) {
+    public HandlerResponse handle(JsonRpcRequest request) {
         logger.log("Completion complete called with "+ request);
-        return "COMPLETION";
+        return new HandlerResponse("COMPLETION");
     }
 }

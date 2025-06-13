@@ -1,6 +1,7 @@
 package com.davidparry.scout.annotation;
 
 import com.davidparry.scout.handlers.Handler;
+import com.davidparry.scout.spec.ToolOutputResponse;
 import com.davidparry.scout.tools.Tool;
 
 import java.util.Collections;
@@ -13,8 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
  * It also maintains mappings between JSON-RPC methods and their handlers.
  */
 public class SchemaRegistry {
-    private static final SchemaRegistry INSTANCE = new SchemaRegistry();
-    
     // Store class and its metadata
     private final Map<String, SchemaMetadata> registry = new ConcurrentHashMap<>();
     
@@ -22,16 +21,7 @@ public class SchemaRegistry {
     private final Map<String, Handler> methodHandlers = new ConcurrentHashMap<>();
     
     // Private constructor to enforce singleton pattern
-    private SchemaRegistry() {}
-    
-    /**
-     * Get the singleton instance of the SchemaRegistry.
-     *
-     * @return The SchemaRegistry instance
-     */
-    public static SchemaRegistry getInstance() {
-        return INSTANCE;
-    }
+    public SchemaRegistry() {}
     
 
     public void register(Class<?> clazz, String name, String description, Tool handler) {
@@ -119,7 +109,7 @@ public class SchemaRegistry {
      *
      * @return An unmodifiable map of all registered method handlers
      */
-    public Map<String, Object> getAllHandlers() {
+    public Map<String, Handler> getAllHandlers() {
         return Collections.unmodifiableMap(methodHandlers);
     }
 

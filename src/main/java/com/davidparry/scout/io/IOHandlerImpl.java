@@ -13,7 +13,7 @@ import java.util.function.Consumer;
  * It can also publish events when input is received.
  */
 public class IOHandlerImpl implements IOHandler {
-    private static final Logger logger = ApplicationLogger.getInstance();
+    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
     private final PrintWriter writer;
     private final List<Consumer<String>> lineListeners;
     private final AtomicBoolean running;
@@ -67,7 +67,7 @@ public class IOHandlerImpl implements IOHandler {
      * @param text The text to write
      */
     public void writeLine(String text) {
-        logger.api(text);
+        logger.api("sent:"+text);
         writer.println(text);
         writer.flush();
     }
@@ -93,7 +93,7 @@ public class IOHandlerImpl implements IOHandler {
                         break;
                     }
                     String line = scanner.nextLine();
-                    logger.api(line);
+                    logger.api("received:"+line);
                     publishLine(line);
                 }
                 logger.log("Input stream closed.");

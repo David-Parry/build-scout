@@ -3,28 +3,28 @@ package com.davidparry.scout.io;
 public class DebugLogger extends BaseLogger {
 
 
-    public DebugLogger(String logDirectory, String level) {
-        super(logDirectory, level);
+    public DebugLogger(LogFile logFile) {
+        super(logFile);
     }
 
     @Override
     public void log(String message) {
-        write(DEBUG_PREFIX + message);
+        getLogFile().write(DEBUG_PREFIX + message);
     }
 
     @Override
     public void log(String message, Throwable exception) {
-        write(DEBUG_PREFIX + message, exception);
+        getLogFile().write(DEBUG_PREFIX + message, exception);
     }
 
     @Override
     public void info(String message) {
-        write(INFO_PREFIX + message);
+        getLogFile().write(INFO_PREFIX + message);
     }
 
     @Override
     public void api(String message) {
-        write(API_PREFIX + message);
+        getLogFile().write(API_PREFIX + message);
     }
 
 }

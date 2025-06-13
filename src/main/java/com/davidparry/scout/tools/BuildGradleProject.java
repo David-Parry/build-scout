@@ -2,11 +2,11 @@ package com.davidparry.scout.tools;
 
 import com.davidparry.scout.ApplicationState;
 import com.davidparry.scout.annotation.Schema;
-import com.davidparry.scout.common.ArgumentUtils;
-import com.davidparry.scout.common.BuildOutput;
-import com.davidparry.scout.common.GradleTasks;
-import com.davidparry.scout.common.GradleTasksImpl;
+import com.davidparry.scout.common.*;
+import com.davidparry.scout.handlers.Handler;
+import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.*;
 
@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Set;
 
 @Schema(name = "build_gradle_project", description = "if you want to also run a complete build with all checks pass the check = true this tool will invoke the build and return the result with both success and errors if isError is true.")
-public class BuildGradleProject extends BuildTool implements Tool<ToolOutputResponse> {
-    private static final Logger logger = ApplicationLogger.getInstance();
+public class BuildGradleProject extends BuildTool implements Tool, Handler {
+    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance(new LogFactory()));
     private final GradleTasks service;
 
     public BuildGradleProject(GradleTasks service) {
@@ -61,5 +61,10 @@ public class BuildGradleProject extends BuildTool implements Tool<ToolOutputResp
         addProperty(new InputProperty(PROJECT_ROOT, "string", "The fully qualified path of the root directory of the project.", rootProjectMandatory()));
         addProperty(new InputProperty("check","boolean", "If this flag is passed and is true then the check part of the gradle build will be also done.",false));
         return new InputSchema("object", getProperties(), getRequired());
+    }
+
+    @Override
+    public HandlerResponse handle(JsonRpcRequest request) {
+        return new HandlerResponse(action(request));
     }
 }

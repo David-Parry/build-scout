@@ -2,7 +2,10 @@ package com.davidparry.scout.tools;
 
 import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.ArgumentUtils;
+import com.davidparry.scout.handlers.Handler;
+import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.*;
 
@@ -15,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Schema(name = "replace_source_file_contents", description = "Given the fully qualified path of the source file and the entire sourceCode of the file you want to replace the existing source code with this tool will do this task for you.")
-public class ReplaceSourceCodeComplete extends BuildTool implements Tool<ToolOutputResponse> {
-    private static final Logger logger = ApplicationLogger.getInstance();
+public class ReplaceSourceCodeComplete extends BuildTool implements Tool, Handler {
+    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
 
     @Override
     public InputSchema schema() {
@@ -78,5 +81,10 @@ public class ReplaceSourceCodeComplete extends BuildTool implements Tool<ToolOut
         }
 
         return new ToolOutputResponse(results, error);
+    }
+
+    @Override
+    public HandlerResponse handle(JsonRpcRequest request) {
+        return new HandlerResponse(action(request));
     }
 }

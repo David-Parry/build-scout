@@ -4,11 +4,11 @@ import com.davidparry.scout.ApplicationState;
 import com.davidparry.scout.Main;
 import com.davidparry.scout.spec.*;
 
-public class InitializeHandler implements Handler<InitializeResult> {
+public class InitializeHandler implements Handler {
 
 
     @Override
-    public InitializeResult handle(JsonRpcRequest request) {
+    public HandlerResponse handle(JsonRpcRequest request) {
         String protocolVersion = request.params().protocolVersion();
 
         ApplicationState.instance().clientInformation(request.params());
@@ -25,7 +25,7 @@ public class InitializeHandler implements Handler<InitializeResult> {
 
         InitializeResult result = new InitializeResult(protocolVersion, capabilities, serverInfo);
 
-        return result;
+        return new HandlerResponse(result);
 
     }
 }

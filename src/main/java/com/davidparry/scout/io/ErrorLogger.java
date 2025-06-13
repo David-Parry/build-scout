@@ -2,18 +2,18 @@ package com.davidparry.scout.io;
 
 public class ErrorLogger extends BaseLogger {
 
-    public ErrorLogger(String logDirectory, String level) {
-        super(logDirectory, level);
+    public ErrorLogger(LogFile logFile) {
+        super(logFile);
     }
 
     @Override
     public void error(String message) {
-        write(ERROR_PREFIX + message);
+        getLogFile().write(ERROR_PREFIX + message);
     }
 
     @Override
     public void error(String message, Throwable exception) {
-        write(ERROR_PREFIX + message, exception);
+        getLogFile().write(ERROR_PREFIX + message, exception);
     }
 
 }

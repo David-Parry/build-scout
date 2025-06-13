@@ -4,7 +4,10 @@ import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.ArgumentUtils;
 import com.davidparry.scout.common.BuildSystem;
 import com.davidparry.scout.common.BuildSystemImpl;
+import com.davidparry.scout.handlers.Handler;
+import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.*;
 
@@ -12,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Schema(name = "update_dependency_version", description = "Given the groupId, artifactId, version and file path to build system main file, this tool will update this dependency in the build system file and save the file.")
-public class UpdateDependencyVersion extends BuildTool implements Tool<ToolOutputResponse> {
-    private static final Logger logger = ApplicationLogger.getInstance();
+public class UpdateDependencyVersion extends BuildTool implements Tool, Handler {
+    private static final Logger logger =ApplicationLogger.getLogger(LogFileWriter.getInstance());
     private final BuildSystem buildSystem;
 
     public UpdateDependencyVersion(BuildSystem buildSystem) {
@@ -67,5 +70,10 @@ public class UpdateDependencyVersion extends BuildTool implements Tool<ToolOutpu
             return createErrorResult("Failed to lookup latest version for groupID " + groupId + " artifactID " + artifactId + " version " + version + " path " + path + " error message " + e.getMessage());
         }
         return new ToolOutputResponse(results, error);
+    }
+
+    @Override
+    public HandlerResponse handle(JsonRpcRequest request) {
+        return new HandlerResponse(action(request));
     }
 }

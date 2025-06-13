@@ -1,6 +1,7 @@
 package com.davidparry.scout.annotation;
 
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 
 import java.io.File;
@@ -16,7 +17,7 @@ import java.util.jar.JarFile;
  * Utility class for scanning and loading classes from the classpath.
  */
 public class ClassScanner {
-    private static final Logger logger = ApplicationLogger.getInstance();
+    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
 
     /**
      * Scans all classes accessible from the context class loader which belong to the given package.

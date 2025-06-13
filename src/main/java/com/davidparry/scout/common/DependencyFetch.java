@@ -1,6 +1,7 @@
 package com.davidparry.scout.common;
 
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import org.gradle.tooling.GradleConnector;
 import org.gradle.tooling.ProjectConnection;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class DependencyFetch {
     private final BuildSystem buildSystem;
-    private static final Logger logger = ApplicationLogger.getInstance();
+    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance(new LogFactory()));
 
     public DependencyFetch(BuildSystem buildSystem) {
         this.buildSystem = buildSystem;

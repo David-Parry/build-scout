@@ -3,13 +3,13 @@ package com.davidparry.scout.io;
 public class ApiLogger extends BaseLogger {
 
 
-    public ApiLogger(String logDirectory, String level) {
-        super(logDirectory, level);
+    public ApiLogger(LogFile logFile) {
+        super(logFile);
     }
 
 
     @Override
     public void api(String message) {
-        rawWrite(message);
+       getLogFile().rawWrite(message);
     }
 }

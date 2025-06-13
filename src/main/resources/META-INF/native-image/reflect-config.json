@@ -250,13 +250,6 @@
     "queryAllPublicMethods": true
   },
   {
-    "name": "com.davidparry.scout.io.ApplicationLogger",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true,
-    "queryAllPublicMethods": true
-  },
-  {
     "name": "com.davidparry.scout.io.Logger",
     "allDeclaredFields": true,
     "allDeclaredMethods": true,
@@ -528,5 +521,12 @@
     "allDeclaredMethods": true,
     "allDeclaredConstructors": true,
     "queryAllPublicMethods": true
+  },
+  {
+    "name": "com.davidparry.scout.tools.BetterWork",
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true,
+    "allDeclaredMethods": true,
+    "allPublicMethods": true
   }
 ]

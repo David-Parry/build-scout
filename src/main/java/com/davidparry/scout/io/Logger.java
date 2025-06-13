@@ -18,8 +18,6 @@ public interface Logger {
 
     void error(String message);
 
-    void close();
-
     void error(String message, Throwable exception);
 
     String level();

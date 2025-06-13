@@ -1,11 +1,10 @@
 package com.davidparry.scout.common;
 
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.Content;
-import com.davidparry.scout.spec.JsonRpcTextResponse;
 import com.davidparry.scout.spec.ToolOutputResponse;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,13 +15,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class BuildSystemImpl implements BuildSystem {
-    private static final Logger logger = ApplicationLogger.getInstance();
+    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
 
 
     public Set<BuildFile> onlyBuildFilesFilter(Set<File> files) {
-        Set<String> absolutePaths = files.stream()
-                .map(File::getAbsolutePath)
-                .collect(Collectors.toSet());
+        Set<String> absolutePaths = files.stream().map(File::getAbsolutePath).collect(Collectors.toSet());
         return identifyBuildFiles(absolutePaths);
     }
 

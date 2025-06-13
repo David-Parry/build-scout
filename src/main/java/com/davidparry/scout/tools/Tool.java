@@ -2,9 +2,11 @@ package com.davidparry.scout.tools;
 
 import com.davidparry.scout.spec.InputSchema;
 import com.davidparry.scout.spec.JsonRpcRequest;
+import com.davidparry.scout.spec.ToolOutputResponse;
+
 import java.util.List;
 
-public interface Tool<T> {
+public interface Tool {
 
     /**
      * Get the JSON Schema for this tool.
@@ -13,7 +15,7 @@ public interface Tool<T> {
      */
     InputSchema schema();
 
-    T action(JsonRpcRequest args);
+    ToolOutputResponse action(JsonRpcRequest args);
 
 
 }

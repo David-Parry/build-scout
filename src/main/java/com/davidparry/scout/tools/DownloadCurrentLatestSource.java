@@ -3,7 +3,10 @@ package com.davidparry.scout.tools;
 import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.BuildSystemImpl;
 import com.davidparry.scout.common.DependencyFetch;
+import com.davidparry.scout.handlers.Handler;
+import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.*;
 
@@ -12,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Schema(name = "download_source_dependencies", description = "Given the groupId, artifactId and version will download the source of the version given and will lookup and download the latest version of that dependency if it is present. It will return the current: and latest: prefixed file names when they are downloaded.")
-public class DownloadCurrentLatestSource extends BuildTool implements Tool<ToolOutputResponse> {
-    private static final Logger logger = ApplicationLogger.getInstance();
+public class DownloadCurrentLatestSource extends BuildTool implements Tool , Handler {
+    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
     private final DependencyFetch dependencyFetch;
 
     public DownloadCurrentLatestSource(DependencyFetch dependencyFetch) {
@@ -73,5 +76,9 @@ public class DownloadCurrentLatestSource extends BuildTool implements Tool<ToolO
             return createErrorResult("Failed to lookup version for groupID " + groupId + " artifactID" + artifactId + " version" + version + " error message " + e.getMessage());
         }
         return new ToolOutputResponse(results, error);
+    }
+    @Override
+    public HandlerResponse handle(JsonRpcRequest request) {
+        return new HandlerResponse(action(request));
     }
 }

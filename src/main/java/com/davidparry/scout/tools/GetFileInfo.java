@@ -3,7 +3,10 @@ package com.davidparry.scout.tools;
 import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.ArgumentUtils;
 import com.davidparry.scout.common.FileInfoRecord;
+import com.davidparry.scout.handlers.Handler;
+import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.*;
 
@@ -11,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Schema(name = "get_file_info", description = "Get information about a file, just simply give an absolute path and it will return the file information for sure.")
-public class GetFileInfo extends BuildTool implements Tool<ToolOutputResponse> {
-    private static final Logger logger = ApplicationLogger.getInstance();
+public class GetFileInfo extends BuildTool implements Tool, Handler {
+    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
 
     // Add explicit no-argument constructor
     public GetFileInfo() {
@@ -39,5 +42,9 @@ public class GetFileInfo extends BuildTool implements Tool<ToolOutputResponse> {
             return createErrorResult("Error handling get-file-info tool call " + e.getMessage());
         }
         return new ToolOutputResponse(results, false);
+    }
+    @Override
+    public HandlerResponse handle(JsonRpcRequest request) {
+        return new HandlerResponse(action(request));
     }
 }

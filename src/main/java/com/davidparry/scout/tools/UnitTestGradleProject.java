@@ -4,7 +4,10 @@ import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.BuildOutput;
 import com.davidparry.scout.common.GradleTasks;
 import com.davidparry.scout.common.GradleTasksImpl;
+import com.davidparry.scout.handlers.Handler;
+import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.*;
 
@@ -14,8 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 @Schema(name = "gradle_tester", description = "Executes Gradle build and check tasks for any gradle project.")
-public class UnitTestGradleProject extends BuildTool implements Tool<ToolOutputResponse> {
-    private static final Logger logger = ApplicationLogger.getInstance();
+public class UnitTestGradleProject extends BuildTool implements Tool, Handler {
+    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
     private final GradleTasks service;
 
     public UnitTestGradleProject(GradleTasks service) {
@@ -54,6 +57,9 @@ public class UnitTestGradleProject extends BuildTool implements Tool<ToolOutputR
         addProperty(new InputProperty(PROJECT_ROOT, "string", "The fully qualified path of the root directory of the project.", rootProjectMandatory()));
         return new InputSchema("object", getProperties(), getRequired());
     }
-
+    @Override
+    public HandlerResponse handle(JsonRpcRequest request) {
+        return new HandlerResponse(action(request));
+    }
 
 }

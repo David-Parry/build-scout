@@ -5,7 +5,10 @@ import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.BuildFile;
 import com.davidparry.scout.common.BuildSystem;
 import com.davidparry.scout.common.BuildSystemImpl;
+import com.davidparry.scout.handlers.Handler;
+import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.InputProperty;
 import com.davidparry.scout.spec.InputSchema;
@@ -19,8 +22,8 @@ import java.util.List;
 import java.util.Set;
 
 @Schema(name = "build_system_file_paths", description = "Given the root directory of a project, this tool identifies all build system files present (e.g., Gradle, Maven, CMake, etc.) and returns their absolute file paths. If multiple build system files are detected, the tool returns multiple path entries. Returns An array of strings, where each string is an absolute file path to a detected build system file.")
-public class BuildSystemFilePaths extends BuildTool implements Tool<ToolOutputResponse> {
-    private static final Logger logger = ApplicationLogger.getInstance();
+public class BuildSystemFilePaths extends BuildTool implements Tool, Handler {
+    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
     private final BuildSystem buildSystem;
 
     public BuildSystemFilePaths(BuildSystem buildSystem) {
@@ -57,5 +60,10 @@ public class BuildSystemFilePaths extends BuildTool implements Tool<ToolOutputRe
         }
         return buildSystem.createPathResults(builds);
 
+    }
+
+    @Override
+    public HandlerResponse handle(JsonRpcRequest request) {
+        return new HandlerResponse(action(request));
     }
 }

@@ -4,6 +4,7 @@ import com.davidparry.scout.State;
 import com.davidparry.scout.handlers.*;
 import com.davidparry.scout.io.ApplicationLogger;
 import com.davidparry.scout.io.IOHandler;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.tools.*;
 
@@ -19,16 +20,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SchemaInitializer {
     private  final Set<Class<?>> PROCESSED_CLASSES = ConcurrentHashMap.newKeySet();
-    private  final Logger logger = ApplicationLogger.getInstance();
-    private  final boolean IS_NATIVE_IMAGE = isNativeImage();
+    private  final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
+    public final SchemaRegistry schemaRegistry;
 
-    /**
-     * Determines if the code is running in a GraalVM native image
-     *
-     * @return true if running as a native image, false otherwise
-     */
-    private boolean isNativeImage() {
-        return System.getProperty("org.graalvm.nativeimage.imagecode") != null;
+    public SchemaInitializer(SchemaRegistry schemaRegistry) {
+        this.schemaRegistry = schemaRegistry;
     }
 
     /**
@@ -48,17 +44,6 @@ public class SchemaInitializer {
         processLoadedClasses();
     }
 
-    public  void registerCoreClasses(IOHandler ioHandler, State state) {
-        SchemaRegistry.getInstance().registerHandler("initialize", new InitializeHandler());
-        SchemaRegistry.getInstance().registerHandler("notifications", new NotificationHandler());
-        SchemaRegistry.getInstance().registerHandler("notifications/roots/list_changed", new NotificationRootsHandler(ioHandler, state));
-        SchemaRegistry.getInstance().registerHandler("notifications/initialized", new NotificationInitializedHandler(ioHandler, state));
-        SchemaRegistry.getInstance().registerHandler("tools/list", new ToolsListHandler(SchemaRegistry.getInstance()));
-        SchemaRegistry.getInstance().registerHandler("tools/call", new ToolDispatcherHandler());
-        SchemaRegistry.getInstance().registerHandler("prompts/list", new PromptsListHandler());
-        SchemaRegistry.getInstance().registerHandler("prompts/get", new PromptDispatchHandler());
-        SchemaRegistry.getInstance().registerHandler("completion/complete", new CompletionComplete());
-    }
 
     /**
      * Process all currently loaded classes to find and register those with @Schema annotations.
@@ -86,7 +71,7 @@ public class SchemaInitializer {
     public  void processClassIfAnnotated(Class<?> clazz) {
         if (clazz != null && !PROCESSED_CLASSES.contains(clazz) && clazz.isAnnotationPresent(Schema.class)) {
             PROCESSED_CLASSES.add(clazz);
-            SchemaProcessor.processAnnotation(clazz);
+            processAnnotation(clazz);
         }
     }
 
@@ -153,5 +138,64 @@ public class SchemaInitializer {
         annotatedClasses.add(UpdateDependencyVersion.class);
         logger.log("Found " + annotatedClasses.size() + " explicitly registered @Schema classes");
         return annotatedClasses;
+    }
+
+    /**
+     * Creates a type-safe instance of the given class if it implements Tool interface.
+     *
+     * @param clazz The class to instantiate
+     * @param <T> The type parameter extending Tool
+     * @return An instance of the class cast to Tool type
+     * @throws Exception if instantiation fails or class doesn't implement Tool
+     */
+    @SuppressWarnings("unchecked")
+    private <T extends Tool> T createToolInstance(Class<?> clazz) throws Exception {
+        // First check if the class implements Tool interface
+        if (!Tool.class.isAssignableFrom(clazz)) {
+            throw new IllegalArgumentException("Class " + clazz.getName() + " does not implement Tool interface");
+        }
+
+        // Cast the class to the bounded type and create instance
+        Class<T> toolClass = (Class<T>) clazz;
+        return toolClass.getDeclaredConstructor().newInstance();
+    }
+
+    /**
+     * Alternative approach using Class.asSubclass() for even better type safety
+     */
+    private Tool createToolInstanceSafe(Class<?> clazz) throws Exception {
+        // This will throw ClassCastException at compile time if clazz doesn't extend Tool
+        Class<? extends Tool> toolClass = clazz.asSubclass(Tool.class);
+        return toolClass.getDeclaredConstructor().newInstance();
+    }
+
+    public void processAnnotation(Class<?> annotatedClass) {
+        logger.log("Ready to process this annotatedClass: " + annotatedClass);
+        Schema annotation = annotatedClass.getAnnotation(Schema.class);
+        logger.log("Schema class found: " + annotation);
+        if (annotation == null) {
+            return;
+        }
+
+        String name = annotation.name().isEmpty() ? annotatedClass.getSimpleName() : annotation.name();
+        String description = annotation.description();
+
+        try {
+            // Use the type-safe instance creation method
+            Tool instance = createToolInstanceSafe(annotatedClass);
+
+            if (instance instanceof Handler) {
+                // Create another instance for handler registration to avoid potential issues
+                Handler handlerInstance = (Handler) createToolInstanceSafe(annotatedClass);
+                schemaRegistry.registerHandler(name, handlerInstance);
+            }
+
+            // Now you can work with the instance
+            logger.log("Successfully created an instance of: " + annotatedClass.getName());
+            // Register the class with the SchemaRegistry
+            schemaRegistry.register(annotatedClass, name, description, instance);
+        } catch (Exception e) {
+            logger.error("Error: " + annotatedClass.getName() + " must have a no-argument constructor and implement Tool interface", e);
+        }
     }
 }

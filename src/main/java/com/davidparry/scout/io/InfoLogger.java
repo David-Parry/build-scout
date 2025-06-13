@@ -2,17 +2,17 @@ package com.davidparry.scout.io;
 
 public class InfoLogger extends BaseLogger {
 
-    public InfoLogger(String logDirectory, String level) {
-        super(logDirectory, level);
+    public InfoLogger(LogFile logFile) {
+        super(logFile);
     }
 
     @Override
     public void info(String message) {
-        write(INFO_PREFIX + message);
+        getLogFile().write(INFO_PREFIX + message);
     }
 
     @Override
     public void api(String message) {
-        write(API_PREFIX + message);
+        getLogFile().write(API_PREFIX + message);
     }
 }

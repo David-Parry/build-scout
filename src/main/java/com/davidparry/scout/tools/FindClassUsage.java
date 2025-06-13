@@ -3,7 +3,10 @@ package com.davidparry.scout.tools;
 import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.ArgumentUtils;
 import com.davidparry.scout.common.SourceClassUsageService;
+import com.davidparry.scout.handlers.Handler;
+import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.*;
 
@@ -16,8 +19,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Schema(name = "find_class_usage", description = "Given the fully qualified path of the root directory of the project and the fully qualified class name this tool will search the projects source code for the classes usage and return file path that uses this class and line numbers where it is used.")
-public class FindClassUsage extends BuildTool implements Tool<ToolOutputResponse> {
-    private static final Logger logger = ApplicationLogger.getInstance();
+public class FindClassUsage extends BuildTool implements Tool, Handler {
+    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
     private final SourceClassUsageService service;
 
     public FindClassUsage(SourceClassUsageService service) {
@@ -79,5 +82,10 @@ public class FindClassUsage extends BuildTool implements Tool<ToolOutputResponse
             return createErrorResult("Error finding class usage: " + e.getMessage());
         }
         return new ToolOutputResponse(results, false);
+    }
+
+    @Override
+    public HandlerResponse handle(JsonRpcRequest request) {
+        return new HandlerResponse(action(request));
     }
 }

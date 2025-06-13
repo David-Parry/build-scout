@@ -1,6 +1,8 @@
 package com.davidparry.scout;
 
+import com.davidparry.scout.common.LogFactory;
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.prompts.Prompt;
 import com.davidparry.scout.spec.RequestParams;
@@ -14,7 +16,7 @@ import java.util.Map;
  */
 public class ApplicationState implements State {
 
-    private static final Logger logger = ApplicationLogger.getInstance();
+    private final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
 
     private String version = "1.0.0";
 
