@@ -4,6 +4,7 @@ import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.ArgumentUtils;
 import com.davidparry.scout.common.BuildSystemImpl;
 import com.davidparry.scout.common.DependencyFetch;
+import com.davidparry.scout.common.LogFactory;
 import com.davidparry.scout.handlers.Handler;
 import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Schema(name = "latest_dependency_version", description = "Given the groupId and artifactId, this tool will return the latest version of this maven dependency.")
 public class LatestDependencyVersion extends BuildTool implements Tool, Handler {
-    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
+    private static final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
     private final DependencyFetch dependencyFetch;
 
     public LatestDependencyVersion(DependencyFetch dependencyFetch) {

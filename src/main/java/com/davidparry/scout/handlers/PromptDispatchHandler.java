@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class PromptDispatchHandler implements Handler {
-    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance(new LogFactory()));
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
     private final State state;
 
     public PromptDispatchHandler(State state) {

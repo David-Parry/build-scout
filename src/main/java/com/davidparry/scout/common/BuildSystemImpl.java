@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class BuildSystemImpl implements BuildSystem {
-    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
 
 
     public Set<BuildFile> onlyBuildFilesFilter(Set<File> files) {

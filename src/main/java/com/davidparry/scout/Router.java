@@ -1,5 +1,7 @@
 package com.davidparry.scout;
 
+import com.davidparry.scout.common.BuildSystemImpl;
+import com.davidparry.scout.common.LogFactory;
 import com.davidparry.scout.handlers.Handler;
 import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
@@ -8,6 +10,7 @@ import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.JSONResponse;
 import com.davidparry.scout.spec.JsonRpcRequest;
+import com.davidparry.scout.tools.ListDependencies;
 import com.google.gson.Gson;
 
 import java.util.Map;
@@ -16,7 +19,7 @@ public class Router {
     private final IOHandler io;
     private final State state;
     private final Gson gson;
-    private final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
     private final Map<String, Handler> handlers;
 
     public Router(IOHandler io, State state, Map<String, Handler> handlers) {
@@ -44,13 +47,19 @@ public class Router {
             HandlerResponse result = null;
             String key = extractKey(request);
             logger.log("Router extracted key is : " + key);
+            Handler handler=null;
+            ListDependencies listDependencies = new ListDependencies();
+            if(listDependencies.getTool().name().equals(key)) {
+               logger.log("Router tool is : " + listDependencies.getTool().name());
+                result =  listDependencies.handle(request);
+               logger.log("Router tool result : " + result);
+            } else {
+                handler = handlers.get(key);
+                if (handler != null) {
+                    result = handler.handle(request);
+                }
 
-            Handler handler = handlers.get(key);
-            if (handler != null) {
-                result = handler.handle(request);
             }
-
-
             if (result != null && result.response() != null) {
                 JSONResponse<?> jsonResponse = new JSONResponse<>(jsonRpc, id, result.response());
                 String outString = gson.toJson(jsonResponse);
@@ -59,13 +68,10 @@ public class Router {
                 // Log the response
                 logger.log("response from handler in json " + outString);
             } else {
-                logger.log("response from handler is : " + request);
+                logger.log("No response from handler : "+ handler + " for request:"  + request);
             }
-
-
         } catch (Exception e) {
             logger.error("Router exception message : " + message, e);
-            //io.writeLine("Error processing request: " + e.getMessage());
         }
     }
 

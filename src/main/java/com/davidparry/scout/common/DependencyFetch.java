@@ -20,7 +20,7 @@ import java.util.List;
 
 public class DependencyFetch {
     private final BuildSystem buildSystem;
-    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance(new LogFactory()));
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
 
     public DependencyFetch(BuildSystem buildSystem) {
         this.buildSystem = buildSystem;

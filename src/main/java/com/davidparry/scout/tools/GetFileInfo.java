@@ -3,6 +3,7 @@ package com.davidparry.scout.tools;
 import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.ArgumentUtils;
 import com.davidparry.scout.common.FileInfoRecord;
+import com.davidparry.scout.common.LogFactory;
 import com.davidparry.scout.handlers.Handler;
 import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Schema(name = "get_file_info", description = "Get information about a file, just simply give an absolute path and it will return the file information for sure.")
 public class GetFileInfo extends BuildTool implements Tool, Handler {
-    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
+    private static final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
 
     // Add explicit no-argument constructor
     public GetFileInfo() {

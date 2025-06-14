@@ -40,13 +40,7 @@ public class LogFileWriter implements LogFile {
         return instance;
     }
 
-    /**
-     * Get the existing singleton instance
-     * @return LogFile interface instance, or null if not initialized
-     */
-    public static LogFile getInstance() {
-        return instance;
-    }
+
 
 
     /**

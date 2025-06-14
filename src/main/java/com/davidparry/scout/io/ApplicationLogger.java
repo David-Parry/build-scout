@@ -10,7 +10,7 @@ public class ApplicationLogger {
     public ApplicationLogger() {
     }
 
-    public static Logger getLogger(LogFile logFile) {
+    public Logger getLogger(LogFile logFile) {
             String loggingLevel = logFile.getLogFactory().getLoggingLevel();
             if ("DEBUG".equalsIgnoreCase(loggingLevel)) {
                 return new DebugLogger(logFile);

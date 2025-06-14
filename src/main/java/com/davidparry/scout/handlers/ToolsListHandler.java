@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ToolsListHandler implements Handler {
     private final List<Tool> tools;
-    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance(new LogFactory()));
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
 
     public ToolsListHandler(List<Tool> tools) {
         this.tools = tools;

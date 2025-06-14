@@ -1,6 +1,7 @@
 package com.davidparry.scout.handlers;
 
 import com.davidparry.scout.ApplicationState;
+import com.davidparry.scout.common.LogFactory;
 import com.davidparry.scout.io.ApplicationLogger;
 import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
@@ -11,7 +12,7 @@ import com.davidparry.scout.spec.PromptsListResponse;
 import java.util.Set;
 
 public class PromptsListHandler implements Handler {
-    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
 
 
     @Override

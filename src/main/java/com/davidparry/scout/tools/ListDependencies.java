@@ -1,5 +1,6 @@
 package com.davidparry.scout.tools;
 
+import com.davidparry.scout.common.BuildSystem;
 import com.davidparry.scout.common.LogFactory;
 import com.davidparry.scout.handlers.Handler;
 import com.davidparry.scout.handlers.HandlerResponse;
@@ -13,10 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListDependencies extends BuildTool implements Handler {
-    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance(new LogFactory()));
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
     //private final DependencyFetch dependencyFetch;
-    //private final BuildSystem buildSystem;
-    private final com.davidparry.scout.spec.Tool tool;
+     private final com.davidparry.scout.spec.Tool tool;
+
+
 
 //    public ListDependencies(DependencyFetch dependencyFetch, BuildSystem buildSystem) {
 //        logger.log("Inside ListDependencies constructor");
@@ -41,7 +43,7 @@ public class ListDependencies extends BuildTool implements Handler {
     }
 
     public ToolOutputResponse action(JsonRpcRequest request) {
-        logger.log("ListDependencies action method received");
+        logger.log("ListDependencies action method received request: " + request);
         List<Content> results = new ArrayList<>();
         boolean error = true;
         try {
@@ -72,7 +74,7 @@ public class ListDependencies extends BuildTool implements Handler {
         } catch (Exception e) {
             logger.error("Failed to process paths", e);
         }
-        results.add(new Content("I am a list and the classes are the bad actors"));
+        results.add(new Content("aaaaI am a list and the classes are the bad actors"));
 
         return new ToolOutputResponse(results, error);
     }

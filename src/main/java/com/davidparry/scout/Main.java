@@ -22,15 +22,15 @@ public class Main {
     public static String MCP_SERVER_NAME = "scout-server";
     private static IOHandler io;
     public final String mcpVersionNumber;
-    private final Logger logger;
     private Router router;
-    private volatile LogFile logFile;
+    private final LogFactory logFactory = new LogFactory();
+    private final LogFile logFile =  LogFileWriter.getInstance(logFactory);
+    private final Logger logger = new ApplicationLogger().getLogger(logFile);
+
     private volatile Map<String, Handler> handlers = new HashMap<>();
     private volatile List<com.davidparry.scout.spec.Tool> tools = new ArrayList<>();
 
     public Main() {
-        logFile = LogFileWriter.getInstance(new LogFactory());
-        logger = ApplicationLogger.getLogger(logFile);
         mcpVersionNumber = loadVersion();
         ApplicationState.instance().setVersion(mcpVersionNumber);
     }

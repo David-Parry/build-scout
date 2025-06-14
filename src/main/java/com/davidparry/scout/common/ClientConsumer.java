@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientConsumer implements Consumer, Handler {
-    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance(new LogFactory()));
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
 
     private final State state;
 

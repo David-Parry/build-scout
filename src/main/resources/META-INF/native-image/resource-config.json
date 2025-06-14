@@ -1,7 +1,12 @@
 {
   "resources": {
     "includes": [
-      {"pattern": "version.txt"}
+      {"pattern": "version.txt"},
+      {
+        "pattern":"\\QMETA-INF/services/java.lang.System$LoggerFinder\\E"
+      }, {
+        "pattern":"\\Qversion.txt\\E"
+      }
     ]
   }
 }

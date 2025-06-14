@@ -16,7 +16,7 @@ import java.net.URI;
 import java.util.*;
 
 public abstract class BuildTool {
-    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance(new LogFactory()));
+    private static final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
     protected final String PROJECT_ROOT = "projectRoot";
     private final List<String> required = new ArrayList<>();
     private final Map<String, InputProperty> properties = new HashMap<>();

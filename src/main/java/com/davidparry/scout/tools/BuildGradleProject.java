@@ -17,8 +17,7 @@ import java.util.Set;
 
 @Schema(name = "build_gradle_project", description = "if you want to also run a complete build with all checks pass the check = true this tool will invoke the build and return the result with both success and errors if isError is true.")
 public class BuildGradleProject extends BuildTool implements Tool, Handler {
-    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance(new LogFactory()));
-    private final GradleTasks service;
+    private static final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));    private final GradleTasks service;
 
     public BuildGradleProject(GradleTasks service) {
         this.service = service;

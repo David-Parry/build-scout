@@ -7,7 +7,7 @@ import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.JsonRpcRequest;
 
 public class CompletionComplete implements Handler {
-    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance(new LogFactory()));
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
 
     @Override
     public HandlerResponse handle(JsonRpcRequest request) {

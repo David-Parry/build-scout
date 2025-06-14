@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Schema(name = "find_build_system", description = "This tool can find the build system given the root directory of the project.")
 public class FindBuildSystem extends BuildTool implements Tool, Handler {
-   private final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
+    private static final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
 
 
     public FindBuildSystem() {

@@ -11,7 +11,7 @@ import com.davidparry.scout.spec.JsonRpcRequest;
 public class NotificationRootsHandler implements Handler {
     private final IOHandler ioHandler;
     private final State state;
-    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance(new LogFactory()));
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
 
     public NotificationRootsHandler(IOHandler ioHandler, State state) {
         this.ioHandler = ioHandler;

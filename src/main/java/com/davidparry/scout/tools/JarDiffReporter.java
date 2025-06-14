@@ -1,10 +1,7 @@
 package com.davidparry.scout.tools;
 
 import com.davidparry.scout.annotation.Schema;
-import com.davidparry.scout.common.ArgumentUtils;
-import com.davidparry.scout.common.DiffData;
-import com.davidparry.scout.common.JarComparatorService;
-import com.davidparry.scout.common.JarDownloader;
+import com.davidparry.scout.common.*;
 import com.davidparry.scout.handlers.Handler;
 import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
@@ -19,7 +16,7 @@ import java.util.Map;
 
 @Schema(name = "version_change_analyzer", description = "Given the groupId, artifactId current version and the latest version of the artifact will return the changes in the public code between the two versions. This allows for a other agents to then check if the code will need to be updated based on the changes.")
 public class JarDiffReporter extends BuildTool implements Tool, Handler {
-    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
+    private static final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
     private final JarComparatorService jarComparatorService;
 
     public JarDiffReporter(JarComparatorService jarComparatorService) {

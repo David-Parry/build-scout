@@ -4,6 +4,7 @@ import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.BuildOutput;
 import com.davidparry.scout.common.GradleTasks;
 import com.davidparry.scout.common.GradleTasksImpl;
+import com.davidparry.scout.common.LogFactory;
 import com.davidparry.scout.handlers.Handler;
 import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
@@ -18,7 +19,7 @@ import java.util.Set;
 
 @Schema(name = "gradle_tester", description = "Executes Gradle build and check tasks for any gradle project.")
 public class UnitTestGradleProject extends BuildTool implements Tool, Handler {
-    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
+    private static final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
     private final GradleTasks service;
 
     public UnitTestGradleProject(GradleTasks service) {

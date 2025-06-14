@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GradleTasksImpl implements GradleTasks {
-    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance(new LogFactory()));
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
 
 
     public BuildOutput buildGradleProject(File projectDir, boolean check) {

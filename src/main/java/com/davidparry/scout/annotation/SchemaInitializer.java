@@ -1,6 +1,7 @@
 package com.davidparry.scout.annotation;
 
 import com.davidparry.scout.State;
+import com.davidparry.scout.common.LogFactory;
 import com.davidparry.scout.handlers.*;
 import com.davidparry.scout.io.ApplicationLogger;
 import com.davidparry.scout.io.IOHandler;
@@ -20,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SchemaInitializer {
     private  final Set<Class<?>> PROCESSED_CLASSES = ConcurrentHashMap.newKeySet();
-    private  final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
     public final SchemaRegistry schemaRegistry;
 
     public SchemaInitializer(SchemaRegistry schemaRegistry) {
@@ -199,3 +200,4 @@ public class SchemaInitializer {
         }
     }
 }
+

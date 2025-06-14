@@ -2,6 +2,7 @@ package com.davidparry.scout.tools;
 
 import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.ArgumentUtils;
+import com.davidparry.scout.common.LogFactory;
 import com.davidparry.scout.handlers.Handler;
 import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @Schema(name = "replace_source_file_contents", description = "Given the fully qualified path of the source file and the entire sourceCode of the file you want to replace the existing source code with this tool will do this task for you.")
 public class ReplaceSourceCodeComplete extends BuildTool implements Tool, Handler {
-    private static final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
+    private static final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
 
     @Override
     public InputSchema schema() {

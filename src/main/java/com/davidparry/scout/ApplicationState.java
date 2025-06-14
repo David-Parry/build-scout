@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class ApplicationState implements State {
 
-    private final Logger logger = ApplicationLogger.getLogger(LogFileWriter.getInstance());
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
 
     private String version = "1.0.0";
 
