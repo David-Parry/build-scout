@@ -170,10 +170,14 @@ graalvmNative {
             buildArgs.add('--no-fallback')
             buildArgs.add('--initialize-at-run-time=com.google.gson,com.davidparry.scout,com.davidparry.scout.annotation,com.davidparry.scout.common,com.davidparry.scout.tools,com.davidparry.scout.handlers,com.davidparry.scout.io')
             buildArgs.add("--enable-preview")
+            buildArgs.add('--initialize-at-build-time=org.gradle.internal.impldep')
+            buildArgs.add('-Djava.awt.headless=true')
             buildArgs.add("-H:+ReportExceptionStackTraces")
             buildArgs.add("-H:ReflectionConfigurationFiles=${projectDir}/src/main/resources/META-INF/native-image/reflect-config.json")
             buildArgs.add("-H:ResourceConfigurationFiles=${projectDir}/src/main/resources/META-INF/native-image/resource-config.json")
             buildArgs.add("-H:JNIConfigurationFiles=${projectDir}/src/main/resources/META-INF/native-image/jni-config.json")
+            buildArgs.add("-H:DynamicProxyConfigurationFiles=${projectDir}/src/main/resources/META-INF/native-image/proxy-config.json")
+            buildArgs.add("-H:SerializationConfigurationFiles=${projectDir}/src/main/resources/META-INF/native-image/serialization-config.json")
             buildArgs.add('--report-unsupported-elements-at-runtime')
             useFatJar = true  // Uses shadowJar
         }

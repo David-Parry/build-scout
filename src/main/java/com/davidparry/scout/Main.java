@@ -1,12 +1,8 @@
 package com.davidparry.scout;
 
-import com.davidparry.scout.common.BuildSystemImpl;
-import com.davidparry.scout.common.ClientConsumer;
-import com.davidparry.scout.common.DependencyFetch;
-import com.davidparry.scout.common.LogFactory;
+import com.davidparry.scout.common.*;
 import com.davidparry.scout.handlers.*;
 import com.davidparry.scout.io.*;
-import com.davidparry.scout.spec.Tool;
 import com.davidparry.scout.tools.ListDependencies;
 
 import java.io.InputStream;
@@ -22,13 +18,12 @@ public class Main {
     public static String MCP_SERVER_NAME = "scout-server";
     private static IOHandler io;
     public final String mcpVersionNumber;
-    private Router router;
     private final LogFactory logFactory = new LogFactory();
-    private final LogFile logFile =  LogFileWriter.getInstance(logFactory);
+    private final LogFile logFile = LogFileWriter.getInstance(logFactory);
     private final Logger logger = new ApplicationLogger().getLogger(logFile);
-
-    private volatile Map<String, Handler> handlers = new HashMap<>();
-    private volatile List<com.davidparry.scout.spec.Tool> tools = new ArrayList<>();
+    private Router router;
+    private final Map<String, Handler> handlers = new HashMap<>();
+    private final List<com.davidparry.scout.spec.Tool> tools = new ArrayList<>();
 
     public Main() {
         mcpVersionNumber = loadVersion();
@@ -41,8 +36,10 @@ public class Main {
     }
 
     private void initializeHandlers() {
+        BuildSystem buildSystem = new BuildSystemImpl();
+        DependencyFetch dependencyFetch = new DependencyFetch(buildSystem);
         // tools first need to answer list
-        ListDependencies listDependencies = new ListDependencies();
+        ListDependencies listDependencies = new ListDependencies(dependencyFetch, buildSystem);
         tools.add(listDependencies.getTool());
         handlers.put(listDependencies.getTool().name(), listDependencies);
 
@@ -67,7 +64,6 @@ public class Main {
         io = new IOHandlerImpl();
 
         initializeHandlers();
-
 
 
         logger.log("Controller initialized ");
