@@ -10,9 +10,12 @@ import com.davidparry.scout.spec.*;
 import com.davidparry.scout.spec.Tool;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ListDependencies extends BuildTool implements Handler {
     private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
@@ -88,4 +91,55 @@ public class ListDependencies extends BuildTool implements Handler {
     public HandlerResponse handle(JsonRpcRequest request) {
         return new HandlerResponse(action(request));
     }
+
+
+    public List<String> resolveDependencies(File projectDir) {
+        try {
+            // Detect build system
+            if (new File(projectDir, "build.gradle").exists() ||
+                    new File(projectDir, "build.gradle.kts").exists()) {
+                return resolveGradleDependencies(projectDir);
+            } else if (new File(projectDir, "pom.xml").exists()) {
+                return resolveMavenDependencies(projectDir);
+            } else {
+                throw new RuntimeException("No supported build file found");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error resolving dependencies", e);
+        }
+    }
+
+    private List<String> resolveGradleDependencies(File projectDir) throws IOException, InterruptedException {
+        // Use the ProcessBuilder approach instead of Gradle Tooling API
+        List<GradleProcessExecutor.DependencyInfo> deps =
+                GradleProcessExecutor.resolveDependencies(projectDir);
+
+        return deps.stream()
+                .map(dep -> dep.toString())
+                .collect(Collectors.toList());
+    }
+
+    private List<String> resolveMavenDependencies(File projectDir) throws IOException, InterruptedException {
+        // Similar approach for Maven
+        ProcessBuilder pb = new ProcessBuilder(
+                "mvn",
+                "dependency:list",
+                "-DoutputAbsoluteArtifactFilename=false",
+                "-DincludeScope=compile"
+        );
+
+        pb.directory(projectDir);
+        // ... parse output similar to Gradle
+
+        return List.of(); // Implement Maven parsing
+    }
+
+    // Keep this method for compatibility but mark as deprecated
+    @Deprecated
+    public void resolveGradleGroovyDependencies(File projectDir) {
+        // This method was using Gradle Tooling API which doesn't work well in native image
+        // Redirect to the new implementation
+        resolveDependencies(projectDir);
+    }
+
 }

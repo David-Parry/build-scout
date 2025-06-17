@@ -15,8 +15,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DependencyFetch {
     private final BuildSystem buildSystem;
@@ -26,20 +28,20 @@ public class DependencyFetch {
         this.buildSystem = buildSystem;
     }
 
-    public List<String> resolveDependencies(String path) {
-        logger.log("Resolving dependencies for " + path);
-        String type = buildSystem.identifyBuildFile(path);
-        if (BuildSystem.GRADLE_GROOVY.equals(type)) {
-            try {
-                String fileContents = Files.readString(Path.of(path));
-                return resolveGradleGroovyDependencies(fileContents);
-            } catch (IOException e) {
-                return List.of();
-            }
-        } else {
-            return List.of();
-        }
-    }
+//    public List<String> resolveDependencies(String path) {
+//        logger.log("Resolving dependencies for " + path);
+//        String type = buildSystem.identifyBuildFile(path);
+//        if (BuildSystem.GRADLE_GROOVY.equals(type)) {
+//            try {
+//                String fileContents = Files.readString(Path.of(path));
+//                return resolveGradleGroovyDependencies(fileContents);
+//            } catch (IOException e) {
+//                return List.of();
+//            }
+//        } else {
+//            return List.of();
+//        }
+//    }
 
     private List<String> resolveGradleGroovyDependencies(String fileContents) {
         List<String> dependencies = new ArrayList<>();
@@ -244,4 +246,51 @@ public class DependencyFetch {
         }
         return versions;
     }
+
+
+    public List<String> resolveDependencies(String path) {
+        try {
+            Path pathObj = Paths.get(path);
+            File projectDir = (Files.isRegularFile(pathObj) ? pathObj.getParent() : pathObj).toFile();
+            String type = buildSystem.identifyBuildFile(path);
+
+            if (BuildSystem.GRADLE_GROOVY.equalsIgnoreCase(type) ||
+                    BuildSystem.GRADLE_KOTLIN.equalsIgnoreCase(type)) {
+                return resolveGradleDependencies(projectDir);
+            } else if (BuildSystem.MAVEN.equalsIgnoreCase(type)) {
+                return resolveMavenDependencies(projectDir);
+            } else {
+                throw new RuntimeException("No supported build file found");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Error resolving dependencies", e);
+        }
+    }
+
+    private List<String> resolveGradleDependencies(File projectDir) throws IOException, InterruptedException {
+        // Use the ProcessBuilder approach instead of Gradle Tooling API
+        List<GradleProcessExecutor.DependencyInfo> deps =
+                GradleProcessExecutor.resolveDependencies(projectDir);
+
+        return deps.stream()
+                .map(dep -> dep.toString())
+                .collect(Collectors.toList());
+    }
+
+    private List<String> resolveMavenDependencies(File projectDir) throws IOException, InterruptedException {
+        // Similar approach for Maven
+        ProcessBuilder pb = new ProcessBuilder(
+                "mvn",
+                "dependency:list",
+                "-DoutputAbsoluteArtifactFilename=false",
+                "-DincludeScope=compile"
+        );
+
+        pb.directory(projectDir);
+        // ... parse output similar to Gradle
+
+        return List.of(); // Implement Maven parsing
+    }
+
+
 }

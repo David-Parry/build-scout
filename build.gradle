@@ -161,24 +161,61 @@ void updateScoutServerJarInConfig(File configFile, File latestJar) {
         println "Could not find scout-server args in config."
     }
 }
-
 graalvmNative {
     binaries {
         main {
             imageName = 'scout'
             mainClass = 'com.davidparry.scout.Main'
             buildArgs.add('--no-fallback')
-            buildArgs.add('--initialize-at-run-time=com.google.gson,com.davidparry.scout,com.davidparry.scout.annotation,com.davidparry.scout.common,com.davidparry.scout.tools,com.davidparry.scout.handlers,com.davidparry.scout.io')
+
+            // Initialize at runtime - Gradle and SLF4J classes that were causing issues
+            buildArgs.add('--initialize-at-run-time=org.slf4j.LoggerFactory')
+            buildArgs.add('--initialize-at-run-time=org.slf4j.impl.StaticLoggerBinder')
+            buildArgs.add('--initialize-at-run-time=org.gradle.internal.time.Time')
+            buildArgs.add('--initialize-at-run-time=org.gradle.internal.concurrent.CompositeStoppable')
+            buildArgs.add('--initialize-at-run-time=org.gradle.internal.time.MonotonicClock')
+            buildArgs.add('--initialize-at-run-time=org.gradle.util.internal.DefaultGradleVersion')
+            buildArgs.add('--initialize-at-run-time=org.gradle.tooling')
+            buildArgs.add('--initialize-at-run-time=org.gradle.internal')
+            buildArgs.add('--initialize-at-run-time=org.gradle.util')
+
+            // Your existing runtime initializations
+            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.consumer.connection')
+            buildArgs.add('--initialize-at-run-time=com.google.gson')
+            buildArgs.add('--initialize-at-run-time=com.davidparry.scout')
+            buildArgs.add('--initialize-at-run-time=com.davidparry.scout.annotation')
+            buildArgs.add('--initialize-at-run-time=com.davidparry.scout.common')
+            buildArgs.add('--initialize-at-run-time=com.davidparry.scout.tools')
+            buildArgs.add('--initialize-at-run-time=com.davidparry.scout.handlers')
+            buildArgs.add('--initialize-at-run-time=com.davidparry.scout.io')
+
+            // Enable preview features
             buildArgs.add("--enable-preview")
+
+            // Remove the build-time initialization for org.gradle.tooling since it conflicts
+            // buildArgs.add('--initialize-at-build-time=org.gradle.internal.impldep,org.gradle.tooling')
             buildArgs.add('--initialize-at-build-time=org.gradle.internal.impldep')
+
+            // JVM arguments
             buildArgs.add('-Djava.awt.headless=true')
+
+            // Debugging and reporting
             buildArgs.add("-H:+ReportExceptionStackTraces")
+
+            // Configuration files
             buildArgs.add("-H:ReflectionConfigurationFiles=${projectDir}/src/main/resources/META-INF/native-image/reflect-config.json")
             buildArgs.add("-H:ResourceConfigurationFiles=${projectDir}/src/main/resources/META-INF/native-image/resource-config.json")
             buildArgs.add("-H:JNIConfigurationFiles=${projectDir}/src/main/resources/META-INF/native-image/jni-config.json")
             buildArgs.add("-H:DynamicProxyConfigurationFiles=${projectDir}/src/main/resources/META-INF/native-image/proxy-config.json")
             buildArgs.add("-H:SerializationConfigurationFiles=${projectDir}/src/main/resources/META-INF/native-image/serialization-config.json")
+            buildArgs.add("-H:PredefinedClassesConfigurationFiles=${projectDir}/src/main/resources/META-INF/native-image/predefined-classes-config.json")
+
+            // Report unsupported elements
             buildArgs.add('--report-unsupported-elements-at-runtime')
+
+            // Optional: Add trace for debugging if needed
+            buildArgs.add('--trace-class-initialization=org.gradle.internal.time.Time')
+
             useFatJar = true  // Uses shadowJar
         }
     }
