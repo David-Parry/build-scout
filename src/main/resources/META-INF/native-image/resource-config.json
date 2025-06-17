@@ -3,6 +3,26 @@
   "includes":[{
     "pattern":"\\QMETA-INF/services/java.lang.System$LoggerFinder\\E"
   }, {
+    "pattern":"\\QMETA-INF/services/java.nio.channels.spi.SelectorProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.gradle.initialization.GradleApiSpecProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.gradle.internal.service.scopes.GradleModuleServices\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/org.gradle.tooling.internal.protocol.ConnectionVersion4\\E"
+  }, {
+    "pattern":"\\Qgradle-implementation-plugins.properties\\E"
+  }, {
+    "pattern":"\\Qgradle-plugins.properties\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/build-receipt.properties\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/initialization/converted-types.txt\\E"
+  }, {
+    "pattern":"\\Qorg/gradle/initialization/removed-types.txt\\E"
+  }, {
+    "pattern":"\\Qorg/slf4j/impl/StaticLoggerBinder.class\\E"
+  }, {
     "pattern":"\\Qversion.txt\\E"
   }]},
   "bundles":[]

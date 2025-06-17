@@ -179,6 +179,30 @@ graalvmNative {
             buildArgs.add('--initialize-at-run-time=org.gradle.internal')
             buildArgs.add('--initialize-at-run-time=org.gradle.util')
 
+            // Additional Gradle Tooling API runtime initialization
+            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.consumer')
+            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.adapter')
+            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.build')
+            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.gradle')
+            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.protocol')
+            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.model')
+            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.model.java')
+            buildArgs.add('--initialize-at-run-time=org.gradle.internal.service')
+            buildArgs.add('--initialize-at-run-time=org.gradle.internal.service.scopes')
+            buildArgs.add('--initialize-at-run-time=org.gradle.internal.impldep.org.apache.commons.lang')
+            buildArgs.add('--initialize-at-run-time=org.gradle.internal.reflect')
+            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.consumer.DefaultGradleConnector')
+            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.consumer.ConnectorServices')
+            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.consumer.connection.ConnectorServiceRegistry')
+            buildArgs.add('--initialize-at-run-time=org.gradle.internal.service')
+            buildArgs.add('--initialize-at-run-time=org.gradle.internal.service.DefaultServiceRegistry')
+            buildArgs.add('--initialize-at-run-time=org.gradle.internal.service.ServiceRegistry')
+            buildArgs.add('--initialize-at-run-time=org.gradle.internal.logging.services.LoggingServiceRegistry')
+            buildArgs.add('--initialize-at-run-time=org.gradle.internal.concurrent')
+            buildArgs.add('--initialize-at-run-time=org.gradle.internal.concurrent.DefaultExecutorFactory')
+            buildArgs.add('--initialize-at-run-time=org.gradle.internal.id.LongIdGenerator')
+
+
             // Your existing runtime initializations
             buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.consumer.connection')
             buildArgs.add('--initialize-at-run-time=com.google.gson')

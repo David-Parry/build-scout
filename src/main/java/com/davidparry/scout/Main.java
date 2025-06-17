@@ -3,6 +3,7 @@ package com.davidparry.scout;
 import com.davidparry.scout.common.*;
 import com.davidparry.scout.handlers.*;
 import com.davidparry.scout.io.*;
+import com.davidparry.scout.tools.BuildGradleProject;
 import com.davidparry.scout.tools.ListDependencies;
 
 import java.io.InputStream;
@@ -42,6 +43,11 @@ public class Main {
         ListDependencies listDependencies = new ListDependencies(dependencyFetch, buildSystem);
         tools.add(listDependencies.getTool());
         handlers.put(listDependencies.getTool().name(), listDependencies);
+        GradleTasks gradleTasks = new GradleTasksImpl();
+        BuildGradleProject buildGradleProject = new BuildGradleProject(gradleTasks);
+        tools.add(buildGradleProject.getTool());
+        handlers.put(buildGradleProject.getTool().name(), buildGradleProject);
+
 
 
         // other handlers

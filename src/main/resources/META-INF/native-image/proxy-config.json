@@ -1,2 +1,29 @@
 [
+  {
+    "interfaces":["net.rubygrapefruit.platform.WindowsRegistry"]
+  },
+  {
+    "interfaces":["org.gradle.internal.logging.events.OutputEventListener"]
+  },
+  {
+    "interfaces":["org.gradle.internal.logging.progress.ProgressListener"]
+  },
+  {
+    "interfaces":["org.gradle.internal.scripts.ScriptFileResolvedListener"]
+  },
+  {
+    "interfaces":["org.gradle.launcher.daemon.client.DaemonStartListener"]
+  },
+  {
+    "interfaces":["org.gradle.process.internal.ExecHandleListener"]
+  },
+  {
+    "interfaces":["org.gradle.tooling.ProgressListener"]
+  },
+  {
+    "interfaces":["org.gradle.tooling.internal.provider.connection.ProviderConnectionParameters"]
+  },
+  {
+    "interfaces":["org.gradle.tooling.internal.provider.connection.ProviderOperationParameters"]
+  }
 ]
