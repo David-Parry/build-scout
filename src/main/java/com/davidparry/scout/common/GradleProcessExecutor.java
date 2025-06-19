@@ -10,24 +10,118 @@ import java.util.concurrent.TimeUnit;
 
 public class GradleProcessExecutor {
 
-    public static class DependencyInfo {
-        public final String group;
-        public final String name;
-        public final String version;
+    public BuildOutput buildProject(File projectDir, boolean check) throws IOException, InterruptedException {
+        StringBuilder output = new StringBuilder();
+        StringBuilder errorOutput = new StringBuilder();
+        boolean hasError = false;
 
-        public DependencyInfo(String group, String name, String version) {
-            this.group = group;
-            this.name = name;
-            this.version = version;
+        // Determine the gradle executable
+        String gradleExecutable = findGradleExecutable(projectDir);
+
+        // Build the task list
+        List<String> command = new ArrayList<>();
+        command.add(gradleExecutable);
+        command.add("clean");
+        command.add("build");
+        if (check) {
+            command.add("check");
+        }
+        command.add("--no-daemon");
+        command.add("-Dorg.gradle.daemon=false");
+        command.add("-Dorg.gradle.parallel=false");
+        command.add("-Dorg.gradle.workers.max=1");
+
+        // Build the command
+        ProcessBuilder pb = new ProcessBuilder(command);
+        pb.directory(projectDir);
+
+        Process process = pb.start();
+
+        // Read output stream
+        Thread outputThread = new Thread(() -> {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    output.append(line).append("\n");
+                }
+            } catch (IOException e) {
+                // Don't append to errorOutput here as it's not a build error
+                output.append("Error reading output: ").append(e.getMessage()).append("\n");
+            }
+        });
+
+        // Read error stream - but collect warnings separately
+        StringBuilder warnings = new StringBuilder();
+        Thread errorThread = new Thread(() -> {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Check if it's just a warning or note
+                    if (line.contains("Note:") || line.contains("warning:") || line.contains("VM warning:")) {
+                        warnings.append(line).append("\n");
+                    } else {
+                        errorOutput.append(line).append("\n");
+                    }
+                }
+            } catch (IOException e) {
+                errorOutput.append("Error reading error stream: ").append(e.getMessage()).append("\n");
+            }
+        });
+
+        outputThread.start();
+        errorThread.start();
+
+        boolean finished = process.waitFor(300, TimeUnit.SECONDS); // 5 minutes timeout for builds
+
+        outputThread.join(5000); // Wait max 5 seconds for threads to finish
+        errorThread.join(5000);
+
+        if (!finished) {
+            process.destroyForcibly();
+            errorOutput.append("Gradle build process timed out after 5 minutes\n");
+            hasError = true;
+        } else if (process.exitValue() != 0) {
+            hasError = true;
+            if (errorOutput.length() == 0) {
+                errorOutput.append("Gradle build failed with exit code: ").append(process.exitValue()).append("\n");
+            }
         }
 
-        @Override
-        public String toString() {
-            return group + ":" + name + ":" + version;
+        // Append warnings to output (not error) if build succeeded
+        if (!hasError && warnings.length() > 0) {
+            if (output.length() > 0) {
+                output.append("\n");
+            }
+            output.append("Build Warnings:\n").append(warnings);
+        } else if (hasError && warnings.length() > 0) {
+            // If build failed, include warnings in error output
+            errorOutput.append("\nBuild Warnings:\n").append(warnings);
         }
+
+        return new BuildOutput(output.toString(), errorOutput.toString(), hasError);
     }
 
-    public static List<DependencyInfo> resolveDependencies(File projectDir) throws IOException, InterruptedException {
+    public String formatOutput(BuildOutput buildOutput) {
+        StringBuilder result = new StringBuilder();
+
+        // Add output if present
+        if (buildOutput.output() != null && !buildOutput.output().isEmpty()) {
+            result.append("Output:\n").append(buildOutput.output());
+        }
+
+        // Add error if present
+        if (buildOutput.error() != null && !buildOutput.error().isEmpty()) {
+            // Add a separator if we already have content
+            if (!result.isEmpty()) {
+                result.append("\n\n");
+            }
+            result.append("Error:\n").append(buildOutput.error());
+        }
+
+        return result.toString();
+    }
+
+    public List<DependencyInfo> resolveDependencies(File projectDir) throws IOException, InterruptedException {
         List<DependencyInfo> dependencies = new ArrayList<>();
 
         // Determine the gradle executable
@@ -85,7 +179,7 @@ public class GradleProcessExecutor {
         return dependencies;
     }
 
-    private static String findGradleExecutable(File projectDir) {
+    private String findGradleExecutable(File projectDir) {
         // First try gradlew in the project directory
         File gradlewUnix = new File(projectDir, "gradlew");
         File gradlewWindows = new File(projectDir, "gradlew.bat");
@@ -105,7 +199,7 @@ public class GradleProcessExecutor {
         return "gradle";
     }
 
-    private static DependencyInfo parseDependencyLine(String line) {
+    private DependencyInfo parseDependencyLine(String line) {
         // Remove tree characters and trim
         String cleaned = line.replaceAll("[\\|\\\\+\\-\\s]+", " ").trim();
 

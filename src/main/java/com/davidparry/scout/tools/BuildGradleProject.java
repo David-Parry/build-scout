@@ -1,9 +1,6 @@
 package com.davidparry.scout.tools;
 
-import com.davidparry.scout.common.ArgumentUtils;
-import com.davidparry.scout.common.BuildOutput;
-import com.davidparry.scout.common.GradleTasks;
-import com.davidparry.scout.common.LogFactory;
+import com.davidparry.scout.common.*;
 import com.davidparry.scout.handlers.Handler;
 import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
@@ -19,11 +16,11 @@ import java.util.Set;
 
 public class BuildGradleProject extends BuildTool implements Handler {
     private static final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
-    private final GradleTasks service;
+    private final GradleProcessExecutor service;
     private final Tool tool;
 
-    public BuildGradleProject(GradleTasks service) {
-        this.service = service;
+    public BuildGradleProject(GradleProcessExecutor gradleProcessExecutor) {
+        this.service = gradleProcessExecutor;
         tool = new Tool("build_gradle_project", "if you want to also run a complete build with all checks pass the check = true this tool will invoke the build and return the result with both success and errors if isError is true.", schema());
     }
 
@@ -41,7 +38,7 @@ public class BuildGradleProject extends BuildTool implements Handler {
                 check = checkParameter;
             }
             for (File file : files) {
-                BuildOutput output = service.buildGradleProject(file, check);
+                BuildOutput output = service.buildProject(file, check);
                 results.add(new Content(service.formatOutput(output)));
                 if (!error) {
                     error = output.failed();
@@ -66,7 +63,7 @@ public class BuildGradleProject extends BuildTool implements Handler {
         return new HandlerResponse(action(request));
     }
 
-    public Tool getTool() {
-        return tool;
+    public Tool tool() {
+        return this.tool;
     }
 }

@@ -1,6 +1,5 @@
 package com.davidparry.scout.tools;
 
-import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.ArgumentUtils;
 import com.davidparry.scout.common.FileInfoRecord;
 import com.davidparry.scout.common.LogFactory;
@@ -10,27 +9,26 @@ import com.davidparry.scout.io.ApplicationLogger;
 import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.*;
+import com.davidparry.scout.spec.Tool;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Schema(name = "get_file_info", description = "Get information about a file, just simply give an absolute path and it will return the file information for sure.")
-public class GetFileInfo extends BuildTool implements Tool, Handler {
-    private static final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
+public class GetFileInfo extends BuildTool implements Handler {
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
+    private final Tool tool;
 
     // Add explicit no-argument constructor
     public GetFileInfo() {
-        // Default constructor for schema processor
+        this.tool = new Tool("get_file_info", "Get information about a file, just simply give an absolute path and it will return the file information for sure.", schema());
     }
 
-    @Override
     public InputSchema schema() {
         logger.log("GetFileInfo schema Schema being created and returned");
         addProperty(new InputProperty("path", "string", "The Absolute Path to the file.", true));
         return new InputSchema("object", getProperties(), getRequired());
     }
 
-    @Override
     public ToolOutputResponse action(JsonRpcRequest args) {
         List<Content> results = new ArrayList<>();
         try {
@@ -44,8 +42,13 @@ public class GetFileInfo extends BuildTool implements Tool, Handler {
         }
         return new ToolOutputResponse(results, false);
     }
+
     @Override
     public HandlerResponse handle(JsonRpcRequest request) {
         return new HandlerResponse(action(request));
+    }
+
+    public Tool tool() {
+        return tool;
     }
 }

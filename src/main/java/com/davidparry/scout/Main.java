@@ -3,8 +3,7 @@ package com.davidparry.scout;
 import com.davidparry.scout.common.*;
 import com.davidparry.scout.handlers.*;
 import com.davidparry.scout.io.*;
-import com.davidparry.scout.tools.BuildGradleProject;
-import com.davidparry.scout.tools.ListDependencies;
+import com.davidparry.scout.tools.*;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -22,9 +21,9 @@ public class Main {
     private final LogFactory logFactory = new LogFactory();
     private final LogFile logFile = LogFileWriter.getInstance(logFactory);
     private final Logger logger = new ApplicationLogger().getLogger(logFile);
-    private Router router;
     private final Map<String, Handler> handlers = new HashMap<>();
     private final List<com.davidparry.scout.spec.Tool> tools = new ArrayList<>();
+    private Router router;
 
     public Main() {
         mcpVersionNumber = loadVersion();
@@ -38,16 +37,55 @@ public class Main {
 
     private void initializeHandlers() {
         BuildSystem buildSystem = new BuildSystemImpl();
-        DependencyFetch dependencyFetch = new DependencyFetch(buildSystem);
-        // tools first need to answer list
-        ListDependencies listDependencies = new ListDependencies(dependencyFetch, buildSystem);
-        tools.add(listDependencies.getTool());
-        handlers.put(listDependencies.getTool().name(), listDependencies);
-        GradleTasks gradleTasks = new GradleTasksImpl();
-        BuildGradleProject buildGradleProject = new BuildGradleProject(gradleTasks);
-        tools.add(buildGradleProject.getTool());
-        handlers.put(buildGradleProject.getTool().name(), buildGradleProject);
+        GradleProcessExecutor gradleProcessExecutor = new GradleProcessExecutor();
+        DependencyFetch dependencyFetch = new DependencyFetch(buildSystem, gradleProcessExecutor);
+        JarDownloader jarDownloader = new JarDownloader();
+        JarComparatorService jarComparatorService = new JarComparatorService(jarDownloader);
 
+        // tools with handlers
+        ListDependencies listDependencies = new ListDependencies(dependencyFetch, buildSystem);
+        tools.add(listDependencies.tool());
+        handlers.put(listDependencies.tool().name(), listDependencies);
+
+        BuildGradleProject buildGradleProject = new BuildGradleProject(gradleProcessExecutor);
+        tools.add(buildGradleProject.tool());
+        handlers.put(buildGradleProject.tool().name(), buildGradleProject);
+
+        BuildSystemFilePaths buildSystemFilePaths = new BuildSystemFilePaths(buildSystem);
+        tools.add(buildSystemFilePaths.tool());
+        handlers.put(buildSystemFilePaths.tool().name(), buildSystemFilePaths);
+
+        DownloadCurrentLatestSource downloadCurrentLatestSource = new DownloadCurrentLatestSource(dependencyFetch);
+        tools.add(downloadCurrentLatestSource.tool());
+        handlers.put(downloadCurrentLatestSource.tool().name(), downloadCurrentLatestSource);
+
+        FindClassUsage findClassUsage = new FindClassUsage(new SourceClassUsageService());
+        tools.add(findClassUsage.tool());
+        handlers.put(findClassUsage.tool().name(), findClassUsage);
+
+        GetFileInfo getFileInfo = new GetFileInfo();
+        tools.add(getFileInfo.tool());
+        handlers.put(getFileInfo.tool().name(), getFileInfo);
+
+        GetResourceInfo getResourceInfo = new GetResourceInfo();
+        tools.add(getResourceInfo.tool());
+        handlers.put(getResourceInfo.tool().name(), getResourceInfo);
+
+        JarDiffReporter jarDiffReporter = new JarDiffReporter(jarComparatorService);
+        tools.add(jarDiffReporter.tool());
+        handlers.put(jarDiffReporter.tool().name(), jarDiffReporter);
+
+        ReplaceSourceCodeComplete replaceSourceCodeComplete = new ReplaceSourceCodeComplete();
+        tools.add(replaceSourceCodeComplete.tool());
+        handlers.put(replaceSourceCodeComplete.tool().name(), replaceSourceCodeComplete);
+
+        UnitTestGradleProject unitTestGradleProject = new UnitTestGradleProject(gradleProcessExecutor);
+        tools.add(unitTestGradleProject.tool());
+        handlers.put(unitTestGradleProject.tool().name(), unitTestGradleProject);
+
+        UpdateDependencyVersion updateDependencyVersion = new UpdateDependencyVersion(buildSystem);
+        tools.add(updateDependencyVersion.tool());
+        handlers.put(updateDependencyVersion.tool().name(), updateDependencyVersion);
 
 
         // other handlers

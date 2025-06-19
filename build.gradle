@@ -34,7 +34,7 @@ repositories {
 dependencies {
   //  implementation 'org.slf4j:slf4j-api:2.0.16'
     implementation 'org.slf4j:slf4j-nop:1.7.36'
-    implementation 'org.gradle:gradle-tooling-api:8.7'
+    //implementation 'org.gradle:gradle-tooling-api:8.14.2'
     implementation 'com.google.code.gson:gson:2.13.1'
     implementation 'com.github.siom79.japicmp:japicmp:0.23.1'
     testImplementation platform('org.junit:junit-bom:5.10.0')
@@ -161,6 +161,8 @@ void updateScoutServerJarInConfig(File configFile, File latestJar) {
         println "Could not find scout-server args in config."
     }
 }
+
+
 graalvmNative {
     binaries {
         main {
@@ -169,42 +171,11 @@ graalvmNative {
             buildArgs.add('--no-fallback')
 
             // Initialize at runtime - Gradle and SLF4J classes that were causing issues
-            buildArgs.add('--initialize-at-run-time=org.slf4j.LoggerFactory')
-            buildArgs.add('--initialize-at-run-time=org.slf4j.impl.StaticLoggerBinder')
-            buildArgs.add('--initialize-at-run-time=org.gradle.internal.time.Time')
-            buildArgs.add('--initialize-at-run-time=org.gradle.internal.concurrent.CompositeStoppable')
-            buildArgs.add('--initialize-at-run-time=org.gradle.internal.time.MonotonicClock')
-            buildArgs.add('--initialize-at-run-time=org.gradle.util.internal.DefaultGradleVersion')
-            buildArgs.add('--initialize-at-run-time=org.gradle.tooling')
-            buildArgs.add('--initialize-at-run-time=org.gradle.internal')
-            buildArgs.add('--initialize-at-run-time=org.gradle.util')
-
-            // Additional Gradle Tooling API runtime initialization
-            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.consumer')
-            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.adapter')
-            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.build')
-            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.gradle')
-            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.protocol')
-            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.model')
-            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.model.java')
-            buildArgs.add('--initialize-at-run-time=org.gradle.internal.service')
-            buildArgs.add('--initialize-at-run-time=org.gradle.internal.service.scopes')
-            buildArgs.add('--initialize-at-run-time=org.gradle.internal.impldep.org.apache.commons.lang')
-            buildArgs.add('--initialize-at-run-time=org.gradle.internal.reflect')
-            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.consumer.DefaultGradleConnector')
-            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.consumer.ConnectorServices')
-            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.consumer.connection.ConnectorServiceRegistry')
-            buildArgs.add('--initialize-at-run-time=org.gradle.internal.service')
-            buildArgs.add('--initialize-at-run-time=org.gradle.internal.service.DefaultServiceRegistry')
-            buildArgs.add('--initialize-at-run-time=org.gradle.internal.service.ServiceRegistry')
-            buildArgs.add('--initialize-at-run-time=org.gradle.internal.logging.services.LoggingServiceRegistry')
-            buildArgs.add('--initialize-at-run-time=org.gradle.internal.concurrent')
-            buildArgs.add('--initialize-at-run-time=org.gradle.internal.concurrent.DefaultExecutorFactory')
-            buildArgs.add('--initialize-at-run-time=org.gradle.internal.id.LongIdGenerator')
+            //buildArgs.add('--initialize-at-run-time=org.slf4j.LoggerFactory')
+            //buildArgs.add('--initialize-at-run-time=org.slf4j.impl.StaticLoggerBinder')
 
 
             // Your existing runtime initializations
-            buildArgs.add('--initialize-at-run-time=org.gradle.tooling.internal.consumer.connection')
             buildArgs.add('--initialize-at-run-time=com.google.gson')
             buildArgs.add('--initialize-at-run-time=com.davidparry.scout')
             buildArgs.add('--initialize-at-run-time=com.davidparry.scout.annotation')
@@ -218,7 +189,7 @@ graalvmNative {
 
             // Remove the build-time initialization for org.gradle.tooling since it conflicts
             // buildArgs.add('--initialize-at-build-time=org.gradle.internal.impldep,org.gradle.tooling')
-            buildArgs.add('--initialize-at-build-time=org.gradle.internal.impldep')
+            buildArgs.add('--initialize-at-run-time=org.gradle.internal.impldep')
 
             // JVM arguments
             buildArgs.add('-Djava.awt.headless=true')
@@ -240,19 +211,24 @@ graalvmNative {
             // Optional: Add trace for debugging if needed
             buildArgs.add('--trace-class-initialization=org.gradle.internal.time.Time')
 
+            buildArgs.add("-H:+PrintClassInitialization")
+            buildArgs.add("-H:Log=registerResource:3")  // Verbose resource registration
+            buildArgs.add("-H:+PrintAnalysisStatistics")
+
+
             useFatJar = true  // Uses shadowJar
         }
     }
-    agent {
-        enabled = true
-        defaultMode = "standard" // or "conditional" for conditional metadata
-
-        // Optional: Configure metadata copy task
-        metadataCopy {
-            inputTaskNames.add("run") // or "test"
-            outputDirectories.add("src/main/resources/META-INF/native-image")
-        }
-    }
+//    agent {
+//        enabled = true
+//        defaultMode = "standard" // or "conditional" for conditional metadata
+//
+//        // Optional: Configure metadata copy task
+//        metadataCopy {
+//            inputTaskNames.add("run") // or "test"
+//            outputDirectories.add("src/main/resources/META-INF/native-image")
+//        }
+//    }
 }
 
 nativeCompile.dependsOn shadowJar

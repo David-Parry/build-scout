@@ -1,8 +1,6 @@
 package com.davidparry.scout.tools;
 
-import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.ArgumentUtils;
-import com.davidparry.scout.common.BuildSystemImpl;
 import com.davidparry.scout.common.DependencyFetch;
 import com.davidparry.scout.common.LogFactory;
 import com.davidparry.scout.handlers.Handler;
@@ -11,24 +9,21 @@ import com.davidparry.scout.io.ApplicationLogger;
 import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.*;
+import com.davidparry.scout.spec.Tool;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Schema(name = "latest_dependency_version", description = "Given the groupId and artifactId, this tool will return the latest version of this maven dependency.")
-public class LatestDependencyVersion extends BuildTool implements Tool, Handler {
-    private static final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
+public class LatestDependencyVersion extends BuildTool implements Handler {
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
     private final DependencyFetch dependencyFetch;
+    private final Tool tool;
 
     public LatestDependencyVersion(DependencyFetch dependencyFetch) {
         this.dependencyFetch = dependencyFetch;
+        this.tool = new Tool("latest_dependency_version", "Given the groupId and artifactId, this tool will return the latest version of this maven dependency.", schema());
     }
 
-    public LatestDependencyVersion() {
-        this(new DependencyFetch(new BuildSystemImpl()));
-    }
-
-    @Override
     public InputSchema schema() {
         logger.log("LatestDependencyVersion schema Schema being created and returned");
         addProperty(new InputProperty("groupId", "string", "The maven group id used in maven dependency repository.", true));
@@ -36,7 +31,6 @@ public class LatestDependencyVersion extends BuildTool implements Tool, Handler 
         return new InputSchema("object", getProperties(), getRequired());
     }
 
-    @Override
     public ToolOutputResponse action(JsonRpcRequest request) {
         List<Content> results = new ArrayList<>();
         boolean error = true;
@@ -71,5 +65,9 @@ public class LatestDependencyVersion extends BuildTool implements Tool, Handler 
     @Override
     public HandlerResponse handle(JsonRpcRequest request) {
         return new HandlerResponse(action(request));
+    }
+
+    public Tool tool() {
+        return this.tool;
     }
 }

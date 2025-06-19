@@ -1,6 +1,5 @@
 package com.davidparry.scout.tools;
 
-import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.ArgumentUtils;
 import com.davidparry.scout.common.LogFactory;
 import com.davidparry.scout.handlers.Handler;
@@ -9,6 +8,7 @@ import com.davidparry.scout.io.ApplicationLogger;
 import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.*;
+import com.davidparry.scout.spec.Tool;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,11 +18,15 @@ import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 
-@Schema(name = "replace_source_file_contents", description = "Given the fully qualified path of the source file and the entire sourceCode of the file you want to replace the existing source code with this tool will do this task for you.")
-public class ReplaceSourceCodeComplete extends BuildTool implements Tool, Handler {
-    private static final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
+public class ReplaceSourceCodeComplete extends BuildTool implements Handler {
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
+    private final Tool tool;
 
-    @Override
+
+    public ReplaceSourceCodeComplete() {
+        this.tool = new Tool("replace_source_file_contents", "Given the fully qualified path of the source file and the entire sourceCode of the file you want to replace the existing source code with this tool will do this task for you.", schema());
+    }
+
     public InputSchema schema() {
         logger.log("ReplaceSourceCodeComplete schema Schema being created and returned");
         addProperty(new InputProperty("fullyQualifiedSourceFilePath", "string", "The fully qualified path of the source file you want its contents replaced.", true));
@@ -30,7 +34,6 @@ public class ReplaceSourceCodeComplete extends BuildTool implements Tool, Handle
         return new InputSchema("object", getProperties(), getRequired());
     }
 
-    @Override
     public ToolOutputResponse action(JsonRpcRequest request) {
         List<Content> results = new ArrayList<>();
         boolean error = false;
@@ -87,5 +90,9 @@ public class ReplaceSourceCodeComplete extends BuildTool implements Tool, Handle
     @Override
     public HandlerResponse handle(JsonRpcRequest request) {
         return new HandlerResponse(action(request));
+    }
+
+    public Tool tool() {
+        return tool;
     }
 }
