@@ -29,11 +29,6 @@ public class DevNullLogger implements Logger {
     }
 
     @Override
-    public void close() {
-
-    }
-
-    @Override
     public void error(String message, Throwable exception) {
 
     }

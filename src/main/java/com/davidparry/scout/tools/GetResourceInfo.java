@@ -1,11 +1,15 @@
 package com.davidparry.scout.tools;
 
-import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.ArgumentUtils;
 import com.davidparry.scout.common.FileInfoRecord;
+import com.davidparry.scout.common.LogFactory;
+import com.davidparry.scout.handlers.Handler;
+import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.*;
+import com.davidparry.scout.spec.Tool;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,16 +19,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Schema(name = "get_project_file_resource_info", description = "Lists available resources/files of a project and provides information about them.")
-public class GetResourceInfo extends BuildTool implements Tool<ToolOutputResponse> {
-    private static final Logger logger = ApplicationLogger.getInstance();
+public class GetResourceInfo extends BuildTool implements Handler {
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
+    private final Tool tool;
 
     // Add explicit no-argument constructor
     public GetResourceInfo() {
-        // Default constructor for schema processor
+        this.tool = new Tool("get_project_file_resource_info", "Lists available resources/files of a project and provides information about them.", schema());
     }
 
-    @Override
     public InputSchema schema() {
         logger.log("GetResourceInfo schema Schema being created and returned");
         addProperty(new InputProperty("path", "string", "Absolute Path to list resources at that directory.", true));
@@ -32,7 +35,6 @@ public class GetResourceInfo extends BuildTool implements Tool<ToolOutputRespons
         return new InputSchema("object", getProperties(), getRequired());
     }
 
-    @Override
     public ToolOutputResponse action(JsonRpcRequest args) {
         List<Content> results = new ArrayList<>();
         try {
@@ -67,5 +69,14 @@ public class GetResourceInfo extends BuildTool implements Tool<ToolOutputRespons
         } else {
             return List.of(path);
         }
+    }
+
+    @Override
+    public HandlerResponse handle(JsonRpcRequest request) {
+        return new HandlerResponse(action(request));
+    }
+
+    public Tool tool() {
+        return this.tool;
     }
 }

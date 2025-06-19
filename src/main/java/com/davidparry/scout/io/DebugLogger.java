@@ -1,30 +1,52 @@
 package com.davidparry.scout.io;
 
-public class DebugLogger extends BaseLogger {
+public class DebugLogger implements Logger {
+    private final LogFile logFile;
 
 
-    public DebugLogger(String logDirectory, String level) {
-        super(logDirectory, level);
+    public DebugLogger(LogFile logFile) {
+        this.logFile = logFile;
+        log("Debugger Logger initialized " + this.getClass().getSimpleName());
     }
 
     @Override
     public void log(String message) {
-        write(DEBUG_PREFIX + message);
+        logFile.write(DEBUG_PREFIX + message);
     }
 
     @Override
     public void log(String message, Throwable exception) {
-        write(DEBUG_PREFIX + message, exception);
+        logFile.write(DEBUG_PREFIX + message, exception);
     }
 
     @Override
     public void info(String message) {
-        write(INFO_PREFIX + message);
+        logFile.write(INFO_PREFIX + message);
+    }
+
+    @Override
+    public void error(String message) {
+        logFile.write(ERROR_PREFIX + message);
+    }
+
+    @Override
+    public void error(String message, Throwable exception) {
+        logFile.write(ERROR_PREFIX + message, exception);
+    }
+
+    @Override
+    public String level() {
+        return logFile.getLogFactory().getLoggingLevel();
+    }
+
+    @Override
+    public String path() {
+        return logFile.getLogFactory().getLogDirectory();
     }
 
     @Override
     public void api(String message) {
-        write(API_PREFIX + message);
+        logFile.write(API_PREFIX + message);
     }
 
 }

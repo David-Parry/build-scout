@@ -1,11 +1,15 @@
 package com.davidparry.scout.tools;
 
-import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.ArgumentUtils;
+import com.davidparry.scout.common.LogFactory;
 import com.davidparry.scout.common.SourceClassUsageService;
+import com.davidparry.scout.handlers.Handler;
+import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.*;
+import com.davidparry.scout.spec.Tool;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -15,20 +19,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Schema(name = "find_class_usage", description = "Given the fully qualified path of the root directory of the project and the fully qualified class name this tool will search the projects source code for the classes usage and return file path that uses this class and line numbers where it is used.")
-public class FindClassUsage extends BuildTool implements Tool<ToolOutputResponse> {
-    private static final Logger logger = ApplicationLogger.getInstance();
+public class FindClassUsage extends BuildTool implements Handler {
+    private static final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
     private final SourceClassUsageService service;
+    private final Tool tool;
 
     public FindClassUsage(SourceClassUsageService service) {
         this.service = service;
+        this.tool = new Tool("find_class_usage", "Given the fully qualified path of the root directory of the project and the fully qualified class name this tool will search the projects source code for the classes usage and return file path that uses this class and line numbers where it is used.", schema());
     }
 
-    public FindClassUsage() {
-        this(new SourceClassUsageService());
-    }
-
-    @Override
     public InputSchema schema() {
         logger.log("FindClassUsage schema Schema being created and returned");
         addProperty(new InputProperty(PROJECT_ROOT, "string", "The fully qualified path of the root directory of the project.", rootProjectMandatory()));
@@ -36,7 +36,6 @@ public class FindClassUsage extends BuildTool implements Tool<ToolOutputResponse
         return new InputSchema("object", getProperties(), getRequired());
     }
 
-    @Override
     public ToolOutputResponse action(JsonRpcRequest request) {
         List<Content> results = new ArrayList<>();
         try {
@@ -79,5 +78,14 @@ public class FindClassUsage extends BuildTool implements Tool<ToolOutputResponse
             return createErrorResult("Error finding class usage: " + e.getMessage());
         }
         return new ToolOutputResponse(results, false);
+    }
+
+    @Override
+    public HandlerResponse handle(JsonRpcRequest request) {
+        return new HandlerResponse(action(request));
+    }
+
+    public Tool tool() {
+        return this.tool;
     }
 }

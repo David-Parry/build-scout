@@ -1,17 +1,13 @@
 package com.davidparry.scout;
 
-import com.davidparry.scout.annotation.SchemaInitializer;
-import com.davidparry.scout.annotation.SchemaRegistry;
-import com.davidparry.scout.common.ClientConsumer;
-import com.davidparry.scout.common.LogFactory;
-import com.davidparry.scout.io.ApplicationLogger;
-import com.davidparry.scout.io.IOHandler;
-import com.davidparry.scout.io.IOHandlerImpl;
-import com.davidparry.scout.io.Logger;
+import com.davidparry.scout.common.*;
+import com.davidparry.scout.handlers.*;
+import com.davidparry.scout.io.*;
+import com.davidparry.scout.tools.*;
 
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -21,18 +17,17 @@ public class Main {
     private static final CountDownLatch shutdownLatch = new CountDownLatch(1);
     public static String MCP_SERVER_NAME = "scout-server";
     private static IOHandler io;
-    private static RequestController controller;
     public final String mcpVersionNumber;
-    private final Logger logger;
-    private final SchemaInitializer schemaInitializer;
+    private final LogFactory logFactory = new LogFactory();
+    private final LogFile logFile = LogFileWriter.getInstance(logFactory);
+    private final Logger logger = new ApplicationLogger().getLogger(logFile);
+    private final Map<String, Handler> handlers = new HashMap<>();
+    private final List<com.davidparry.scout.spec.Tool> tools = new ArrayList<>();
+    private Router router;
 
     public Main() {
-        LogFactory logFactory = new LogFactory();
-        logger = logFactory.getLogger();
-        ApplicationLogger.setLogger(logger);
         mcpVersionNumber = loadVersion();
         ApplicationState.instance().setVersion(mcpVersionNumber);
-        schemaInitializer = new SchemaInitializer();
     }
 
     public static void main(String[] args) {
@@ -40,21 +35,86 @@ public class Main {
         main.start();
     }
 
+    private void initializeHandlers() {
+        BuildSystem buildSystem = new BuildSystemImpl();
+        GradleProcessExecutor gradleProcessExecutor = new GradleProcessExecutor();
+        DependencyFetch dependencyFetch = new DependencyFetch(buildSystem, gradleProcessExecutor);
+        JarDownloader jarDownloader = new JarDownloader();
+        JarComparatorService jarComparatorService = new JarComparatorService(jarDownloader);
+
+        // tools with handlers
+        ListDependencies listDependencies = new ListDependencies(dependencyFetch, buildSystem);
+        tools.add(listDependencies.tool());
+        handlers.put(listDependencies.tool().name(), listDependencies);
+
+        BuildGradleProject buildGradleProject = new BuildGradleProject(gradleProcessExecutor);
+        tools.add(buildGradleProject.tool());
+        handlers.put(buildGradleProject.tool().name(), buildGradleProject);
+
+        BuildSystemFilePaths buildSystemFilePaths = new BuildSystemFilePaths(buildSystem);
+        tools.add(buildSystemFilePaths.tool());
+        handlers.put(buildSystemFilePaths.tool().name(), buildSystemFilePaths);
+
+        DownloadCurrentLatestSource downloadCurrentLatestSource = new DownloadCurrentLatestSource(dependencyFetch);
+        tools.add(downloadCurrentLatestSource.tool());
+        handlers.put(downloadCurrentLatestSource.tool().name(), downloadCurrentLatestSource);
+
+        FindClassUsage findClassUsage = new FindClassUsage(new SourceClassUsageService());
+        tools.add(findClassUsage.tool());
+        handlers.put(findClassUsage.tool().name(), findClassUsage);
+
+        GetFileInfo getFileInfo = new GetFileInfo();
+        tools.add(getFileInfo.tool());
+        handlers.put(getFileInfo.tool().name(), getFileInfo);
+
+        GetResourceInfo getResourceInfo = new GetResourceInfo();
+        tools.add(getResourceInfo.tool());
+        handlers.put(getResourceInfo.tool().name(), getResourceInfo);
+
+        JarDiffReporter jarDiffReporter = new JarDiffReporter(jarComparatorService);
+        tools.add(jarDiffReporter.tool());
+        handlers.put(jarDiffReporter.tool().name(), jarDiffReporter);
+
+        ReplaceSourceCodeComplete replaceSourceCodeComplete = new ReplaceSourceCodeComplete();
+        tools.add(replaceSourceCodeComplete.tool());
+        handlers.put(replaceSourceCodeComplete.tool().name(), replaceSourceCodeComplete);
+
+        UnitTestGradleProject unitTestGradleProject = new UnitTestGradleProject(gradleProcessExecutor);
+        tools.add(unitTestGradleProject.tool());
+        handlers.put(unitTestGradleProject.tool().name(), unitTestGradleProject);
+
+        UpdateDependencyVersion updateDependencyVersion = new UpdateDependencyVersion(buildSystem);
+        tools.add(updateDependencyVersion.tool());
+        handlers.put(updateDependencyVersion.tool().name(), updateDependencyVersion);
+
+
+        // other handlers
+        handlers.put("initialize", new InitializeHandler());
+        handlers.put("notifications", new NotificationHandler());
+        handlers.put("notifications/roots/list_changed", new NotificationRootsHandler(io, ApplicationState.instance()));
+        handlers.put("notifications/initialized", new NotificationInitializedHandler(io, ApplicationState.instance()));
+        handlers.put("tools/list", new ToolsListHandler(tools));
+        handlers.put("prompts/list", new PromptsListHandler());
+        handlers.put("prompts/get", new PromptDispatchHandler(ApplicationState.instance()));
+        handlers.put("completion/complete", new CompletionComplete());
+        handlers.put("roots", new ClientConsumer(ApplicationState.instance()));
+    }
+
+
     public void start() {
         logger.info("Starting Scout version " + mcpVersionNumber + " Logger Level " + logger.level());
 
         // Create an IOHandler instance for console I/O
         io = new IOHandlerImpl();
 
-        // Initialize the Schema annotation system
-        schemaInitializer.initialize();
-        schemaInitializer.registerCoreClasses(io, ApplicationState.instance());
-        SchemaRegistry registry = SchemaRegistry.getInstance();
+        initializeHandlers();
 
 
-        // Create the request controller
-        controller = new RequestController(io, registry, new ClientConsumer(ApplicationState.instance()));
         logger.log("Controller initialized ");
+
+        router = new Router(io, ApplicationState.instance(), handlers);
+
+
         try {
             // Add a listener for individual lines
             io.addLineListener(this::process);
@@ -65,7 +125,7 @@ public class Main {
                     // Stop the async input reader and close resources
                     //io.stopAsyncInputReader();
                     stop();
-                    logger.close();
+                    logFile.close();
                     shutdownLatch.countDown();
                 }
             }));
@@ -77,7 +137,7 @@ public class Main {
         } catch (Exception e) {
             logger.log("Error in main method", e);
             stop();
-            logger.close();
+            logFile.close();
             System.exit(1);
         }
     }
@@ -86,7 +146,7 @@ public class Main {
         if (io != null) {
             io.stopRunning();
         }
-        logger.close();
+        logFile.close();
     }
 
     /**
@@ -100,7 +160,7 @@ public class Main {
                 if (io != null && !io.isRunning()) {
                     logger.log("IO processing has stopped. Initiating shutdown.");
                     if (isShuttingDown.compareAndSet(false, true)) {
-                        logger.close();
+                        logFile.close();
                         shutdownLatch.countDown();
                     }
                 }
@@ -136,10 +196,8 @@ public class Main {
         if (line.isEmpty()) {
             return;
         }
-
         try {
-            // Delegate processing to the controller
-            controller.processRequest(line);
+            router.route(line);
         } catch (Exception e) {
             logger.log("Error processing input", e);
         }

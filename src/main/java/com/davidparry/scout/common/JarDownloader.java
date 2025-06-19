@@ -13,7 +13,7 @@ import java.nio.file.Path;
  * using groupId, artifactId and version.
  */
 public class JarDownloader {
-    private static final String MAVEN_CENTRAL_URL = "https://repo1.maven.org/maven2";
+    private final String MAVEN_CENTRAL_URL = "https://repo1.maven.org/maven2";
 
     /**
      * Downloads a file from a URL to a local file.
@@ -22,7 +22,7 @@ public class JarDownloader {
      * @param outputPath The path where the file will be saved
      * @throws IOException If an I/O error occurs
      */
-    private static void downloadFile(String fileUrl, String outputPath) throws IOException {
+    private void downloadFile(String fileUrl, String outputPath) throws IOException {
         URL url = new URL(fileUrl);
         try (ReadableByteChannel readableByteChannel = Channels.newChannel(url.openStream()); FileOutputStream fileOutputStream = new FileOutputStream(outputPath)) {
             fileOutputStream.getChannel().transferFrom(readableByteChannel, 0, Long.MAX_VALUE);

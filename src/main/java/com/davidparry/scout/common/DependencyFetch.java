@@ -1,98 +1,27 @@
 package com.davidparry.scout.common;
 
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
-import org.gradle.tooling.GradleConnector;
-import org.gradle.tooling.ProjectConnection;
-import org.gradle.tooling.model.GradleModuleVersion;
-import org.gradle.tooling.model.idea.IdeaDependency;
-import org.gradle.tooling.model.idea.IdeaModule;
-import org.gradle.tooling.model.idea.IdeaProject;
-import org.gradle.tooling.model.idea.IdeaSingleEntryLibraryDependency;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DependencyFetch {
     private final BuildSystem buildSystem;
-    private static final Logger logger = ApplicationLogger.getInstance();
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
+    private final GradleProcessExecutor gradleProcessExecutor;
 
-    public DependencyFetch(BuildSystem buildSystem) {
+    public DependencyFetch(BuildSystem buildSystem, GradleProcessExecutor gradleProcessExecutor) {
         this.buildSystem = buildSystem;
+        this.gradleProcessExecutor = gradleProcessExecutor;
     }
 
-    public List<String> resolveDependencies(String path) {
-        logger.log("Resolving dependencies for " + path);
-        String type = buildSystem.identifyBuildFile(path);
-        if (BuildSystem.GRADLE_GROOVY.equals(type)) {
-            try {
-                String fileContents = Files.readString(Path.of(path));
-                return resolveGradleGroovyDependencies(fileContents);
-            } catch (IOException e) {
-                return List.of();
-            }
-        } else {
-            return List.of();
-        }
-    }
-
-    private List<String> resolveGradleGroovyDependencies(String fileContents) {
-        List<String> dependencies = new ArrayList<>();
-
-        try {
-            Path projectPath = Files.createTempDirectory("buildscout-gradle-");
-            projectPath.toFile().deleteOnExit();
-            File projectDir = projectPath.toAbsolutePath().toFile();
-            projectDir.deleteOnExit();
-
-            // Write the build file to the temporary directory
-            File buildFile = new File(projectDir, "build.gradle");
-
-            Files.write(buildFile.toPath(), fileContents.getBytes());
-
-            // Create an empty settings.gradle file
-            File settingsFile = new File(projectDir, "settings.gradle");
-            Files.write(settingsFile.toPath(), "".getBytes());
-
-            // Connect to the Gradle project using the Tooling API
-            GradleConnector connector = GradleConnector.newConnector();
-            connector.forProjectDirectory(projectDir);
-
-            try (ProjectConnection connection = connector.connect()) {
-                // Request the IDEA model which contains dependency information
-                IdeaProject ideaProject = connection.getModel(IdeaProject.class);
-
-                for (IdeaModule module : ideaProject.getModules()) {
-                    for (IdeaDependency dependency : module.getDependencies()) {
-                        if (dependency instanceof IdeaSingleEntryLibraryDependency libraryDependency) {
-                            GradleModuleVersion moduleVersion = libraryDependency.getGradleModuleVersion();
-                            if (moduleVersion != null) {
-                                String group = moduleVersion.getGroup();
-                                String name = moduleVersion.getName();
-                                String version = moduleVersion.getVersion();
-
-                                String groupName = group + ":" + name;
-                                if (fileContents.contains(groupName)) {
-                                    String dependencyNotation = groupName + ":" + version;
-                                    dependencies.add(dependencyNotation);
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
-
-        } catch (Exception e) {
-            logger.error("Error resolving Gradle dependencies", e);
-        }
-
-        return dependencies;
-    }
 
     public String lookupLatestVersion(String groupId, String artifactId) {
         try {
@@ -184,63 +113,40 @@ public class DependencyFetch {
         }
     }
 
-    private List<JarData> fetchCurrentLatestMavenArtifactVersions(String groupId, String artifactId, String currentVersion) {
-        List<JarData> versions = new ArrayList<>();
-        Path tempMetadataFile = null;
+    public List<String> resolveDependencies(String path) {
         try {
-            // Convert groupId to path format
-            String groupPath = groupId.replace('.', '/');
+            Path pathObj = Paths.get(path);
+            File projectDir = (Files.isRegularFile(pathObj) ? pathObj.getParent() : pathObj).toFile();
+            String type = buildSystem.identifyBuildFile(path);
 
-            // Maven central repository URL for metadata
-            String metadataUrl = String.format("https://repo1.maven.org/maven2/%s/%s/maven-metadata.xml", groupPath, artifactId);
-
-            // Download the metadata file
-            tempMetadataFile = Files.createTempFile("maven-metadata", ".xml");
-            File metadataFile = tempMetadataFile.toFile();
-
-            java.net.URL url = new java.net.URL(metadataUrl);
-            try (java.io.InputStream in = url.openStream(); java.io.FileOutputStream out = new java.io.FileOutputStream(metadataFile)) {
-
-                byte[] buffer = new byte[4096];
-                int bytesRead;
-                while ((bytesRead = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, bytesRead);
-                }
-            }
-
-            // Parse the XML to get all versions
-            javax.xml.parsers.DocumentBuilderFactory factory = javax.xml.parsers.DocumentBuilderFactory.newInstance();
-            javax.xml.parsers.DocumentBuilder builder = factory.newDocumentBuilder();
-            org.w3c.dom.Document doc = builder.parse(metadataFile);
-
-            org.w3c.dom.NodeList versionNodes = doc.getElementsByTagName("latest");
-            if (versionNodes.getLength() > 0) {
-                versions.add(new JarData(versionNodes.item(0).getTextContent(), groupId, artifactId, "latest"));
-            }
-
-            // If no "latest" tag, try to get the "release" tag
-            versionNodes = doc.getElementsByTagName("release");
-            if (versionNodes.getLength() > 0) {
-                versions.add(new JarData(versionNodes.item(0).getTextContent(), groupId, artifactId, "release"));
-            }
-
-            versionNodes = doc.getElementsByTagName("version");
-            for (int i = 0; i < versionNodes.getLength(); i++) {
-                String version = versionNodes.item(i).getTextContent();
-                if (version.equals(currentVersion)) {
-                    versions.add(new JarData(version, groupId, artifactId, "current"));
-                }
+            if (BuildSystem.GRADLE_GROOVY.equalsIgnoreCase(type) || BuildSystem.GRADLE_KOTLIN.equalsIgnoreCase(type)) {
+                return resolveGradleDependencies(projectDir);
+            } else if (BuildSystem.MAVEN.equalsIgnoreCase(type)) {
+                return resolveMavenDependencies(projectDir);
+            } else {
+                throw new RuntimeException("No supported build file found");
             }
         } catch (Exception e) {
-            logger.error("Error resolving latest version", e);
-        } finally {
-            if (tempMetadataFile != null) {
-                try {
-                    Files.deleteIfExists(tempMetadataFile);
-                } catch (Exception ignore) {
-                }
-            }
+            throw new RuntimeException("Error resolving dependencies", e);
         }
-        return versions;
     }
+
+    private List<String> resolveGradleDependencies(File projectDir) throws IOException, InterruptedException {
+        // Use the ProcessBuilder approach instead of Gradle Tooling API
+        List<DependencyInfo> deps = gradleProcessExecutor.resolveDependencies(projectDir);
+
+        return deps.stream().map(Record::toString).collect(Collectors.toList());
+    }
+
+    private List<String> resolveMavenDependencies(File projectDir) throws IOException, InterruptedException {
+        // Similar approach for Maven
+        ProcessBuilder pb = new ProcessBuilder("mvn", "dependency:list", "-DoutputAbsoluteArtifactFilename=false", "-DincludeScope=compile");
+
+        pb.directory(projectDir);
+        // ... parse output similar to Gradle
+
+        return List.of(); // Implement Maven parsing
+    }
+
+
 }

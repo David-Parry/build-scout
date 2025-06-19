@@ -1,25 +1,30 @@
 package com.davidparry.scout.io;
 
+import com.davidparry.scout.common.LogFactory;
+
 /**
  * Logger factory class for the application.
  * Provides centralized logging functionality with thread-safe operations.
  */
 public class ApplicationLogger {
-    private static Logger INSTANCE;
-
-    private ApplicationLogger() {
+    public ApplicationLogger() {
     }
 
+    public Logger getLogger(LogFile logFile) {
+            String loggingLevel = logFile.getLogFactory().getLoggingLevel();
+            if ("DEBUG".equalsIgnoreCase(loggingLevel)) {
+                return new DebugLogger(logFile);
+            } else if ("INFO".equalsIgnoreCase(loggingLevel)) {
+                return  new InfoLogger(logFile);
+            } else if ("ERROR".equalsIgnoreCase(loggingLevel)) {
+                return new ErrorLogger(logFile);
+            } else if ("API".equalsIgnoreCase(loggingLevel)) {
+                 return new ApiLogger(logFile);
+            } else {
+                return new DevNullLogger();
+            }
 
-    public static Logger getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new DevNullLogger();
-        }
-        return INSTANCE;
-    }
 
-    public static void setLogger(Logger logger) {
-        INSTANCE = logger;
     }
 
 }

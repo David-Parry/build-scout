@@ -1,23 +1,21 @@
 package com.davidparry.scout.handlers;
 
-import com.davidparry.scout.annotation.SchemaMetadata;
-import com.davidparry.scout.annotation.SchemaRegistry;
+import com.davidparry.scout.common.LogFactory;
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.JsonRpcRequest;
-import com.davidparry.scout.spec.ToolOutputResponse;
-import com.davidparry.scout.tools.Tool;
 
-public class ToolDispatcherHandler implements Handler<ToolOutputResponse> {
-    private static final Logger logger = ApplicationLogger.getInstance();
+public class ToolDispatcherHandler implements Handler {
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
 
     @Override
-    public ToolOutputResponse handle(JsonRpcRequest request) {
+    public HandlerResponse handle(JsonRpcRequest request) {
         logger.info("ToolDispatcherHandler Received request");
         logger.log("ToolDispatcherHandler Handling request: " + request);
-        SchemaMetadata metadata = SchemaRegistry.getInstance().getSchema(request.params().name());
-
-        Tool tool = metadata.getTool();
-        return (ToolOutputResponse) tool.action(request);
+//        SchemaMetadata metadata = SchemaRegistry.getInstance().getSchema(request.params().name());
+//
+//        Tool tool = metadata.getTool();
+        return new HandlerResponse();
     }
 }

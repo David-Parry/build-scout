@@ -1,33 +1,32 @@
 package com.davidparry.scout.tools;
 
-import com.davidparry.scout.annotation.Schema;
 import com.davidparry.scout.common.ArgumentUtils;
 import com.davidparry.scout.common.DiffData;
 import com.davidparry.scout.common.JarComparatorService;
-import com.davidparry.scout.common.JarDownloader;
+import com.davidparry.scout.common.LogFactory;
+import com.davidparry.scout.handlers.Handler;
+import com.davidparry.scout.handlers.HandlerResponse;
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.*;
+import com.davidparry.scout.spec.Tool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Schema(name = "version_change_analyzer", description = "Given the groupId, artifactId current version and the latest version of the artifact will return the changes in the public code between the two versions. This allows for a other agents to then check if the code will need to be updated based on the changes.")
-public class JarDiffReporter extends BuildTool implements Tool<ToolOutputResponse> {
-    private static final Logger logger = ApplicationLogger.getInstance();
+public class JarDiffReporter extends BuildTool implements Handler {
+    private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
     private final JarComparatorService jarComparatorService;
+    private final Tool tool;
 
     public JarDiffReporter(JarComparatorService jarComparatorService) {
         this.jarComparatorService = jarComparatorService;
+        this.tool = new Tool("version_change_analyzer", "Given the groupId, artifactId current version and the latest version of the artifact will return the changes in the public code between the two versions. This allows for a other agents to then check if the code will need to be updated based on the changes.", schema());
     }
 
-    public JarDiffReporter() {
-        this(new JarComparatorService(new JarDownloader()));
-    }
-
-    @Override
     public InputSchema schema() {
         logger.log("JarDiffReporter schema being created and returned");
         addProperty(new InputProperty("groupId", "string", "The maven group id used in maven dependency repository.", true));
@@ -37,7 +36,6 @@ public class JarDiffReporter extends BuildTool implements Tool<ToolOutputRespons
         return new InputSchema("object", getProperties(), getRequired());
     }
 
-    @Override
     public ToolOutputResponse action(JsonRpcRequest args) {
         List<Content> results = new ArrayList<>();
         boolean error = true;
@@ -84,4 +82,12 @@ public class JarDiffReporter extends BuildTool implements Tool<ToolOutputRespons
         }
     }
 
+    @Override
+    public HandlerResponse handle(JsonRpcRequest request) {
+        return new HandlerResponse(action(request));
+    }
+
+    public Tool tool() {
+        return tool;
+    }
 }

@@ -1,5 +1,7 @@
 package com.davidparry.scout.io;
 
+import com.davidparry.scout.common.LogFactory;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -7,25 +9,46 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class BaseLogger implements Logger {
-    public final String loggingLevel;
-    public final String logDirectory;
+public class LogFileWriter implements LogFile {
+    private static volatile LogFileWriter instance;
+    private static final Object lock = new Object();
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd-HHmmss");
     private final SimpleDateFormat timestampFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     private PrintWriter logWriter;
-
-    public BaseLogger(String logDirectory, String loggingLevel) {
-        this.logDirectory = logDirectory;
-        this.loggingLevel = loggingLevel;
-        initialize();
+    private final LogFactory logFactory;
+    private LogFileWriter(LogFactory logFactory) {
+        this.logFactory = logFactory;
     }
+
+    public LogFactory getLogFactory() {
+        return logFactory;
+    }
+
+    /**
+     * Get the singleton instance of LogFileWriter
+     * @param logFactory The directory where log files will be stored
+     * @return LogFile interface instance
+     */
+    public static LogFile getInstance(LogFactory logFactory) {
+        if (instance == null) {
+            synchronized (lock) {
+                if (instance == null) {
+                    instance = new LogFileWriter(logFactory);
+                }
+            }
+        }
+        return instance;
+    }
+
+
+
 
     /**
      * Initialize the log directory
      */
     private void initialize() {
-        if (logDirectory != null) {
-            File logDir = new File(logDirectory);
+        if (logFactory.getLogDirectory() != null) {
+            File logDir = new File(logFactory.getLogDirectory());
             if (!logDir.exists()) {
                 logDir.mkdirs();
             }
@@ -41,13 +64,14 @@ public class BaseLogger implements Logger {
         if (logWriter != null) {
             logWriter.close();
         }
+        initialize();
         String timestamp = dateFormat.format(new Date());
-        String currentLogFile = logDirectory + "/scoutServer.log";
+        String currentLogFile = logFactory.getLogDirectory() + "/scoutServer.log";
 
         // Check if the current log file exists and rename it with timestamp
         File existingLogFile = new File(currentLogFile);
         if (existingLogFile.exists()) {
-            String archivedLogFile = logDirectory + "/scoutServer_" + timestamp + ".log";
+            String archivedLogFile = logFactory.getLogDirectory() + "/scoutServer_" + timestamp + ".log";
             File archivedFile = new File(archivedLogFile);
             if (!existingLogFile.renameTo(archivedFile)) {
                 // If rename fails, try to delete the existing file to avoid conflicts
@@ -64,12 +88,12 @@ public class BaseLogger implements Logger {
         }
     }
 
-    protected void write(String message) {
+    public void write(String message) {
         String timestamp = timestampFormat.format(new Date());
         rawWrite("[" + timestamp + "] " + message);
     }
 
-    protected void rawWrite(String message) {
+    public void rawWrite(String message) {
         try {
             if (logWriter == null) {
                 createNewLogFile();
@@ -81,8 +105,7 @@ public class BaseLogger implements Logger {
         }
     }
 
-
-    protected void write(String message, Throwable exception) {
+    public void write(String message, Throwable exception) {
         try {
             if (logWriter == null) {
                 createNewLogFile();
@@ -100,7 +123,6 @@ public class BaseLogger implements Logger {
     /**
      * Close the logger and release resources
      */
-    @Override
     public void close() {
         try {
             if (logWriter != null) {
@@ -110,46 +132,5 @@ public class BaseLogger implements Logger {
         } catch (Exception e) {
             // Ignore any exceptions during close
         }
-    }
-
-    @Override
-    public void api(String message) {
-
-    }
-
-    @Override
-    public void log(String message) {
-
-    }
-
-    @Override
-    public void log(String message, Throwable exception) {
-
-    }
-
-    @Override
-    public void info(String message) {
-
-    }
-
-    @Override
-    public void error(String message) {
-        write(ERROR_PREFIX + message);
-    }
-
-    @Override
-    public void error(String message, Throwable exception) {
-        write(ERROR_PREFIX + message, exception);
-    }
-
-
-    @Override
-    public String level() {
-        return loggingLevel;
-    }
-
-    @Override
-    public String path() {
-        return logDirectory;
     }
 }

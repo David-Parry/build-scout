@@ -2,7 +2,9 @@ package com.davidparry.scout.tools;
 
 import com.davidparry.scout.ApplicationState;
 import com.davidparry.scout.common.ArgumentUtils;
+import com.davidparry.scout.common.LogFactory;
 import com.davidparry.scout.io.ApplicationLogger;
+import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.Content;
 import com.davidparry.scout.spec.InputProperty;
@@ -14,7 +16,7 @@ import java.net.URI;
 import java.util.*;
 
 public abstract class BuildTool {
-    private static final Logger logger = ApplicationLogger.getInstance();
+    private static final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
     protected final String PROJECT_ROOT = "projectRoot";
     private final List<String> required = new ArrayList<>();
     private final Map<String, InputProperty> properties = new HashMap<>();
