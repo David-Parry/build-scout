@@ -1,7 +1,7 @@
 package com.davidparry.scout.io;
 
 public class ApiLogger implements Logger {
-    private LogFile logFile;
+    private final LogFile logFile;
 
     public ApiLogger(LogFile logFile) {
         this.logFile = logFile;
@@ -11,7 +11,7 @@ public class ApiLogger implements Logger {
 
     @Override
     public void api(String message) {
-      logFile.rawWrite(API_PREFIX +message);
+        logFile.rawWrite(API_PREFIX + message);
     }
 
     @Override
@@ -31,12 +31,12 @@ public class ApiLogger implements Logger {
 
     @Override
     public void error(String message) {
-        logFile.write(ERROR_PREFIX +message);
+        logFile.write(ERROR_PREFIX + message);
     }
 
     @Override
     public void error(String message, Throwable exception) {
-        logFile.write(ERROR_PREFIX+message, exception);
+        logFile.write(ERROR_PREFIX + message, exception);
     }
 
     @Override

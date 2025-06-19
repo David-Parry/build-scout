@@ -1,9 +1,10 @@
 package com.davidparry.scout.io;
 
 public class ErrorLogger implements Logger {
-    private LogFile logFile;
+    private final LogFile logFile;
+
     public ErrorLogger(LogFile logFile) {
-         this.logFile = logFile;
+        this.logFile = logFile;
         info("Error Logger initialized " + this.getClass().getSimpleName());
 
     }

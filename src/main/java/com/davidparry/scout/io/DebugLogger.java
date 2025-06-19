@@ -1,9 +1,7 @@
 package com.davidparry.scout.io;
 
-import static com.davidparry.scout.io.Logger.DEBUG_PREFIX;
-
-public class DebugLogger implements  Logger {
-    private LogFile logFile;
+public class DebugLogger implements Logger {
+    private final LogFile logFile;
 
 
     public DebugLogger(LogFile logFile) {
