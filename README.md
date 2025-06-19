@@ -53,23 +53,56 @@ This will increment the version number and build the JAR:
 ```
 
 ### Native Image Build (Experimental)
-This will increment the version number and build the native image:
+Completed and tested all the tools, prompt and root to see the native image working.
+Still need to review more for edge cases but try it out.
 
 ```bash
 ./gradlew clean prebuild nativeCompile 
 ```
+
+### To run the server locally and get out put for native image class discovery.
+```json lines
+ "scout-server": {
+            "command": "java",
+            "args": [
+                "-agentlib:native-image-agent=config-output-dir=/Users/davidparry/code/github/mcp-servers/build-scout/tmp/META-INF/native-image",
+                "-Dorg.gradle.native=false",
+                "-Djava.awt.headless=true",
+                "-jar /Users/davidparry/code/github/mcp-servers/build-scout/build/libs/scout-1.0.105.jar"
+            ],
+            "env": {
+                "BUILD_SCOUT_LOGGING": "DEBUG"
+            }
+        }
+```
+
 
 ## Installation & Configuration
 
 ### Claude Desktop
 Add to your `claude_desktop_config.json`:
 
+#### If you built the JAR:
 ```json
 {
   "mcpServers": {
     "scout-server": {
       "command": "java",
       "args": ["-jar", "/path/to/scout-1.0.{VERSION}.jar"]
+    }
+  }
+}
+```
+#### If you built the Native Image:
+```json
+{
+  "mcpServers": {
+    "scout-server": {
+      "command": "scout",
+      "args": [],
+      "env": {
+        "BUILD_SCOUT_LOGGING": "ERROR"
+      }
     }
   }
 }
@@ -187,11 +220,10 @@ src/
 │   ├── java/
 │   │   └── com/davidparry/scout/
 │   │       ├── Main.java
-│   │       ├── RequestController.java
+│   │       ├── Router.java
 │   │       ├── tools/           # MCP tools implementation
 │   │       ├── common/          # Build system implementations
 │   │       ├── spec/            # MCP protocol specifications
-│   │       └── annotation/      # Schema annotation system
 │   └── resources/
 │       └── META-INF/native-image/  # GraalVM configuration
 └── test/
@@ -200,9 +232,8 @@ src/
 
 ### Adding New Tools
 1. Create a new class implementing the `Tool<T>` interface
-2. Add the `@Schema` annotation with name and description
-3. Register the class in `SchemaInitializer.getAnnotatedClasses()`
-4. Implement the `schema()` and `action()` methods
+2. Register the class in `SchemaInitializer.getAnnotatedClasses()`
+3. Implement the `schema()`,  `tool()` , `handle()`  methods
 
 ### Testing
 Run the test suite:
@@ -222,7 +253,7 @@ The build system automatically:
 ### Common Issues
 1. **Build failures** - Check Java version compatibility (requires Java 21+)
 2. **Native image issues** - Ensure GraalVM is properly configured
-3. **Tool registration** - Verify `@Schema` annotations are present and classes are registered
+3. **Tool registration** - Static classes not registered correctly; for the native image.
 
 ### Logging
 The server includes comprehensive logging at different levels. Check the console output for detailed information about tool execution and errors.
