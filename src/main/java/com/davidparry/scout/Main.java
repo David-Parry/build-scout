@@ -43,49 +43,70 @@ public class Main {
         JarComparatorService jarComparatorService = new JarComparatorService(jarDownloader);
 
         // tools with handlers
+        //1
         ListDependencies listDependencies = new ListDependencies(dependencyFetch, buildSystem);
         tools.add(listDependencies.tool());
         handlers.put(listDependencies.tool().name(), listDependencies);
 
+        //2
         BuildGradleProject buildGradleProject = new BuildGradleProject(gradleProcessExecutor);
         tools.add(buildGradleProject.tool());
         handlers.put(buildGradleProject.tool().name(), buildGradleProject);
 
+        //3
         BuildSystemFilePaths buildSystemFilePaths = new BuildSystemFilePaths(buildSystem);
         tools.add(buildSystemFilePaths.tool());
         handlers.put(buildSystemFilePaths.tool().name(), buildSystemFilePaths);
 
+        //4
         DownloadCurrentLatestSource downloadCurrentLatestSource = new DownloadCurrentLatestSource(dependencyFetch);
         tools.add(downloadCurrentLatestSource.tool());
         handlers.put(downloadCurrentLatestSource.tool().name(), downloadCurrentLatestSource);
 
+        //5
         FindClassUsage findClassUsage = new FindClassUsage(new SourceClassUsageService());
         tools.add(findClassUsage.tool());
         handlers.put(findClassUsage.tool().name(), findClassUsage);
 
+        //6
         GetFileInfo getFileInfo = new GetFileInfo();
         tools.add(getFileInfo.tool());
         handlers.put(getFileInfo.tool().name(), getFileInfo);
 
+        //7
         GetResourceInfo getResourceInfo = new GetResourceInfo();
         tools.add(getResourceInfo.tool());
         handlers.put(getResourceInfo.tool().name(), getResourceInfo);
 
+        //8
         JarDiffReporter jarDiffReporter = new JarDiffReporter(jarComparatorService);
         tools.add(jarDiffReporter.tool());
         handlers.put(jarDiffReporter.tool().name(), jarDiffReporter);
 
+        //9
         ReplaceSourceCodeComplete replaceSourceCodeComplete = new ReplaceSourceCodeComplete();
         tools.add(replaceSourceCodeComplete.tool());
         handlers.put(replaceSourceCodeComplete.tool().name(), replaceSourceCodeComplete);
 
+        //10
         UnitTestGradleProject unitTestGradleProject = new UnitTestGradleProject(gradleProcessExecutor);
         tools.add(unitTestGradleProject.tool());
         handlers.put(unitTestGradleProject.tool().name(), unitTestGradleProject);
 
+        //11
         UpdateDependencyVersion updateDependencyVersion = new UpdateDependencyVersion(buildSystem);
         tools.add(updateDependencyVersion.tool());
         handlers.put(updateDependencyVersion.tool().name(), updateDependencyVersion);
+
+        //12
+        LatestDependencyVersion latestDependencyVersion = new LatestDependencyVersion(dependencyFetch);
+        tools.add(latestDependencyVersion.tool());
+        handlers.put(latestDependencyVersion.tool().name(), latestDependencyVersion);
+
+        //13
+        FindBuildSystem findBuildSystem = new FindBuildSystem(buildSystem);
+        tools.add(findBuildSystem.tool());
+        handlers.put(findBuildSystem.tool().name(), findBuildSystem);
 
 
         // other handlers

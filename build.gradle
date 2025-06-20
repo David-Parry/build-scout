@@ -9,7 +9,7 @@ plugins {
 }
 
 group = 'com.davidparry.scout'
-version = '1.0.105'
+version = '1.0.108'
 jar.enabled = false
 
 repositories {
@@ -172,6 +172,7 @@ graalvmNative {
             //buildArgs.add('--initialize-at-run-time=org.slf4j.LoggerFactory')
             //buildArgs.add('--initialize-at-run-time=org.slf4j.impl.StaticLoggerBinder')
 
+            buildArgs.add("--enable-url-protocols=https,http")
 
             // Your existing runtime initializations
             buildArgs.add('--initialize-at-run-time=com.google.gson')
