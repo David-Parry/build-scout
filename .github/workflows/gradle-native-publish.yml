@@ -11,11 +11,11 @@ on:
 jobs:
   build-native-windows:
     runs-on: windows-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Set up GraalVM JDK 21
         uses: graalvm/setup-graalvm@v1
         with:
@@ -24,13 +24,13 @@ jobs:
           distribution: 'graalvm'
           native-image: true
           set-java-home: true
-      
+
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v3
-      
+
       - name: Build native image
         run: ./gradlew nativeCompile
-      
+
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
@@ -40,11 +40,11 @@ jobs:
 
   build-native-macos:
     runs-on: macos-14  # Apple Silicon (M1/M2) runner
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Set up GraalVM JDK 21
         uses: graalvm/setup-graalvm@v1
         with:
@@ -53,16 +53,16 @@ jobs:
           distribution: 'graalvm'
           native-image: true
           set-java-home: true
-      
+
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v3
-      
+
       - name: Grant execute permissions for Gradle wrapper
         run: chmod +x gradlew
-      
+
       - name: Build native image
         run: ./gradlew nativeCompile
-      
+
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
         with:
@@ -72,11 +72,11 @@ jobs:
 
   build-native-linux:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Set up GraalVM JDK 21
         uses: graalvm/setup-graalvm@v1
         with:
@@ -85,16 +85,16 @@ jobs:
           distribution: 'graalvm'
           native-image: true
           set-java-home: true
-      
+
       - name: Set up Gradle
         uses: gradle/gradle-build-action@v3
-      
+
       - name: Grant execute permissions for Gradle wrapper
         run: chmod +x gradlew
-      
+
       - name: Build native image
         run: ./gradlew nativeCompile
-      
+
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
         with:
@@ -106,40 +106,41 @@ jobs:
     needs: [build-native-windows, build-native-macos, build-native-linux]
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')  # Only run on version tags
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
-      
+
       - name: Prepare release assets
         run: |
+          mkdir -p release
           # Rename files with platform suffix
-          mv artifacts/scout-win/scout.exe artifacts/scout-windows.exe
-          mv artifacts/scout-mac/scout artifacts/scout-macos
-          mv artifacts/scout-lin/scout artifacts/scout-linux
+          mv artifacts/scout-win/scout.exe release/scout-windows.exe
+          mv artifacts/scout-mac/scout release/scout-macos
+          mv artifacts/scout-lin/scout release/scout-linux
           
           # Make executables executable
-          chmod +x artifacts/scout-macos
-          chmod +x artifacts/scout-linux
+          chmod +x release/scout-macos
+          chmod +x release/scout-linux
           
           # Create checksums
-          cd artifacts
-          sha256sum scout-* > checksums.txt
+          cd release
+          sha256sum scout-windows.exe scout-macos scout-linux > checksums.tx
           cd ..
-      
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            artifacts/scout-windows.exe
-            artifacts/scout-macos
-            artifacts/scout-linux
-            artifacts/checksums.txt
+            release/scout-windows.exe
+            release/scout-macos
+            release/scout-linux
+            release/checksums.txt
           generate_release_notes: true
           draft: false
           prerelease: false
