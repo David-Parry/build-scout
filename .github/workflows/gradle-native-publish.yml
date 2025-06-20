@@ -119,9 +119,9 @@ jobs:
       - name: Prepare release assets
         run: |
           # Rename files with platform suffix
-          mv artifacts/scout-windows/scout.exe artifacts/scout-windows.exe
-          mv artifacts/scout-macos/scout artifacts/scout-macos
-          mv artifacts/scout-linux/scout artifacts/scout-linux
+          if [ -f artifacts/scout-windows/scout.exe ]; then mv artifacts/scout-windows/scout.exe artifacts/scout-windows.exe; fi
+          if [ -f artifacts/scout-macos/scout ] && [ ! -f artifacts/scout-macos ]; then mv artifacts/scout-macos/scout artifacts/scout-macos; fi
+          if [ -f artifacts/scout-linux/scout ] && [ ! -f artifacts/scout-linux ]; then mv artifacts/scout-linux/scout artifacts/scout-linux; fi
           
           # Make executables executable
           chmod +x artifacts/scout-macos
