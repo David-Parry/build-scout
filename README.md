@@ -75,6 +75,10 @@ Still need to review more for edge cases but try it out.
             }
         }
 ```
+### After running the server, you can generate the native image configuration files will append to the files already in the `src/main/resources/META-INF/native-image` directory.:
+```bash 
+$GRAALVM_HOME/bin/native-image-configure generate --input-dir=tmp/META-INF/native-image --output-dir=src/main/resources/META-INF/native-image
+```
 
 
 ## Installation & Configuration
@@ -230,10 +234,6 @@ src/
     └── java/                    # Unit tests
 ```
 
-### Adding New Tools
-1. Create a new class implementing the `Tool<T>` interface
-2. Register the class in `SchemaInitializer.getAnnotatedClasses()`
-3. Implement the `schema()`,  `tool()` , `handle()`  methods
 
 ### Testing
 Run the test suite:

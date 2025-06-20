@@ -7,9 +7,569 @@
   }, {
     "pattern":"\\QMETA-INF/services/java.net.spi.URLStreamHandlerProvider\\E"
   }, {
-    "pattern":"\\QMETA-INF/services/javax.xml.parsers.DocumentBuilderFactory\\E"
+    "pattern":"\\Qjakarta/servlet/ServletContextListener.class\\E"
+  }, {
+    "pattern":"\\Qjakarta/servlet/http/HttpServlet.class\\E"
+  }, {
+    "pattern":"\\Qjava/awt/event/ActionListener.class\\E"
+  }, {
+    "pattern":"\\Qjava/awt/event/MouseListener.class\\E"
+  }, {
+    "pattern":"\\Qjava/awt/event/WindowAdapter.class\\E"
+  }, {
+    "pattern":"\\Qjava/awt/event/WindowFocusListener.class\\E"
+  }, {
+    "pattern":"\\Qjava/awt/event/WindowListener.class\\E"
+  }, {
+    "pattern":"\\Qjava/awt/event/WindowStateListener.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/Closeable.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/DataInput.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/EOFException.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/FilterInputStream.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/FilterOutputStream.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/Flushable.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/IOException.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/InputStream.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/ObjectInput.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/ObjectInputStream.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/ObjectStreamConstants.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/ObjectStreamException.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/OutputStream.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/PipedOutputStream.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/Reader.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/Serializable.class\\E"
+  }, {
+    "pattern":"\\Qjava/io/StreamCorruptedException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/AutoCloseable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/ClassLoader.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/ClassNotFoundException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/CloneNotSupportedException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Cloneable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Comparable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Deprecated.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Enum.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Exception.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/IllegalArgumentException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/InterruptedException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Iterable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Object.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Readable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/ReflectiveOperationException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Runnable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/RuntimeException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/SafeVarargs.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/SecurityManager.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Thread.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Throwable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/annotation/Annotation.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/constant/Constable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/ref/PhantomReference.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/ref/Reference.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/ref/SoftReference.class\\E"
+  }, {
+    "pattern":"\\Qjava/net/UnknownHostException.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/channels/AsynchronousCloseException.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/channels/ByteChannel.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/channels/Channel.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/channels/ClosedChannelException.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/channels/FileChannel.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/channels/FileLock.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/channels/GatheringByteChannel.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/channels/InterruptibleChannel.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/channels/ReadableByteChannel.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/channels/ScatteringByteChannel.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/channels/SeekableByteChannel.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/channels/WritableByteChannel.class\\E"
+  }, {
+    "pattern":"\\Qjava/nio/channels/spi/AbstractInterruptibleChannel.class\\E"
+  }, {
+    "pattern":"\\Qjava/security/DigestException.class\\E"
+  }, {
+    "pattern":"\\Qjava/security/GeneralSecurityException.class\\E"
+  }, {
+    "pattern":"\\Qjava/security/KeyStoreException.class\\E"
+  }, {
+    "pattern":"\\Qjava/security/MessageDigest.class\\E"
+  }, {
+    "pattern":"\\Qjava/security/MessageDigestSpi.class\\E"
+  }, {
+    "pattern":"\\Qjava/security/NoSuchAlgorithmException.class\\E"
+  }, {
+    "pattern":"\\Qjava/security/NoSuchProviderException.class\\E"
+  }, {
+    "pattern":"\\Qjava/security/SecureClassLoader.class\\E"
+  }, {
+    "pattern":"\\Qjava/security/UnrecoverableEntryException.class\\E"
+  }, {
+    "pattern":"\\Qjava/security/UnrecoverableKeyException.class\\E"
+  }, {
+    "pattern":"\\Qjava/security/cert/CertificateEncodingException.class\\E"
+  }, {
+    "pattern":"\\Qjava/security/cert/CertificateException.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/Array.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/BatchUpdateException.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/Blob.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/CallableStatement.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/Clob.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/Connection.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/DatabaseMetaData.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/Driver.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/NClob.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/ParameterMetaData.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/PreparedStatement.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/ResultSet.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/ResultSetMetaData.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/SQLClientInfoException.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/SQLDataException.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/SQLException.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/SQLFeatureNotSupportedException.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/SQLIntegrityConstraintViolationException.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/SQLInvalidAuthorizationSpecException.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/SQLNonTransientConnectionException.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/SQLNonTransientException.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/SQLSyntaxErrorException.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/SQLTimeoutException.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/SQLTransactionRollbackException.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/SQLTransientException.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/SQLType.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/SQLXML.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/Savepoint.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/Statement.class\\E"
+  }, {
+    "pattern":"\\Qjava/sql/Wrapper.class\\E"
+  }, {
+    "pattern":"\\Qjava/text/CollationKey.class\\E"
+  }, {
+    "pattern":"\\Qjava/text/Collator.class\\E"
+  }, {
+    "pattern":"\\Qjava/text/ParseException.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/AbstractCollection.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/AbstractList.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/AbstractMap.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/AbstractSet.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/BitSet.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Collection.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Comparator.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Dictionary.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Enumeration.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/EventListener.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/HashMap.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Hashtable.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/InvalidPropertiesFormatException.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Iterator.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/LinkedHashMap.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/List.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Map.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Properties.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/SequencedCollection.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/SequencedMap.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/Set.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/TimerTask.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/concurrent/ConcurrentHashMap.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/concurrent/ConcurrentMap.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/concurrent/ExecutionException.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/zip/DataFormatException.class\\E"
+  }, {
+    "pattern":"\\Qjavax/management/AttributeNotFoundException.class\\E"
+  }, {
+    "pattern":"\\Qjavax/management/DynamicMBean.class\\E"
+  }, {
+    "pattern":"\\Qjavax/management/InvalidAttributeValueException.class\\E"
+  }, {
+    "pattern":"\\Qjavax/management/JMException.class\\E"
+  }, {
+    "pattern":"\\Qjavax/management/MBeanException.class\\E"
+  }, {
+    "pattern":"\\Qjavax/management/MBeanRegistration.class\\E"
+  }, {
+    "pattern":"\\Qjavax/management/NotCompliantMBeanException.class\\E"
+  }, {
+    "pattern":"\\Qjavax/management/OperationsException.class\\E"
+  }, {
+    "pattern":"\\Qjavax/management/ReflectionException.class\\E"
+  }, {
+    "pattern":"\\Qjavax/management/StandardMBean.class\\E"
+  }, {
+    "pattern":"\\Qjavax/naming/NamingException.class\\E"
+  }, {
+    "pattern":"\\Qjavax/naming/Referenceable.class\\E"
+  }, {
+    "pattern":"\\Qjavax/naming/spi/ObjectFactory.class\\E"
+  }, {
+    "pattern":"\\Qjavax/script/ScriptException.class\\E"
+  }, {
+    "pattern":"\\Qjavax/security/auth/callback/CallbackHandler.class\\E"
+  }, {
+    "pattern":"\\Qjavax/security/auth/callback/UnsupportedCallbackException.class\\E"
+  }, {
+    "pattern":"\\Qjavax/servlet/ServletContextListener.class\\E"
+  }, {
+    "pattern":"\\Qjavax/servlet/ServletException.class\\E"
+  }, {
+    "pattern":"\\Qjavax/servlet/http/HttpServlet.class\\E"
+  }, {
+    "pattern":"\\Qjavax/sql/CommonDataSource.class\\E"
+  }, {
+    "pattern":"\\Qjavax/sql/ConnectionEventListener.class\\E"
+  }, {
+    "pattern":"\\Qjavax/sql/ConnectionPoolDataSource.class\\E"
+  }, {
+    "pattern":"\\Qjavax/sql/DataSource.class\\E"
+  }, {
+    "pattern":"\\Qjavax/sql/PooledConnection.class\\E"
+  }, {
+    "pattern":"\\Qjavax/sql/XAConnection.class\\E"
+  }, {
+    "pattern":"\\Qjavax/sql/XADataSource.class\\E"
+  }, {
+    "pattern":"\\Qjavax/tools/FileObject.class\\E"
+  }, {
+    "pattern":"\\Qjavax/tools/ForwardingJavaFileManager.class\\E"
+  }, {
+    "pattern":"\\Qjavax/tools/JavaFileManager.class\\E"
+  }, {
+    "pattern":"\\Qjavax/tools/JavaFileObject.class\\E"
+  }, {
+    "pattern":"\\Qjavax/tools/OptionChecker.class\\E"
+  }, {
+    "pattern":"\\Qjavax/tools/SimpleJavaFileObject.class\\E"
+  }, {
+    "pattern":"\\Qjavax/transaction/xa/XAException.class\\E"
+  }, {
+    "pattern":"\\Qjavax/transaction/xa/XAResource.class\\E"
+  }, {
+    "pattern":"\\Qjavax/transaction/xa/Xid.class\\E"
+  }, {
+    "pattern":"\\Qjavax/xml/parsers/ParserConfigurationException.class\\E"
+  }, {
+    "pattern":"\\Qjavax/xml/transform/TransformerException.class\\E"
+  }, {
+    "pattern":"\\Qorg/osgi/framework/BundleActivator.class\\E"
+  }, {
+    "pattern":"\\Qorg/osgi/service/jdbc/DataSourceFactory.class\\E"
+  }, {
+    "pattern":"\\Qorg/xml/sax/ContentHandler.class\\E"
+  }, {
+    "pattern":"\\Qorg/xml/sax/DTDHandler.class\\E"
+  }, {
+    "pattern":"\\Qorg/xml/sax/EntityResolver.class\\E"
+  }, {
+    "pattern":"\\Qorg/xml/sax/ErrorHandler.class\\E"
+  }, {
+    "pattern":"\\Qorg/xml/sax/SAXException.class\\E"
+  }, {
+    "pattern":"\\Qorg/xml/sax/helpers/DefaultHandler.class\\E"
   }, {
     "pattern":"\\Qversion.txt\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/Closeable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/DataInput.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/EOFException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/FilterInputStream.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/FilterOutputStream.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/Flushable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/IOException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/InputStream.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/ObjectInput.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/ObjectInputStream.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/ObjectStreamConstants.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/ObjectStreamException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/OutputStream.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/PipedOutputStream.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/Reader.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/Serializable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/io/StreamCorruptedException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/AutoCloseable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/ClassLoader.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/ClassNotFoundException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/CloneNotSupportedException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Cloneable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Comparable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Deprecated.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Enum.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Exception.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/IllegalArgumentException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/InterruptedException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Iterable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Object.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Readable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/ReflectiveOperationException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Runnable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/RuntimeException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/SafeVarargs.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/SecurityManager.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Thread.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Throwable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/annotation/Annotation.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/constant/Constable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/ref/PhantomReference.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/ref/Reference.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/ref/SoftReference.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/net/UnknownHostException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/channels/AsynchronousCloseException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/channels/ByteChannel.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/channels/Channel.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/channels/ClosedChannelException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/channels/FileChannel.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/channels/FileLock.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/channels/GatheringByteChannel.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/channels/InterruptibleChannel.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/channels/ReadableByteChannel.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/channels/ScatteringByteChannel.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/channels/SeekableByteChannel.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/channels/WritableByteChannel.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/nio/channels/spi/AbstractInterruptibleChannel.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/security/DigestException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/security/GeneralSecurityException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/security/KeyStoreException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/security/MessageDigest.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/security/MessageDigestSpi.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/security/NoSuchAlgorithmException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/security/NoSuchProviderException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/security/SecureClassLoader.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/security/UnrecoverableEntryException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/security/UnrecoverableKeyException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/security/cert/CertificateEncodingException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/security/cert/CertificateException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/text/CollationKey.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/text/Collator.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/text/ParseException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/AbstractCollection.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/AbstractList.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/AbstractMap.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/AbstractSet.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/BitSet.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Collection.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Comparator.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Dictionary.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Enumeration.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/EventListener.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/HashMap.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Hashtable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/InvalidPropertiesFormatException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Iterator.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/LinkedHashMap.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/List.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Map.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Properties.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/SequencedCollection.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/SequencedMap.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/Set.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/TimerTask.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/concurrent/ConcurrentHashMap.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/concurrent/ConcurrentMap.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/concurrent/ExecutionException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/zip/DataFormatException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjavax/security/auth/callback/CallbackHandler.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjavax/security/auth/callback/UnsupportedCallbackException.class\\E"
   }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfc.nrm\\E"
   }, {
@@ -18,6 +578,154 @@
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/uprops.icu\\E"
   }, {
     "pattern":"java.base:\\Qsun/net/idn/uidna.spp\\E"
+  }, {
+    "pattern":"java.compiler:\\Qjavax/tools/FileObject.class\\E"
+  }, {
+    "pattern":"java.compiler:\\Qjavax/tools/ForwardingJavaFileManager.class\\E"
+  }, {
+    "pattern":"java.compiler:\\Qjavax/tools/JavaFileManager.class\\E"
+  }, {
+    "pattern":"java.compiler:\\Qjavax/tools/JavaFileObject.class\\E"
+  }, {
+    "pattern":"java.compiler:\\Qjavax/tools/OptionChecker.class\\E"
+  }, {
+    "pattern":"java.compiler:\\Qjavax/tools/SimpleJavaFileObject.class\\E"
+  }, {
+    "pattern":"java.desktop:\\Qjava/awt/event/ActionListener.class\\E"
+  }, {
+    "pattern":"java.desktop:\\Qjava/awt/event/MouseListener.class\\E"
+  }, {
+    "pattern":"java.desktop:\\Qjava/awt/event/WindowAdapter.class\\E"
+  }, {
+    "pattern":"java.desktop:\\Qjava/awt/event/WindowFocusListener.class\\E"
+  }, {
+    "pattern":"java.desktop:\\Qjava/awt/event/WindowListener.class\\E"
+  }, {
+    "pattern":"java.desktop:\\Qjava/awt/event/WindowStateListener.class\\E"
+  }, {
+    "pattern":"java.management:\\Qjavax/management/AttributeNotFoundException.class\\E"
+  }, {
+    "pattern":"java.management:\\Qjavax/management/DynamicMBean.class\\E"
+  }, {
+    "pattern":"java.management:\\Qjavax/management/InvalidAttributeValueException.class\\E"
+  }, {
+    "pattern":"java.management:\\Qjavax/management/JMException.class\\E"
+  }, {
+    "pattern":"java.management:\\Qjavax/management/MBeanException.class\\E"
+  }, {
+    "pattern":"java.management:\\Qjavax/management/MBeanRegistration.class\\E"
+  }, {
+    "pattern":"java.management:\\Qjavax/management/NotCompliantMBeanException.class\\E"
+  }, {
+    "pattern":"java.management:\\Qjavax/management/OperationsException.class\\E"
+  }, {
+    "pattern":"java.management:\\Qjavax/management/ReflectionException.class\\E"
+  }, {
+    "pattern":"java.management:\\Qjavax/management/StandardMBean.class\\E"
+  }, {
+    "pattern":"java.naming:\\Qjavax/naming/NamingException.class\\E"
+  }, {
+    "pattern":"java.naming:\\Qjavax/naming/Referenceable.class\\E"
+  }, {
+    "pattern":"java.naming:\\Qjavax/naming/spi/ObjectFactory.class\\E"
+  }, {
+    "pattern":"java.scripting:\\Qjavax/script/ScriptException.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/Array.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/BatchUpdateException.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/Blob.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/CallableStatement.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/Clob.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/Connection.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/DatabaseMetaData.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/Driver.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/NClob.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/ParameterMetaData.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/PreparedStatement.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/ResultSet.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/ResultSetMetaData.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/SQLClientInfoException.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/SQLDataException.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/SQLException.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/SQLFeatureNotSupportedException.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/SQLIntegrityConstraintViolationException.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/SQLInvalidAuthorizationSpecException.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/SQLNonTransientConnectionException.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/SQLNonTransientException.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/SQLSyntaxErrorException.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/SQLTimeoutException.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/SQLTransactionRollbackException.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/SQLTransientException.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/SQLType.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/SQLXML.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/Savepoint.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/Statement.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjava/sql/Wrapper.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjavax/sql/CommonDataSource.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjavax/sql/ConnectionEventListener.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjavax/sql/ConnectionPoolDataSource.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjavax/sql/DataSource.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjavax/sql/PooledConnection.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjavax/sql/XAConnection.class\\E"
+  }, {
+    "pattern":"java.sql:\\Qjavax/sql/XADataSource.class\\E"
+  }, {
+    "pattern":"java.transaction.xa:\\Qjavax/transaction/xa/XAException.class\\E"
+  }, {
+    "pattern":"java.transaction.xa:\\Qjavax/transaction/xa/XAResource.class\\E"
+  }, {
+    "pattern":"java.transaction.xa:\\Qjavax/transaction/xa/Xid.class\\E"
+  }, {
+    "pattern":"java.xml:\\Qjavax/xml/parsers/ParserConfigurationException.class\\E"
+  }, {
+    "pattern":"java.xml:\\Qjavax/xml/transform/TransformerException.class\\E"
+  }, {
+    "pattern":"java.xml:\\Qorg/xml/sax/ContentHandler.class\\E"
+  }, {
+    "pattern":"java.xml:\\Qorg/xml/sax/DTDHandler.class\\E"
+  }, {
+    "pattern":"java.xml:\\Qorg/xml/sax/EntityResolver.class\\E"
+  }, {
+    "pattern":"java.xml:\\Qorg/xml/sax/ErrorHandler.class\\E"
+  }, {
+    "pattern":"java.xml:\\Qorg/xml/sax/SAXException.class\\E"
+  }, {
+    "pattern":"java.xml:\\Qorg/xml/sax/helpers/DefaultHandler.class\\E"
   }]},
   "bundles":[]
 }

@@ -185,6 +185,9 @@
   "methods":[{"name":"getRecordComponents","parameterTypes":[] }, {"name":"isRecord","parameterTypes":[] }]
 },
 {
+  "name":"java.lang.Module"
+},
+{
   "name":"java.lang.Record",
   "allDeclaredFields":true
 },
@@ -192,8 +195,14 @@
   "name":"java.lang.String"
 },
 {
+  "name":"java.lang.StringBuilder"
+},
+{
   "name":"java.lang.Thread",
   "fields":[{"name":"threadLocalRandomProbe"}]
+},
+{
+  "name":"java.lang.invoke.CallSite"
 },
 {
   "name":"java.lang.reflect.RecordComponent",
@@ -221,8 +230,12 @@
   "name":"java.util.Date"
 },
 {
-  "name":"java.util.concurrent.ForkJoinTask",
-  "fields":[{"name":"aux"}, {"name":"status"}]
+  "name":"java.util.List",
+  "methods":[{"name":"copyOf","parameterTypes":["java.util.Collection"] }]
+},
+{
+  "name":"java.util.Optional",
+  "methods":[{"name":"isEmpty","parameterTypes":[] }]
 },
 {
   "name":"java.util.concurrent.atomic.AtomicBoolean",
@@ -233,12 +246,15 @@
   "fields":[{"name":"base"}, {"name":"cellsBusy"}]
 },
 {
+  "name":"java.util.function.Function"
+},
+{
+  "name":"java.util.zip.DeflaterInputStream"
+},
+{
   "name":"javax.security.auth.x500.X500Principal",
   "fields":[{"name":"thisX500Name"}],
   "methods":[{"name":"<init>","parameterTypes":["sun.security.x509.X500Name"] }]
-},
-{
-  "name":"jdk.internal.misc.Unsafe"
 },
 {
   "name":"sun.security.pkcs12.PKCS12KeyStore",

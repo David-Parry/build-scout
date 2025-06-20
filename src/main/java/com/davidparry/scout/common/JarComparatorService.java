@@ -6,7 +6,7 @@ import japicmp.cmp.JarArchiveComparatorOptions;
 import japicmp.model.AccessModifier;
 import japicmp.model.JApiChangeStatus;
 import japicmp.model.JApiClass;
-
+import japicmp.config.Options;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,9 +42,14 @@ public class JarComparatorService {
         File oldJar = jarDownloader.downloadJar(groupId, artifactId, currentVersion).toFile();
         File newJar = jarDownloader.downloadJar(groupId, artifactId, latestVersion).toFile();
 
+        Options optDefault = Options.newDefault();
+        optDefault.setIgnoreMissingClasses(true);
+        optDefault.setIncludeSynthetic(false);
+        optDefault.setAccessModifier(AccessModifier.PUBLIC);
         // Set up comparator options
-        JarArchiveComparatorOptions options = new JarArchiveComparatorOptions();
+        JarArchiveComparatorOptions options = JarArchiveComparatorOptions.of(optDefault);
         options.setIncludeSynthetic(false);
+
         options.setAccessModifier(AccessModifier.PUBLIC);
 
         // Create comparator
