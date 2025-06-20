@@ -118,21 +118,6 @@ jobs:
       
       - name: Prepare release assets
         run: |
-          # Remove old artifact if present before moving
-          [ -f artifacts/scout-macos ] && rm artifacts/scout-macos
-          if [ -f artifacts/scout-macos/scout ]; then
-            mv artifacts/scout-macos/scout artifacts/scout-macos
-          fi
-          [ -f artifacts/scout-linux ] && rm artifacts/scout-linux
-          if [ -f artifacts/scout-linux/scout ]; then
-            mv artifacts/scout-linux/scout artifacts/scout-linux
-          fi
-          [ -f artifacts/scout-windows ] && rm artifacts/scout-windows
-          if [ -f artifacts/scout-windows/scout.exe ]; then
-            mv artifacts/scout-windows/scout.exe artifacts/scout-windows
-          fi
-          
-          
           # Make executables executable
           chmod +x artifacts/scout-macos
           chmod +x artifacts/scout-linux
