@@ -34,7 +34,7 @@ jobs:
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
-          name: scout-windows
+          name: scout-win
           path: build/native/nativeCompile/scout.exe
           retention-days: 1
 
@@ -66,7 +66,7 @@ jobs:
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
         with:
-          name: scout-macos
+          name: scout-mac
           path: build/native/nativeCompile/scout
           retention-days: 1
 
@@ -98,7 +98,7 @@ jobs:
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
         with:
-          name: scout-linux
+          name: scout-lin
           path: build/native/nativeCompile/scout
           retention-days: 1
 
@@ -118,6 +118,11 @@ jobs:
       
       - name: Prepare release assets
         run: |
+          # Rename files with platform suffix
+          mv artifacts/scout-win/scout.exe artifacts/scout-windows.exe
+          mv artifacts/scout-mac/scout artifacts/scout-macos
+          mv artifacts/scout-lin/scout artifacts/scout-linux
+          
           # Make executables executable
           chmod +x artifacts/scout-macos
           chmod +x artifacts/scout-linux
