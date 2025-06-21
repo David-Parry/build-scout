@@ -133,7 +133,7 @@ jobs:
           
           # Create checksums
           cd release
-          sha256sum scout-windows.exe scout-macos scout-linux > checksums.tx
+          sha256sum scout-windows.exe scout-macos scout-linux > checksums.txt
           cd ..
 
       - name: Create GitHub Release
