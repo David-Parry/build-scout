@@ -69,9 +69,9 @@ public class Main {
         handlers.put(findClassUsage.tool().name(), findClassUsage);
 
         //6
-        GetFileInfo getFileInfo = new GetFileInfo();
-        tools.add(getFileInfo.tool());
-        handlers.put(getFileInfo.tool().name(), getFileInfo);
+        GetProjectFileInfo getProjectFileInfo = new GetProjectFileInfo();
+        tools.add(getProjectFileInfo.tool());
+        handlers.put(getProjectFileInfo.tool().name(), getProjectFileInfo);
 
         //7
         GetResourceInfo getResourceInfo = new GetResourceInfo();
@@ -108,6 +108,10 @@ public class Main {
         tools.add(findBuildSystem.tool());
         handlers.put(findBuildSystem.tool().name(), findBuildSystem);
 
+        //14
+        JacocoGradleReporter jacocoGradleReporter = new JacocoGradleReporter(gradleProcessExecutor, buildSystem);
+        tools.add(jacocoGradleReporter.tool());
+        handlers.put(jacocoGradleReporter.tool().name(), jacocoGradleReporter);
 
         // other handlers
         handlers.put("initialize", new InitializeHandler());
