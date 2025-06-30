@@ -5,7 +5,6 @@ public class ApiLogger implements Logger {
 
     public ApiLogger(LogFile logFile) {
         this.logFile = logFile;
-        api("ApiLogger initialized " + this.getClass().getSimpleName());
     }
 
 
