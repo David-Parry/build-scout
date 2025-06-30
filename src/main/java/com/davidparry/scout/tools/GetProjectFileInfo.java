@@ -14,13 +14,13 @@ import com.davidparry.scout.spec.Tool;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GetFileInfo extends BuildTool implements Handler {
+public class GetProjectFileInfo extends BuildTool implements Handler {
     private final Logger logger = new ApplicationLogger().getLogger(LogFileWriter.getInstance(new LogFactory()));
     private final Tool tool;
 
     // Add explicit no-argument constructor
-    public GetFileInfo() {
-        this.tool = new Tool("get_file_info", "Get information about a file, just simply give an absolute path and it will return the file information for sure.", schema());
+    public GetProjectFileInfo() {
+        this.tool = new Tool("get_project_file_info", "Get information about a file, just simply give an absolute path and it will return the file information for sure.", schema());
     }
 
     public InputSchema schema() {

@@ -99,15 +99,18 @@ public class IOHandlerImpl implements IOHandler {
                     publishLine(line);
                 }
                 logger.log("Input stream closed.");
-                stopRunning();
             } catch (Exception e) {
                 if (running.get()) { // Only log if we're still supposed to be running
                     logger.log("Error while reading next line from input reader: ", e);
                 }
+                throw e; // Re-throw to ensure outer catch handles it
+            } finally {
+                stopRunning();
             }
+        } catch (Exception e) {
+            logger.log("Fatal error in startInputReader: ", e);
+            stopRunning(); // Ensure shutdown on any exception
         }
-
-
     }
 
     public void stopRunning() {

@@ -17,6 +17,11 @@
   "allDeclaredFields":true,
   "methods":[{"name":"<init>","parameterTypes":["boolean","boolean","long","long","boolean","boolean","java.lang.String","java.lang.String"] }, {"name":"absolutePath","parameterTypes":[] }, {"name":"canRead","parameterTypes":[] }, {"name":"canWrite","parameterTypes":[] }, {"name":"error","parameterTypes":[] }, {"name":"exists","parameterTypes":[] }, {"name":"isDirectory","parameterTypes":[] }, {"name":"lastModified","parameterTypes":[] }, {"name":"size","parameterTypes":[] }]
 },
+  {
+    "name":"com.davidparry.scout.common.JacocoConfig",
+    "allDeclaredFields":true,
+    "allDeclaredMethods":true
+  },
 {
   "name":"com.davidparry.scout.spec.Capabilities",
   "allDeclaredFields":true,
@@ -189,7 +194,8 @@
 },
 {
   "name":"java.lang.Record",
-  "allDeclaredFields":true
+  "allDeclaredFields":true,
+  "allDeclaredMethods":true
 },
 {
   "name":"java.lang.String"

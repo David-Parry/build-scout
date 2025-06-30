@@ -6,33 +6,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class GradleProcessExecutor {
 
-    public BuildOutput buildProject(File projectDir, boolean check) throws IOException, InterruptedException {
+    public BuildOutput build(File projectDir, List<String> commands) throws IOException, InterruptedException{
         StringBuilder output = new StringBuilder();
         StringBuilder errorOutput = new StringBuilder();
         boolean hasError = false;
 
         // Determine the gradle executable
         String gradleExecutable = findGradleExecutable(projectDir);
-
-        // Build the task list
-        List<String> command = new ArrayList<>();
-        command.add(gradleExecutable);
-        command.add("clean");
-        command.add("build");
-        if (check) {
-            command.add("check");
-        }
-        command.add("--no-daemon");
-        command.add("-Dorg.gradle.daemon=false");
-        command.add("-Dorg.gradle.parallel=false");
-        command.add("-Dorg.gradle.workers.max=1");
+        commands.addFirst(gradleExecutable);
 
         // Build the command
-        ProcessBuilder pb = new ProcessBuilder(command);
+        ProcessBuilder pb = new ProcessBuilder(commands);
         pb.directory(projectDir);
 
         Process process = pb.start();
@@ -82,23 +71,45 @@ public class GradleProcessExecutor {
             hasError = true;
         } else if (process.exitValue() != 0) {
             hasError = true;
-            if (errorOutput.length() == 0) {
+            if (errorOutput.isEmpty()) {
                 errorOutput.append("Gradle build failed with exit code: ").append(process.exitValue()).append("\n");
             }
         }
 
         // Append warnings to output (not error) if build succeeded
-        if (!hasError && warnings.length() > 0) {
-            if (output.length() > 0) {
+        if (!hasError && !warnings.isEmpty()) {
+            if (!output.isEmpty()) {
                 output.append("\n");
             }
             output.append("Build Warnings:\n").append(warnings);
-        } else if (hasError && warnings.length() > 0) {
+        } else if (hasError && !warnings.isEmpty()) {
             // If build failed, include warnings in error output
             errorOutput.append("\nBuild Warnings:\n").append(warnings);
         }
 
         return new BuildOutput(output.toString(), errorOutput.toString(), hasError);
+    }
+
+
+    public BuildOutput buildProject(File projectDir, boolean check) throws IOException, InterruptedException {
+        // Determine the gradle executable
+        String gradleExecutable = findGradleExecutable(projectDir);
+
+        // Build the task list
+        List<String> command = new ArrayList<>();
+        command.add(gradleExecutable);
+        command.add("clean");
+        command.add("build");
+        if (check) {
+            command.add("check");
+        }
+
+        command.add("--no-daemon");
+        command.add("-Dorg.gradle.daemon=false");
+        command.add("-Dorg.gradle.parallel=false");
+        command.add("-Dorg.gradle.workers.max=1");
+
+        return  build(projectDir, command);
     }
 
     public String formatOutput(BuildOutput buildOutput) {
