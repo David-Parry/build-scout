@@ -11,17 +11,21 @@ import java.util.concurrent.TimeUnit;
 
 public class GradleProcessExecutor {
 
-    public BuildOutput build(File projectDir, List<String> commands) throws IOException, InterruptedException{
+    public BuildOutput build(File projectDir, List<String> tasks) throws IOException, InterruptedException{
         StringBuilder output = new StringBuilder();
         StringBuilder errorOutput = new StringBuilder();
         boolean hasError = false;
 
         // Determine the gradle executable
         String gradleExecutable = findGradleExecutable(projectDir);
-        commands.addFirst(gradleExecutable);
+
+        // Build the complete command list
+        List<String> command = new ArrayList<>();
+        command.add(gradleExecutable);
+        command.addAll(tasks);
 
         // Build the command
-        ProcessBuilder pb = new ProcessBuilder(commands);
+        ProcessBuilder pb = new ProcessBuilder(command);
         pb.directory(projectDir);
 
         Process process = pb.start();
@@ -92,24 +96,20 @@ public class GradleProcessExecutor {
 
 
     public BuildOutput buildProject(File projectDir, boolean check) throws IOException, InterruptedException {
-        // Determine the gradle executable
-        String gradleExecutable = findGradleExecutable(projectDir);
-
-        // Build the task list
-        List<String> command = new ArrayList<>();
-        command.add(gradleExecutable);
-        command.add("clean");
-        command.add("build");
+        // Build the task list (without the executable)
+        List<String> tasks = new ArrayList<>();
+        tasks.add("clean");
+        tasks.add("build");
         if (check) {
-            command.add("check");
+            tasks.add("check");
         }
+        tasks.add("--info");
+        tasks.add("--no-daemon");
+        tasks.add("-Dorg.gradle.daemon=false");
+        tasks.add("-Dorg.gradle.parallel=false");
+        tasks.add("-Dorg.gradle.workers.max=1");
 
-        command.add("--no-daemon");
-        command.add("-Dorg.gradle.daemon=false");
-        command.add("-Dorg.gradle.parallel=false");
-        command.add("-Dorg.gradle.workers.max=1");
-
-        return  build(projectDir, command);
+        return build(projectDir, tasks);
     }
 
     public String formatOutput(BuildOutput buildOutput) {
