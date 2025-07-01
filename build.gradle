@@ -9,7 +9,7 @@ plugins {
 }
 
 group = 'com.davidparry.scout'
-version = '1.0.117'
+version = '1.0.118'
 jar.enabled = false
 
 repositories {
