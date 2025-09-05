@@ -57,7 +57,13 @@
   }, {
     "pattern":"\\Qjava/io/StreamCorruptedException.class\\E"
   }, {
+    "pattern":"\\Qjava/io/Writer.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Appendable.class\\E"
+  }, {
     "pattern":"\\Qjava/lang/AutoCloseable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/CharSequence.class\\E"
   }, {
     "pattern":"\\Qjava/lang/ClassLoader.class\\E"
   }, {
@@ -75,11 +81,19 @@
   }, {
     "pattern":"\\Qjava/lang/Exception.class\\E"
   }, {
+    "pattern":"\\Qjava/lang/IllegalAccessException.class\\E"
+  }, {
     "pattern":"\\Qjava/lang/IllegalArgumentException.class\\E"
   }, {
     "pattern":"\\Qjava/lang/InterruptedException.class\\E"
   }, {
     "pattern":"\\Qjava/lang/Iterable.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/NoSuchMethodException.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/Number.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/NumberFormatException.class\\E"
   }, {
     "pattern":"\\Qjava/lang/Object.class\\E"
   }, {
@@ -101,6 +115,12 @@
   }, {
     "pattern":"\\Qjava/lang/annotation/Annotation.class\\E"
   }, {
+    "pattern":"\\Qjava/lang/annotation/Documented.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/annotation/Retention.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/annotation/Target.class\\E"
+  }, {
     "pattern":"\\Qjava/lang/constant/Constable.class\\E"
   }, {
     "pattern":"\\Qjava/lang/ref/PhantomReference.class\\E"
@@ -108,6 +128,14 @@
     "pattern":"\\Qjava/lang/ref/Reference.class\\E"
   }, {
     "pattern":"\\Qjava/lang/ref/SoftReference.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/reflect/GenericArrayType.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/reflect/ParameterizedType.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/reflect/Type.class\\E"
+  }, {
+    "pattern":"\\Qjava/lang/reflect/WildcardType.class\\E"
   }, {
     "pattern":"\\Qjava/net/UnknownHostException.class\\E"
   }, {
@@ -150,6 +178,8 @@
     "pattern":"\\Qjava/security/NoSuchAlgorithmException.class\\E"
   }, {
     "pattern":"\\Qjava/security/NoSuchProviderException.class\\E"
+  }, {
+    "pattern":"\\Qjava/security/PrivilegedAction.class\\E"
   }, {
     "pattern":"\\Qjava/security/SecureClassLoader.class\\E"
   }, {
@@ -259,9 +289,13 @@
   }, {
     "pattern":"\\Qjava/util/List.class\\E"
   }, {
+    "pattern":"\\Qjava/util/Map$Entry.class\\E"
+  }, {
     "pattern":"\\Qjava/util/Map.class\\E"
   }, {
     "pattern":"\\Qjava/util/Properties.class\\E"
+  }, {
+    "pattern":"\\Qjava/util/RandomAccess.class\\E"
   }, {
     "pattern":"\\Qjava/util/SequencedCollection.class\\E"
   }, {
@@ -405,7 +439,13 @@
   }, {
     "pattern":"java.base:\\Qjava/io/StreamCorruptedException.class\\E"
   }, {
+    "pattern":"java.base:\\Qjava/io/Writer.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Appendable.class\\E"
+  }, {
     "pattern":"java.base:\\Qjava/lang/AutoCloseable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/CharSequence.class\\E"
   }, {
     "pattern":"java.base:\\Qjava/lang/ClassLoader.class\\E"
   }, {
@@ -423,11 +463,19 @@
   }, {
     "pattern":"java.base:\\Qjava/lang/Exception.class\\E"
   }, {
+    "pattern":"java.base:\\Qjava/lang/IllegalAccessException.class\\E"
+  }, {
     "pattern":"java.base:\\Qjava/lang/IllegalArgumentException.class\\E"
   }, {
     "pattern":"java.base:\\Qjava/lang/InterruptedException.class\\E"
   }, {
     "pattern":"java.base:\\Qjava/lang/Iterable.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/NoSuchMethodException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/Number.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/NumberFormatException.class\\E"
   }, {
     "pattern":"java.base:\\Qjava/lang/Object.class\\E"
   }, {
@@ -449,6 +497,12 @@
   }, {
     "pattern":"java.base:\\Qjava/lang/annotation/Annotation.class\\E"
   }, {
+    "pattern":"java.base:\\Qjava/lang/annotation/Documented.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/annotation/Retention.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/annotation/Target.class\\E"
+  }, {
     "pattern":"java.base:\\Qjava/lang/constant/Constable.class\\E"
   }, {
     "pattern":"java.base:\\Qjava/lang/ref/PhantomReference.class\\E"
@@ -456,6 +510,14 @@
     "pattern":"java.base:\\Qjava/lang/ref/Reference.class\\E"
   }, {
     "pattern":"java.base:\\Qjava/lang/ref/SoftReference.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/reflect/GenericArrayType.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/reflect/ParameterizedType.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/reflect/Type.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/lang/reflect/WildcardType.class\\E"
   }, {
     "pattern":"java.base:\\Qjava/net/UnknownHostException.class\\E"
   }, {
@@ -498,6 +560,8 @@
     "pattern":"java.base:\\Qjava/security/NoSuchAlgorithmException.class\\E"
   }, {
     "pattern":"java.base:\\Qjava/security/NoSuchProviderException.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/security/PrivilegedAction.class\\E"
   }, {
     "pattern":"java.base:\\Qjava/security/SecureClassLoader.class\\E"
   }, {
@@ -547,9 +611,13 @@
   }, {
     "pattern":"java.base:\\Qjava/util/List.class\\E"
   }, {
+    "pattern":"java.base:\\Qjava/util/Map$Entry.class\\E"
+  }, {
     "pattern":"java.base:\\Qjava/util/Map.class\\E"
   }, {
     "pattern":"java.base:\\Qjava/util/Properties.class\\E"
+  }, {
+    "pattern":"java.base:\\Qjava/util/RandomAccess.class\\E"
   }, {
     "pattern":"java.base:\\Qjava/util/SequencedCollection.class\\E"
   }, {

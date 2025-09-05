@@ -1,6 +1,7 @@
 package com.davidparry.scout.spec;
 
-import com.google.gson.Gson;
+import com.davidparry.scout.common.GsonProvider;
+import com.google.gson.JsonElement;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Map;
@@ -10,13 +11,13 @@ import java.util.Map;
  * Record representing a JSON-RPC request according to the JSON-RPC 2.0 specification.
  */
 public record JsonRpcRequest(@SerializedName("jsonrpc") String jsonrpc, @SerializedName("method") String method,
-                             @SerializedName("name") String name, @SerializedName("id") int id,
+                             @SerializedName("name") String name, @SerializedName("id") JsonElement id,
                              @SerializedName("params") RequestParams params, @SerializedName("error") RpcError error,
                              @SerializedName("result") Map<String, Object> result
 
 ) {
 
-    public JsonRpcRequest(String jsonrpc, String method, int id) {
+    public JsonRpcRequest(String jsonrpc, String method, JsonElement id) {
         this(jsonrpc, method,null, id, null, null, null);
     }
 
@@ -27,7 +28,7 @@ public record JsonRpcRequest(@SerializedName("jsonrpc") String jsonrpc, @Seriali
      * @return The parsed JsonRpcRequest object
      */
     public static JsonRpcRequest fromJson(String json) {
-        return new Gson().fromJson(json, JsonRpcRequest.class);
+        return GsonProvider.getInstance().fromJson(json, JsonRpcRequest.class);
     }
 
     /**
@@ -36,7 +37,7 @@ public record JsonRpcRequest(@SerializedName("jsonrpc") String jsonrpc, @Seriali
      * @return The JSON string representation
      */
     public String toJson() {
-        return new Gson().toJson(this);
+        return GsonProvider.getInstance().toJson(this);
     }
 }
 

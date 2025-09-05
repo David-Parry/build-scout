@@ -1,5 +1,6 @@
 package com.davidparry.scout;
 
+import com.davidparry.scout.common.GsonProvider;
 import com.davidparry.scout.common.LogFactory;
 import com.davidparry.scout.handlers.Handler;
 import com.davidparry.scout.handlers.HandlerResponse;
@@ -23,7 +24,7 @@ public class Router {
     public Router(IOHandler io, State state, Map<String, Handler> handlers) {
         this.io = io;
         this.state = state;
-        this.gson = new Gson();
+        this.gson = GsonProvider.getInstance();
         this.handlers = handlers;
 
     }
@@ -35,13 +36,13 @@ public class Router {
         if (message == null || message.isEmpty()) {
             return;
         }
-        String jsonRpc = "2.0";
-        int id = 0;
 
         JsonRpcRequest request = JsonRpcRequest.fromJson(message);
         try {
-            jsonRpc = request.jsonrpc();
-            id = request.id();
+            // Observe the id to set session policy if not already set
+            state.observeIdIfUnset(request.id());
+            
+            String jsonRpc = request.jsonrpc();
             HandlerResponse result = null;
             String key = extractKey(request);
             logger.log("Router extracted key is : " + key);
@@ -51,7 +52,8 @@ public class Router {
             }
 
             if (result != null && result.response() != null) {
-                JSONResponse<?> jsonResponse = new JSONResponse<>(jsonRpc, id, result.response());
+                // Echo back the original id as-is to preserve type and value
+                JSONResponse<?> jsonResponse = new JSONResponse<>(jsonRpc, request.id(), result.response());
                 String outString = gson.toJson(jsonResponse);
                 io.writeLine(outString);
 

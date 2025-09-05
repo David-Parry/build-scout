@@ -4,6 +4,7 @@ import com.davidparry.scout.spec.Capabilities;
 import com.davidparry.scout.spec.ClientInfo;
 import com.davidparry.scout.spec.JsonRpcRequest;
 import com.davidparry.scout.spec.RequestParams;
+import com.google.gson.JsonPrimitive;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class ArgumentUtilsTest {
                 "testName", arguments);
 
         // Prepare JsonRpcRequest
-        JsonRpcRequest request = new JsonRpcRequest("2.0", "testMethod", "testName", 1, params, null, null);
+        JsonRpcRequest request = new JsonRpcRequest("2.0", "testMethod", "testName", new JsonPrimitive(1), params, null, null);
 
         // Test integer extraction
         Integer intValue = ArgumentUtils.getArgument(request, "intKey");
