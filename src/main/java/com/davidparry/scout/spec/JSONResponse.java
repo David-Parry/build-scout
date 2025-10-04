@@ -1,12 +1,13 @@
 package com.davidparry.scout.spec;
 
+import com.google.gson.JsonElement;
 
 /**
  * Represents a JSON-RPC 2.0 response.
  */
 public class JSONResponse<T> {
 
-    private int  id;
+    private JsonElement id;
 
     private String jsonrpc;
     
@@ -21,10 +22,11 @@ public class JSONResponse<T> {
     
     /**
      * Constructor with result
+     * @param jsonRpc The JSON-RPC version
      * @param id The request ID
      * @param result The response result
      */
-    public JSONResponse(String jsonRpc, int id, T result) {
+    public JSONResponse(String jsonRpc, JsonElement id, T result) {
         this.jsonrpc = jsonRpc;
         this.id = id;
         this.result = result;
@@ -32,7 +34,7 @@ public class JSONResponse<T> {
     }
 
     // Getters and Setters
-    public String getJsonppc() {
+    public String getJsonrpc() {
         return jsonrpc;
     }
     
@@ -40,11 +42,11 @@ public class JSONResponse<T> {
         this.jsonrpc = jsonRpc;
     }
     
-    public int getId() {
+    public JsonElement getId() {
         return id;
     }
     
-    public void setId(int id) {
+    public void setId(JsonElement id) {
         this.id = id;
     }
     

@@ -7,6 +7,7 @@ import com.davidparry.scout.io.IOHandler;
 import com.davidparry.scout.io.LogFileWriter;
 import com.davidparry.scout.io.Logger;
 import com.davidparry.scout.spec.JsonRpcRequest;
+import com.google.gson.JsonElement;
 
 public class NotificationRootsHandler implements Handler {
     private final IOHandler ioHandler;
@@ -21,7 +22,9 @@ public class NotificationRootsHandler implements Handler {
     @Override
     public HandlerResponse handle(JsonRpcRequest request) {
         logger.log("Received notification request of updated  " + request);
-        JsonRpcRequest responseMethod = new JsonRpcRequest(state.jsonrpc(), "roots/list", request.id() + 1);
+        // Generate a new id using the session's id policy instead of incrementing the inbound id
+        JsonElement newId = state.nextId();
+        JsonRpcRequest responseMethod = new JsonRpcRequest(state.jsonrpc(), "roots/list", newId);
         String message = responseMethod.toJson();
         ioHandler.writeLine(message);
         this.logger.log("sent message to client from update: " + message);
